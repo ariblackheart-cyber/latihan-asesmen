@@ -1,0 +1,801 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Kuis Tenses Bahasa Inggris</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=Patrick+Hand&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f6f4ef; --card:#ffffff; --ink:#1d1b18; --muted:#6b665d; --line:#e6e1d6;
+    --accent:#1f6f5c; --accent-soft:#e3f1ec;
+    --ok:#1f8a4c; --ok-soft:#e4f5ea; --bad:#c2412d; --bad-soft:#fbe9e5;
+    --t-present:#2f6fd6; --t-cont:#8a4fd1; --t-perfect:#1f8a7a; --t-future:#c23b7a; --t-past:#d07a12; --t-ever:#5b7f1e;
+    --radius:16px; --hand:"Patrick Hand","Comic Sans MS",cursive;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:560px;margin:0 auto;padding:20px 16px 48px}
+  header{display:flex;align-items:center;justify-content:space-between;gap:12px;margin-bottom:18px}
+  h1{font-size:20px;font-weight:800;margin:0;letter-spacing:-.01em}
+  h1 span{color:var(--accent)}
+  .tabs{display:flex;background:#ebe7de;border-radius:999px;padding:4px}
+  .tabs button{border:0;background:transparent;font:inherit;font-weight:600;font-size:14px;padding:7px 14px;border-radius:999px;color:var(--muted);cursor:pointer}
+  .tabs button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.08)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:20px;margin-bottom:14px}
+  .label{font-size:12px;font-weight:700;text-transform:uppercase;letter-spacing:.06em;color:var(--muted);margin:0 0 10px}
+  .note{font-size:12px;color:var(--muted);margin:8px 0 14px;line-height:1.5}
+  .chip{border:1.5px solid var(--line);background:var(--card);font:inherit;font-size:14px;font-weight:600;padding:9px 14px;border-radius:999px;cursor:pointer;color:var(--ink)}
+  .chip.on{border-color:var(--accent);background:var(--accent-soft);color:var(--accent)}
+  .seg{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+  .seg .chip{border-radius:12px;padding:12px;text-align:left}
+  .seg .chip small{display:block;font-weight:500;color:var(--muted);font-size:12px;margin-top:2px}
+  .acts{display:grid;gap:10px}
+  .act{display:flex;align-items:center;gap:12px;width:100%;text-align:left;border:1.5px solid var(--line);background:var(--card);border-radius:14px;padding:12px 14px;font:inherit;cursor:pointer;color:var(--ink)}
+  .act:hover{border-color:#cfc8b8}
+  .act .num{width:32px;height:32px;border-radius:10px;background:var(--accent-soft);color:var(--accent);font-weight:800;display:flex;align-items:center;justify-content:center;flex-shrink:0;font-size:14px}
+  .act.pas .num{background:#fbe6ef;color:var(--t-future)}
+  .act.mix .num{background:#f4ead6;color:#a06410}
+  .act .tx{flex:1;min-width:0}
+  .act .tt{font-weight:700;font-size:15px;margin:0}
+  .act .st{font-size:13px;color:var(--muted);margin:2px 0 0}
+  .act .best{font-size:12px;font-weight:700;color:var(--ok);background:var(--ok-soft);padding:4px 9px;border-radius:99px;white-space:nowrap}
+  .btn{display:block;width:100%;border:0;font:inherit;font-weight:700;font-size:16px;padding:15px;border-radius:14px;cursor:pointer;background:var(--accent);color:#fff}
+  .btn:active{transform:translateY(1px)}
+  .btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+  .btn.small{font-size:14px;padding:11px}
+  .btn[disabled]{opacity:.45;cursor:default}
+  .row{display:flex;gap:10px}
+  .row .btn{flex:1}
+  .linkbtn{background:none;border:0;font:inherit;font-size:13px;font-weight:600;color:var(--muted);text-decoration:underline;cursor:pointer;padding:8px 0 0}
+  .hidden{display:none !important}
+  .bar{height:8px;background:#e4dfd3;border-radius:99px;overflow:hidden}
+  .bar i{display:block;height:100%;width:0;background:var(--accent);border-radius:99px;transition:width .3s}
+
+  /* whiteboard */
+  .board{background:#fff;border:10px solid #c9a66b;border-radius:10px;box-shadow:inset 0 0 0 1px #e8e2d4,0 2px 10px rgba(0,0,0,.08);padding:16px 16px 10px;margin-bottom:14px;font-family:var(--hand)}
+  .board .head{display:flex;align-items:baseline;justify-content:space-between;gap:10px;border-bottom:1.5px dashed #ddd6c6;padding-bottom:8px;margin-bottom:6px}
+  .board .word{font-size:24px;color:#2a55a8}
+  .board .word b{color:var(--bad);font-weight:400}
+  .board .forms{font-size:17px;color:var(--bad);text-align:right;line-height:1.1}
+  .board .sec{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:12px 0 2px}
+  .bl{padding:6px 8px;margin:0 -8px;border-radius:8px;transition:background .2s}
+  .bl.cur{background:#fff7d6}
+  .bl.todo .idl{opacity:.45}
+  .idl{font-size:21px;line-height:1.25;display:flex;gap:8px}
+  .idl .n{color:#b3ab9a;min-width:16px}
+  .kw{color:#2a55a8}
+  .enl{font-size:20px;line-height:1.2;padding-left:24px;margin-top:2px}
+  .enl.ok{color:var(--ok)} .enl.bad{color:var(--bad)}
+  .enl .mark{font-family:"Plus Jakarta Sans",sans-serif;font-size:13px;font-weight:800;margin-left:6px}
+  .enl .tag{font-family:"Plus Jakarta Sans",sans-serif;font-size:10px;font-weight:700;color:#fff;padding:2px 7px;border-radius:99px;margin-left:6px;vertical-align:middle;opacity:.85}
+  .enl .fm{display:block;font-family:"Plus Jakarta Sans",sans-serif;font-size:12px;color:var(--muted);margin-top:1px}
+  .mixw{font-family:"Plus Jakarta Sans",sans-serif;font-size:11px;font-weight:700;color:var(--muted);background:#f1ede4;padding:2px 7px;border-radius:99px;align-self:center;white-space:nowrap}
+
+  /* answer panel */
+  .panel .top{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px}
+  .panel .count{font-size:13px;font-weight:700;color:var(--muted)}
+  .kind{display:inline-block;font-size:12px;font-weight:700;padding:4px 10px;border-radius:99px;background:#efebe2;color:var(--muted)}
+  .kind.q{background:#fdf0dc;color:#9a5c0b}
+  .kind.p{background:#fbe6ef;color:var(--t-future)}
+  .question{font-size:20px;font-weight:700;line-height:1.35;margin:4px 0 0}
+  .opts{display:grid;gap:10px;margin-top:16px}
+  .opt{border:1.5px solid var(--line);background:var(--card);text-align:left;font:inherit;font-size:16px;font-weight:500;padding:13px 15px;border-radius:12px;cursor:pointer;color:var(--ink);line-height:1.35}
+  .opt:hover:not([disabled]){border-color:#cfc8b8}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .opt[disabled]{cursor:default}
+  textarea{width:100%;margin-top:16px;border:1.5px solid var(--line);border-radius:12px;padding:14px;font:inherit;font-size:16px;resize:none;min-height:80px;color:var(--ink);background:#fff}
+  textarea:focus{outline:none;border-color:var(--accent)}
+  .fb{border-radius:12px;padding:14px 16px;margin-top:14px;border:1px solid}
+  .fb.ok{background:var(--ok-soft);border-color:#bfe3cb}
+  .fb.bad{background:var(--bad-soft);border-color:#f1c9c0}
+  .fb h3{margin:0 0 4px;font-size:16px}
+  .fb.ok h3{color:var(--ok)} .fb.bad h3{color:var(--bad)}
+  .fb .ans{font-size:16px;font-weight:700;margin:2px 0 8px}
+  .fb .yours{font-size:13px;color:var(--muted);margin:0 0 4px}
+  .fb .formula{display:inline-block;background:#fff;border:1px solid var(--line);border-radius:8px;padding:6px 10px;font-weight:700;font-size:14px;margin-bottom:8px}
+  .fb p{margin:0;font-size:14px;line-height:1.5}
+  .panel .btn{margin-top:14px}
+
+  .score{text-align:center;padding:22px 20px}
+  .score .big{font-size:48px;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .score .big small{font-size:22px;color:var(--muted);font-weight:700}
+  .score p{color:var(--muted);margin:8px 0 16px;font-size:15px}
+
+  /* rumus */
+  .rt{width:100%;border-collapse:collapse;font-size:14px}
+  .rt th,.rt td{text-align:left;padding:9px 6px;border-bottom:1px solid var(--line);vertical-align:top}
+  .rt th{font-size:11px;text-transform:uppercase;letter-spacing:.05em;color:var(--muted)}
+  .rt td:first-child{font-weight:700;white-space:nowrap}
+  .rt .ex{display:block;color:var(--muted);font-size:13px;margin-top:2px}
+  .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-right:6px}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header>
+    <h1>Kuis <span>Tenses</span></h1>
+    <div class="tabs">
+      <button id="tabQuiz" class="on">Kuis</button>
+      <button id="tabRumus">Rumus</button>
+    </div>
+  </header>
+
+  <!-- MENU -->
+  <section id="menu">
+    <div class="card" id="progCard">
+      <p class="label">Lanjut belajar</p>
+      <p class="note" id="progNote" style="margin:-4px 0 12px"></p>
+      <div class="bar" style="margin-bottom:14px"><i id="progFill"></i></div>
+      <button class="btn" id="nextBoardBtn"></button>
+    </div>
+    <div class="card">
+      <p class="label">Cara menjawab</p>
+      <div class="seg" id="modeChips">
+        <button class="chip on" data-v="mc">Pilihan ganda<small>Pilih kalimat yang benar</small></button>
+        <button class="chip" data-v="type">Ketik sendiri<small>Lebih menantang</small></button>
+      </div>
+    </div>
+    <div class="card">
+      <p class="label">Kalimat aktif</p>
+      <p class="note" style="margin:-4px 0 14px">Satu kegiatan → 5 kalimat (biasa, sedang, sudah, akan, kemarin) + 5 pertanyaannya.</p>
+      <div class="acts" id="actList"></div>
+      <button class="btn ghost small" style="margin-top:10px" data-gen="active">+ Papan aktif baru (acak)</button>
+    </div>
+    <div class="card">
+      <p class="label">Kalimat pasif (di-)</p>
+      <p class="note" style="margin:-4px 0 14px">Satu kata kerja di- → dijauhi, sedang dijauhi, telah dijauhi, akan dijauhi, dijauhi kemarin, pernah dijauhi + pertanyaannya.</p>
+      <div class="acts" id="pasList"></div>
+      <button class="btn ghost small" style="margin-top:10px" data-gen="passive">+ Papan pasif baru (acak)</button>
+    </div>
+    <div class="card">
+      <p class="label">Kata sifat</p>
+      <p class="note" style="margin:-4px 0 14px">Satu kata sifat → lapar, mulai lapar, sudah lapar sejak tadi, akan lapar, kemarin lapar, pernah lapar + 4 pertanyaannya. Kuncinya: selalu pakai to be.</p>
+      <div class="acts" id="adjList"></div>
+      <button class="btn ghost small" style="margin-top:10px" data-gen="adj">+ Papan kata sifat baru (acak)</button>
+    </div>
+    <div class="card">
+      <p class="label">Will · Would · Shall</p>
+      <p class="note" style="margin:-4px 0 14px">Pilih yang pas sesuai konteks: ke teman (will), sopan (would), atau menawarkan/mengajak (shall).</p>
+      <div class="acts" id="modList"></div>
+      <button class="btn ghost small" style="margin-top:10px" data-gen="modal">+ Papan Will · Would · Shall baru (acak)</button>
+    </div>
+    <div class="acts"><button class="act mix" id="mixBtn"><span class="num">?</span><span class="tx"><p class="tt">Campuran acak</p><p class="st">10 soal dari semua papan</p></span></button></div>
+  </section>
+
+  <!-- QUIZ -->
+  <section id="quiz" class="hidden">
+    <div class="card score hidden" id="scoreCard">
+      <div class="big" id="scoreBig"></div>
+      <p id="scoreMsg"></p>
+      <div class="row" style="margin-bottom:10px"><button class="btn" id="nextAfterBtn">Papan berikutnya →</button></div>
+      <div class="row" style="margin-bottom:10px"><button class="btn ghost small" id="retryWrongBtn">Ulangi yang salah</button></div>
+      <div class="row">
+        <button class="btn ghost small" id="againBtn">Ulangi papan ini</button>
+        <button class="btn ghost small" id="menuBtn">Menu</button>
+      </div>
+    </div>
+    <div class="board" id="board"></div>
+    <div class="card panel" id="panel">
+      <div class="top"><span class="kind" id="kind"></span><span class="count" id="count"></span></div>
+      <p class="question" id="qText"></p>
+      <div class="opts" id="opts"></div>
+      <div id="typeArea" class="hidden">
+        <textarea id="typeInput" placeholder="Ketik jawabanmu di sini…" autocomplete="off" autocapitalize="sentences" spellcheck="false"></textarea>
+        <p class="note">Yang dinilai tenses dan bentuk kata kerjanya. Kata a/an/the tidak dinilai, he/she dianggap sama.</p>
+        <button class="btn" id="checkBtn">Cek jawaban</button>
+      </div>
+      <div id="feedback"></div>
+      <button class="btn hidden" id="nextBtn">Lanjut</button>
+    </div>
+    <button class="linkbtn" id="quitBtn">Keluar ke menu</button>
+  </section>
+
+  <!-- RUMUS -->
+  <section id="rumus" class="hidden"></section>
+</div>
+
+<script>
+// ================= DATA =================
+const TENSES = {
+  present:{name:"Simple Present", short:"biasa", color:"var(--t-present)"},
+  cont:{name:"Present Continuous", short:"sedang", color:"var(--t-cont)"},
+  perfect:{name:"Present Perfect", short:"sudah", color:"var(--t-perfect)"},
+  future:{name:"Simple Future", short:"akan", color:"var(--t-future)"},
+  past:{name:"Simple Past", short:"kemarin", color:"var(--t-past)"},
+  ever:{name:"Present Perfect (pengalaman)", short:"pernah", color:"var(--t-ever)"},
+  getting:{name:"Present Continuous (getting)", short:"mulai", color:"var(--t-cont)"},
+  will:{name:"Will · kasual", short:"will", color:"var(--t-present)"},
+  would:{name:"Would · sopan", short:"would", color:"var(--t-cont)"},
+  shall:{name:"Shall · menawarkan", short:"shall", color:"var(--t-perfect)"}
+};
+const ORDER = ["present","cont","perfect","future","past"];
+
+const SUBJ = {
+  I:{en:"I", be:"am", was:"was", have:"have", do:"do", third:false},
+  you:{en:"you", be:"are", was:"were", have:"have", do:"do", third:false},
+  he:{en:"he", be:"is", was:"was", have:"has", do:"does", third:true},
+  we:{en:"we", be:"are", was:"were", have:"have", do:"do", third:false},
+  they:{en:"they", be:"are", was:"were", have:"have", do:"do", third:false},
+  mother:{en:"Mother", be:"is", was:"was", have:"has", do:"does", third:true},
+  father:{en:"Father", be:"is", was:"was", have:"has", do:"does", third:true},
+  ani:{en:"Ani", be:"is", was:"was", have:"has", do:"does", third:true},
+  budi:{en:"Budi", be:"is", was:"was", have:"has", do:"does", third:true},
+  book:{en:"the book", be:"is", was:"was", have:"has", do:"does", third:true},
+  bag:{en:"the bag", be:"is", was:"was", have:"has", do:"does", third:true},
+  car:{en:"the car", be:"is", was:"was", have:"has", do:"does", third:true}
+};
+
+// ACTIVE: s/qs = subject keys; sId/qsId = Indonesian subject; vId = verb in statements; vQ = verb in "Apa yang ..." questions
+const ACTIVE = [
+  {title:"Makan pisang", s:"I", sId:"Saya", qs:"you", qsId:"kamu", vId:"makan", vQ:"makan", oId:"pisang", whId:"apa", wh:"what",
+   v:{v1:"eat",s:"eats",v2:"ate",v3:"eaten",ing:"eating"}, obj:"a banana", objH:"bananas", habit:"every day", habitId:"setiap hari"},
+  {title:"Minum kopi", s:"he", sId:"Dia", qs:"he", qsId:"dia", vId:"minum", vQ:"minum", oId:"kopi", whId:"apa", wh:"what",
+   v:{v1:"drink",s:"drinks",v2:"drank",v3:"drunk",ing:"drinking"}, obj:"coffee", habit:"every morning", habitId:"setiap pagi"},
+  {title:"Pergi ke pasar", s:"mother", sId:"Ibu", qs:"mother", qsId:"ibu", vId:"pergi", vQ:"pergi", oId:"ke pasar", whId:"kemana", wh:"where",
+   v:{v1:"go",s:"goes",v2:"went",v3:"gone",ing:"going"}, obj:"to the market", habit:"every Sunday", habitId:"setiap hari Minggu"},
+  {title:"Membaca buku", s:"we", sId:"Kami", qs:"you", qsId:"kamu", vId:"membaca", vQ:"baca", oId:"buku", whId:"apa", wh:"what",
+   v:{v1:"read",s:"reads",v2:"read",v3:"read",ing:"reading"}, obj:"a book", objH:"books", habit:"every night", habitId:"setiap malam"},
+  {title:"Bermain sepak bola", s:"they", sId:"Mereka", qs:"they", qsId:"mereka", vId:"bermain", vQ:"mainkan", oId:"sepak bola", whId:"apa", wh:"what",
+   v:{v1:"play",s:"plays",v2:"played",v3:"played",ing:"playing"}, obj:"football", habit:"every afternoon", habitId:"setiap sore"},
+  {title:"Menulis surat", s:"ani", sId:"Ani", qs:"ani", qsId:"Ani", vId:"menulis", vQ:"tulis", oId:"surat", whId:"apa", wh:"what",
+   v:{v1:"write",s:"writes",v2:"wrote",v3:"written",ing:"writing"}, obj:"a letter", habit:"every week", habitId:"setiap minggu"},
+  {title:"Membeli sayur", s:"father", sId:"Ayah", qs:"father", qsId:"ayah", vId:"membeli", vQ:"beli", oId:"sayur", whId:"apa", wh:"what",
+   v:{v1:"buy",s:"buys",v2:"bought",v3:"bought",ing:"buying"}, obj:"vegetables", habit:"every Saturday", habitId:"setiap hari Sabtu"},
+  {title:"Menonton film", s:"I", sId:"Saya", qs:"you", qsId:"kamu", vId:"menonton", vQ:"tonton", oId:"film", whId:"apa", wh:"what",
+   v:{v1:"watch",s:"watches",v2:"watched",v3:"watched",ing:"watching"}, obj:"a movie", habit:"every weekend", habitId:"setiap akhir pekan"}
+];
+
+// PASSIVE: one di- verb, 5 lines like the whiteboard video
+const PASSIVE = [
+  {title:"Dijauhi", base:"jauh = far", diId:"dijauhi", s:"he", sId:"Dia", v:{v1:"avoid",v2:"avoided",v3:"avoided",ing:"avoiding"}},
+  {title:"Disakiti", base:"sakit = sick", diId:"disakiti", s:"I", sId:"Aku", v:{v1:"hurt",v2:"hurt",v3:"hurt",ing:"hurting"}},
+  {title:"Diambil", base:"ambil = take", diId:"diambil", s:"book", sId:"Buku itu", v:{v1:"take",v2:"took",v3:"taken",ing:"taking"}},
+  {title:"Dikasihani", base:"kasihan = pity", diId:"dikasihani", s:"he", sId:"Dia", v:{v1:"pity",v2:"pitied",v3:"pitied",ing:"pitying"}},
+  {title:"Dibawa", base:"bawa = bring", diId:"dibawa", s:"bag", sId:"Tas itu", v:{v1:"bring",v2:"brought",v3:"brought",ing:"bringing"}},
+  {title:"Dipermalukan", base:"malu = shame", diId:"dipermalukan", s:"they", sId:"Mereka", v:{v1:"humiliate",v2:"humiliated",v3:"humiliated",ing:"humiliating"}},
+  {title:"Diundang", base:"undang = invite", diId:"diundang", s:"I", sId:"Saya", v:{v1:"invite",v2:"invited",v3:"invited",ing:"inviting"}},
+  {title:"Dipanggil", base:"panggil = call", diId:"dipanggil", s:"you", sId:"Kamu", v:{v1:"call",v2:"called",v3:"called",ing:"calling"}},
+  {title:"Dicuci", base:"cuci = wash", diId:"dicuci", s:"car", sId:"Mobil itu", v:{v1:"wash",v2:"washed",v3:"washed",ing:"washing"}}
+];
+
+// KATA SIFAT: s/qs subject keys, adjId Indonesian, adj English
+const ADJ = [
+  {adjId:"lapar", adj:"hungry", s:"I", sId:"Saya", qs:"you", qsId:"kamu"},
+  {adjId:"sibuk", adj:"busy", s:"he", sId:"Dia", qs:"he", qsId:"dia"},
+  {adjId:"capek", adj:"tired", s:"they", sId:"Mereka", qs:"they", qsId:"mereka"},
+  {adjId:"senang", adj:"happy", s:"mother", sId:"Ibu", qs:"mother", qsId:"ibu"},
+  {adjId:"sakit", adj:"sick", s:"we", sId:"Kami", qs:"you", qsId:"kalian"},
+  {adjId:"marah", adj:"angry", s:"ani", sId:"Ani", qs:"ani", qsId:"Ani"},
+  {adjId:"sedih", adj:"sad", s:"father", sId:"Ayah", qs:"father", qsId:"ayah"},
+  {adjId:"bosan", adj:"bored", s:"you", sId:"Kamu", qs:"you", qsId:"kamu"}
+];
+const flipWas = w=>w==="was"?"were":"was";
+function buildAdj(d){
+  const S=SUBJ[d.s], Q=SUBJ[d.qs], j=d.adj, y="yesterday", tm="tomorrow", sn="since this morning", sl=lc(d.sId), ji=d.adjId;
+  const st=[
+    {t:"present", q:`${d.sId} ${ji}.`, a:sent([S.en,S.be,j]),
+     w:[sent([S.en,j]),sent([S.en,flipBe(S.be),j]),sent([S.en,S.do,j]),sent([S.en,"be",j])],
+     e:`Kata sifat butuh to be. Untuk ${S.en} pakai ${S.be}. Tanpa to be (${S.en} ${j}) salah.`, f:FORM.a_present},
+    {t:"getting", q:`${d.sId} mulai ${ji}.`, a:sent([S.en,S.be,"getting",j]),
+     w:[sent([S.en,"getting",j]),sent([S.en,S.be,j+"ing"]),sent([S.en,S.be,"get",j]),sent([S.en,flipBe(S.be),"getting",j])],
+     e:`"Mulai/makin" + kata sifat → ${S.be} getting + kata sifat. Kata sifat tidak bisa diberi -ing (${j}ing salah).`, f:FORM.a_getting},
+    {t:"perfect", q:`${d.sId} sudah ${ji} sejak tadi pagi.`, a:sent([S.en,S.have,"been",j,sn]),
+     w:[sent([S.en,S.have,j,sn]),sent([S.en,S.be,"been",j,sn]),sent([S.en,S.have,"being",j,sn]),sent([S.en,flipHave(S.have),"been",j,sn])],
+     e:`Keadaan yang sudah berlangsung sampai sekarang → ${S.have} been + kata sifat. Been = V3 dari be, since = sejak.`, f:FORM.a_perfect},
+    {t:"future", q:`Besok ${sl} akan ${ji}.`, a:sent([S.en,"will","be",j,tm]),
+     w:[sent([S.en,"will",j,tm]),sent([S.en,"will",S.be,j,tm]),sent([S.en,"will","been",j,tm]),sent([S.en,S.be,"will",j,tm])],
+     e:`Setelah will selalu be (bentuk dasar), lalu kata sifat. "will ${j}" tanpa be itu salah.`, f:FORM.a_future},
+    {t:"past", q:`Kemarin ${sl} ${ji}.`, a:sent([S.en,S.was,j,y]),
+     w:[sent([S.en,S.be,j,y]),sent([S.en,j,y]),sent([S.en,"did",j,y]),sent([S.en,flipWas(S.was),j,y])],
+     e:`"Kemarin" → to be lampau: ${S.was} + kata sifat. (I/he/she/it → was, you/we/they → were.) Tidak pakai did.`, f:FORM.a_past},
+    {t:"ever", q:`${d.sId} pernah ${ji}.`, a:sent([S.en,S.have,"been",j,"before"]),
+     alt:[sent([S.en,S.have,"ever","been",j])], altNote:`Orang akan paham, tapi untuk kalimat positif lebih alami pakai before: "${sent([S.en,S.have,"been",j,"before"])}"`,
+     w:[sent([S.en,S.have,j,"before"]),sent([S.en,S.was,"been",j,"before"]),sent([S.en,S.have,"be",j,"before"])],
+     e:`"Pernah" = pengalaman → ${S.have} been + kata sifat + before. Ever lebih pas di pertanyaan.`, f:FORM.a_ever}
+  ];
+  const qs=[
+    {t:"present", q:`Apakah ${d.qsId} ${ji}?`, a:sent([Q.be,Q.en,j],1),
+     w:[sent([Q.do,Q.en,j],1),sent([flipBe(Q.be),Q.en,j],1),sent([Q.have,Q.en,j],1)],
+     e:`To be (${Q.be}) pindah ke depan subjek. Tidak pakai do/does untuk kata sifat.`, f:FORM.aq_present},
+    {t:"past", q:`Apakah ${d.qsId} ${ji} kemarin?`, a:sent([Q.was,Q.en,j,y],1),
+     w:[sent(["did",Q.en,j,y],1),sent([Q.be,Q.en,j,y],1),sent([flipWas(Q.was),Q.en,j,y],1)],
+     e:`${cap(Q.was)} pindah ke depan subjek. Tidak pakai did.`, f:FORM.aq_past},
+    {t:"future", q:`Apakah ${d.qsId} akan ${ji} besok?`, a:sent(["will",Q.en,"be",j,tm],1),
+     w:[sent(["will",Q.en,j,tm],1),sent(["will",Q.en,Q.be,j,tm],1),sent(["will",Q.en,"been",j,tm],1)],
+     e:`Will + S + be + kata sifat? Be tetap ada setelah subjek.`, f:FORM.aq_future},
+    {t:"ever", q:`Apakah ${d.qsId} pernah ${ji}?`, a:sent([Q.have,Q.en,"ever","been",j],1),
+     w:[sent([Q.have,Q.en,"ever",j],1),sent(["did",Q.en,"ever","been",j],1),sent([Q.be,Q.en,"ever","been",j],1),sent([flipHave(Q.have),Q.en,"ever","been",j],1)],
+     e:`${cap(Q.have)} + S + ever + been + kata sifat? Di pertanyaan inilah ever dipakai.`, f:FORM.aq_ever}
+  ];
+  return [...st.map(x=>({...x,kind:"s"})), ...qs.map(x=>({...x,kind:"q"}))];
+}
+const adjSet = (d,key,gen)=>({key, gen, type:"adj", title:cap(d.adjId), head:`${d.adjId} = ${d.adj}`, forms:"be + kata sifat", items:buildAdj(d)});
+
+// WILL / WOULD / SHALL
+const MODAL_NOTE = {will:"Juga benar. Untuk teman, will sudah cukup; would/could terdengar lebih sopan.", would:"Juga benar. Would dan could sama-sama sopan.", shall:"Juga benar untuk menawarkan bantuan."};
+const MODAL_EXPL = {
+  will:"Will + you + V1? → permintaan santai, cocok untuk teman. Shall tidak dipakai dengan you.",
+  would:"Would + you + V1? → lebih sopan/formal, cocok untuk atasan, orang tua, atau orang yang belum dikenal.",
+  shall:"Shall + I/we + V1? → menawarkan bantuan (haruskah saya…?) atau mengajak (bagaimana kalau kita…?). Shall hanya dipakai dengan I atau we, dan terdengar sangat formal."
+};
+const MODALS = [
+  {title:"Will · Would · Shall (1)", items:[
+    {t:"will", q:"Maukah kamu membantuku? (ke teman)", a:"Will you help me?", alt:["Would you help me?","Can you help me?"], w:["Shall you help me?","Will you helping me?","Will you to help me?"]},
+    {t:"would", q:"Maukah Anda membantu saya? (sopan, ke atasan)", a:"Would you help me?", alt:["Could you help me?"], w:["Would you helping me?","Would you to help me?","Shall you help me?"]},
+    {t:"shall", q:"Bolehkah saya membantu Anda? (menawarkan bantuan)", a:"Shall I help you?", alt:["May I help you?","Can I help you?"], w:["Shall you help me?","Shall I helping you?","Shall I to help you?"]},
+    {t:"will", q:"Maukah kamu menutup pintu? (ke teman)", a:"Will you close the door?", alt:["Would you close the door?","Can you close the door?"], w:["Shall you close the door?","Will you closing the door?","Will you closed the door?"]},
+    {t:"would", q:"Maukah Anda menutup pintu? (sopan)", a:"Would you close the door?", alt:["Could you close the door?"], w:["Would you closing the door?","Would you to close the door?","Shall you close the door?"]},
+    {t:"shall", q:"Haruskah saya menutup pintunya? (menawarkan)", a:"Shall I close the door?", w:["Shall you close the door?","Shall I closing the door?","Shall I closed the door?"]}
+  ]},
+  {title:"Will · Would · Shall (2)", items:[
+    {t:"will", q:"Maukah kamu meminjamkan pulpenmu? (ke teman)", a:"Will you lend me your pen?", alt:["Can you lend me your pen?","Would you lend me your pen?"], w:["Shall you lend me your pen?","Will you lending me your pen?","Will you lent me your pen?"]},
+    {t:"would", q:"Maukah Anda mengirim email itu? (sopan, ke atasan)", a:"Would you send the email?", alt:["Could you send the email?"], w:["Would you sending the email?","Would you sent the email?","Shall you send the email?"]},
+    {t:"shall", q:"Haruskah saya meneleponnya? (menawarkan)", a:"Shall I call him?", w:["Shall you call him?","Shall I calling him?","Shall I to call him?"]},
+    {t:"shall", q:"Bagaimana kalau kita pergi sekarang? (mengajak)", a:"Shall we go now?", w:["Shall we going now?","Shall we to go now?","Shall we went now?"]},
+    {t:"will", q:"Maukah kamu menunggu sebentar? (ke teman)", a:"Will you wait a moment?", alt:["Would you wait a moment?","Can you wait a moment?"], w:["Shall you wait a moment?","Will you waiting a moment?","Will you waited a moment?"]},
+    {t:"would", q:"Maukah Anda menandatangani dokumen ini? (sopan)", a:"Would you sign this document?", alt:["Could you sign this document?"], w:["Would you signing this document?","Would you to sign this document?","Shall you sign this document?"]}
+  ]}
+];
+
+// ================= BUILDERS =================
+const cap = s=>s.charAt(0).toUpperCase()+s.slice(1);
+const sent = (w,q)=>cap(w.filter(Boolean).join(" "))+(q?"?":".");
+const flipBe = b=>b==="are"?"is":"are";
+const flipHave = h=>h==="has"?"have":"has";
+const flipDo = d=>d==="does"?"do":"does";
+const lc = (s,k)=>/^[A-Z][a-z]+$/.test(s)&&!["Saya","Aku","Dia","Kami","Mereka","Ibu","Ayah","Kamu","Kalian"].includes(s)?s:s.charAt(0).toLowerCase()+s.slice(1);
+function isRegular(v){ return v.v2===v.v1+"ed"||v.v2===v.v1+"d"||v.v2===v.v1.replace(/y$/,"ied"); }
+function verbNote(v){ return isRegular(v) ? `${v.v1} beraturan, tinggal tambah -ed → ${v.v2}.` : `${v.v1} tidak beraturan: ${v.v1} → ${v.v2} → ${v.v3}.`; }
+function pick(correct,cands){ const out=[]; for(const c of cands){ if(c!==correct&&!out.includes(c)) out.push(c); if(out.length===3) break; } return out; }
+
+const FORM = {
+  present:"S + V1 (he/she/it + s/es)", cont:"S + am/is/are + V-ing", perfect:"S + have/has + V3", future:"S + will + V1", past:"S + V2",
+  q_present:"(Wh) + do/does + S + V1?", q_cont:"(Wh) + am/is/are + S + V-ing?", q_perfect:"Have/Has + S + V3?", q_future:"(Wh) + will + S + V1?", q_past:"(Wh) + did + S + V1?",
+  p_present:"S + am/is/are + V3", p_cont:"S + am/is/are + being + V3", p_perfect:"S + have/has + been + V3", p_future:"S + will + be + V3", p_past:"S + was/were + V3", p_ever:"S + have/has + been + V3 + before", pq_ever:"Have/Has + S + ever + been + V3?",
+  a_present:"S + am/is/are + kata sifat", a_getting:"S + am/is/are + getting + kata sifat", a_perfect:"S + have/has + been + kata sifat",
+  a_future:"S + will + be + kata sifat", a_past:"S + was/were + kata sifat", a_ever:"S + have/has + been + kata sifat + before",
+  aq_present:"Am/Is/Are + S + kata sifat?", aq_past:"Was/Were + S + kata sifat?", aq_future:"Will + S + be + kata sifat?", aq_ever:"Have/Has + S + ever + been + kata sifat?",
+  m_will:"Will + you + V1?  (kasual, ke teman)", m_would:"Would + you + V1?  (sopan / formal)", m_shall:"Shall + I/we + V1?  (menawarkan / mengajak)"
+};
+
+function buildActive(a){
+  const S=SUBJ[a.s], Q=SUBJ[a.qs], v=a.v, o=a.obj, oh=a.objH||a.obj, hb=a.habit, Wh=cap(a.wh), y="yesterday", tm="tomorrow";
+  const v1S=S.third?v.s:v.v1, sl=lc(a.sId);
+  const qWh = (kw,time)=> a.whId==="kemana"
+      ? `Ke mana ${a.qsId}${kw?" "+kw:""} pergi${time?" "+time:""}?`
+      : `Apa yang ${kw?kw+" ":""}${a.qsId} ${a.vQ}${time?" "+time:""}?`;
+  const st = [
+    {t:"present", q:`${a.sId} ${a.vId} ${a.oId} ${a.habitId}.`, a:sent([S.en,v1S,oh,hb]),
+     w:[sent([S.en,S.third?v.v1:v.s,oh,hb]),sent([S.en,S.be,v.v1,oh,hb]),sent([S.en,v.v2,oh,hb]),sent([S.en,S.be,v.ing,oh,hb])],
+     e:S.third?`Subjek ${S.en} orang ketiga tunggal, jadi kata kerja + s/es → ${v.s}.`:`Subjek ${S.en} tidak pakai -s → ${v.v1}.`},
+    {t:"cont", q:`${a.sId} sedang ${a.vId} ${a.oId}.`, a:sent([S.en,S.be,v.ing,o]),
+     w:[sent([S.en,v.ing,o]),sent([S.en,S.be,v.v1,o]),sent([S.en,flipBe(S.be),v.ing,o])],
+     e:`Untuk ${S.en} pakai ${S.be}, lalu ${v.v1} + ing → ${v.ing}.`},
+    {t:"perfect", q:`${a.sId} sudah ${a.vId} ${a.oId}.`, a:sent([S.en,S.have,v.v3,o]),
+     w:[sent([S.en,S.have,v.v2,o]),sent([S.en,flipHave(S.have),v.v3,o]),sent([S.en,S.be,v.v3,o]),sent([S.en,S.have,v.v1===v.v3?v.ing:v.v1,o])],
+     e:`Untuk ${S.en} pakai ${S.have}. V3 dari ${v.v1} adalah ${v.v3}.`},
+    {t:"future", q:`Besok ${sl} akan ${a.vId} ${a.oId}.`, a:sent([S.en,"will",v.v1,o,tm]),
+     w:[sent([S.en,"will",v.s,o,tm]),sent([S.en,"will",v.ing,o,tm]),sent([S.en,S.be,"will",v.v1,o,tm]),sent([S.en,"will",v.v2,o,tm])],
+     e:`Setelah will selalu V1 (${v.v1}), untuk semua subjek. Tidak pakai to be.`},
+    {t:"past", q:`Kemarin ${sl} ${a.vId} ${a.oId}.`, a:sent([S.en,v.v2,o,y]),
+     w:[sent([S.en,v1S,o,y]),sent([S.en,S.was,v.v1,o,y]),sent([S.en,S.have,v.v3,o,y]),sent([S.en,S.was,v.v2,o,y]),sent([S.en,S.be,v.ing,o,y])],
+     e:`${verbNote(v)} V2 sama untuk semua subjek.`}
+  ];
+  const qs = [
+    {t:"present", q:qWh("",a.habitId), a:sent([Wh,Q.do,Q.en,v.v1,hb],1),
+     w:[sent([Wh,flipDo(Q.do),Q.en,v.v1,hb],1),sent([Wh,Q.do,Q.en,v.s,hb],1),sent([Wh,Q.be,Q.en,v.v1,hb],1)],
+     e:`Untuk ${Q.en} pakai ${Q.do}. Setelah ${Q.do}, kata kerja kembali ke V1 (${v.v1}).`},
+    {t:"cont", q:qWh("sedang",""), a:sent([Wh,Q.be,Q.en,v.ing],1),
+     w:[sent([Wh,Q.do,Q.en,v.ing],1),sent([Wh,Q.en,Q.be,v.ing],1),sent([Wh,Q.be,Q.en,v.v1],1)],
+     e:`To be (${Q.be}) pindah ke depan subjek.`},
+    {t:"perfect", q:`Apakah ${a.qsId} sudah ${a.vId} ${a.oId}?`, a:sent([Q.have,Q.en,v.v3,o],1),
+     w:[sent(["did",Q.en,v.v3,o],1),sent([flipHave(Q.have),Q.en,v.v3,o],1),sent([Q.have,Q.en,v.v1===v.v3?v.ing:v.v2===v.v3?v.v1:v.v2,o],1),sent([Q.be,Q.en,v.v3,o],1)],
+     e:`${cap(Q.have)} pindah ke depan subjek, kata kerja tetap V3 (${v.v3}).`},
+    {t:"future", q:qWh("akan","besok"), a:sent([Wh,"will",Q.en,v.v1,tm],1),
+     w:[sent([Wh,"will",Q.en,v.ing,tm],1),sent([Wh,Q.en,"will",v.v1,tm],1),sent([Wh,"will",Q.en,v.v2,tm],1),sent([Wh,"will",Q.en,v.s,tm],1)],
+     e:`Will pindah ke depan subjek, kata kerja tetap V1 (${v.v1}).`},
+    {t:"past", q:qWh("","kemarin"), a:sent([Wh,"did",Q.en,v.v1,y],1),
+     w:[sent([Wh,"did",Q.en,v.v2,y],1),sent([Wh,Q.en,v.v2,y],1),sent([Wh,Q.do,Q.en,v.v1,y],1),sent([Wh,Q.was,Q.en,v.v1,y],1)],
+     e:`Setelah did, kata kerja kembali ke V1 (${v.v1}${v.v1===v.v2?"":", bukan "+v.v2}).`}
+  ];
+  return [
+    ...st.map(x=>({...x, kind:"s", f:FORM[x.t]})),
+    ...qs.map(x=>({...x, kind:"q", f:FORM["q_"+x.t]}))
+  ];
+}
+
+function buildPassive(p){
+  const S=SUBJ[p.s], v=p.v, y="yesterday", sl=lc(p.sId);
+  const Q = p.s==="I" ? SUBJ.you : S, qsId = p.s==="I" ? "kamu" : lc(p.sId);
+  const A = x=> v.v1===v.v3 ? null : x; // drop look-alike active sentences when V1 = V3 (hurt)
+  const v3n=`V3 dari ${v.v1} adalah ${v.v3}.`;
+  return [
+    {t:"present", q:`${p.sId} ${p.diId}.`, a:sent([S.en,S.be,v.v3]),
+     w:[["clean","open"].includes(v.v1)?null:A(sent([S.en,S.be,v.v1])),A(sent([S.en,S.be,v.ing])),sent([S.en,flipBe(S.be),v.v3]),sent([S.en,"being",v.v3]),sent([S.en,S.be,"be",v.v3])],
+     e:`Kata kerja di- = pasif: to be + V3. Untuk ${S.en} pakai ${S.be}. ${v3n}`},
+    {t:"cont", q:`${p.sId} sedang ${p.diId}.`, a:sent([S.en,S.be,"being",v.v3]),
+     w:[sent([S.en,S.be,v.v3]),sent([S.en,S.be,"being",v.v1]),sent([S.en,"being",v.v3]),sent([S.en,S.be,"been",v.v3])],
+     e:`"Sedang di-" → ${S.be} + being + V3. Being = bentuk -ing dari be.`},
+    {t:"perfect", q:`${p.sId} telah ${p.diId}.`, a:sent([S.en,S.have,"been",v.v3]),
+     w:[A(sent([S.en,S.have,v.v3])),sent([S.en,S.have,S.be,v.v3]),sent([S.en,S.have,"being",v.v3]),sent([S.en,flipHave(S.have),"been",v.v3])],
+     e:`"Telah di-" → ${S.have} + been + V3. Been = V3 dari be (am/is/are → was/were → been).`},
+    {t:"future", q:`${p.sId} akan ${p.diId}.`, a:sent([S.en,"will","be",v.v3]),
+     w:[A(sent([S.en,"will",v.v3])),sent([S.en,"will","be",v.v1]),sent([S.en,"will","been",v.v3]),sent([S.en,"will",S.be,v.v3]),sent([S.en,"will","being",v.v3])],
+     e:`"Akan di-" → will + be + V3. Setelah will, be selalu dalam bentuk dasar (be), untuk semua subjek.`},
+    {t:"past", q:`${p.sId} ${p.diId} kemarin.`, a:sent([S.en,S.was,v.v3,y]),
+     w:[sent([S.en,S.be,v.v3,y]),sent([S.en,S.was,v.v1,y]),sent([S.en,S.have,"been",v.v3,y]),A(sent([S.en,v.v2,y])),sent([S.en,S.was,"been",v.v3,y])],
+     e:`"Kemarin" → be bentuk lampau: ${S.was} + V3. (I/he/she/it → was, you/we/they → were.)`, f:FORM.p_past},
+    {t:"ever", q:`${p.sId} pernah ${p.diId}.`, a:sent([S.en,S.have,"been",v.v3,"before"]),
+     alt:[sent([S.en,S.have,"ever","been",v.v3])], altNote:`Di video ditulis "have ever been", dan orang akan paham. Tapi untuk kalimat positif, penutur asli lebih sering pakai before: "${sent([S.en,S.have,"been",v.v3,"before"])}"`,
+     w:[A(sent([S.en,S.have,v.v3,"before"])),sent([S.en,S.have,"being",v.v3,"before"]),sent([S.en,S.have,"be",v.v3,"before"]),sent([S.en,S.was,"been",v.v3,"before"])],
+     e:`"Pernah di-" = pengalaman → ${S.have} + been + V3, ditambah before di akhir. Kata ever paling pas dipakai di pertanyaan (lihat soal berikutnya) atau kalimat negatif.`, f:FORM.p_ever},
+    {t:"ever", q:`Apakah ${qsId} pernah ${p.diId}?`, a:sent([Q.have,Q.en,"ever","been",v.v3],1),
+     w:[A(sent([Q.have,Q.en,"ever",v.v3],1)),sent(["did",Q.en,"ever","been",v.v3],1),sent([Q.have,Q.en,"ever","being",v.v3],1),sent([flipHave(Q.have),Q.en,"ever","been",v.v3],1)],
+     e:`Pertanyaan "pernah" → ${cap(Q.have)} + S + ever + been + V3? Di sinilah ever dipakai.`, f:FORM.pq_ever}
+  ].map(x=>({f:FORM["p_"+x.t], ...x, w:x.w.filter(Boolean), kind:"p"}));
+}
+
+const SETS = [
+  ...ACTIVE.map((a,i)=>({key:"a"+i, type:"active", title:a.title, head:`${a.vId} = ${a.v.v1}`, forms:`${a.v.v1} · ${a.v.v2} · ${a.v.v3}`, sub:`${a.sId} · 10 soal`, items:buildActive(a)})),
+  ...PASSIVE.map((p,i)=>({key:"p"+i, type:"passive", title:p.title, head:`${p.base} → <b>${p.diId}</b>`, forms:`${p.v.v1} · ${p.v.v2} · ${p.v.v3}`, sub:`${p.sId} ${p.diId} · 5 soal`, items:buildPassive(p)}))
+];
+SETS.push(...ADJ.map((d,i)=>adjSet(d,"j"+i)));
+SETS.push(...MODALS.map((m,i)=>({key:"m"+i, type:"modal", title:m.title, head:"Will · Would · Shall", forms:"kasual · sopan · menawarkan",
+  items:m.items.map(x=>({...x, kind:"m", f:FORM["m_"+x.t], e:MODAL_EXPL[x.t], altNote:MODAL_NOTE[x.t]}))})));
+function prep(s){ s.items.forEach((it,j)=>{ it.set=s; it.idx=j; it.w=pick(it.a,it.w); });
+  if(s.type==="adj") s.sub=`${s.items[0].q.replace(/\.$/,"")} · ${s.items.length} soal`;
+  if(s.type==="active") s.sub=`${s.items[0].q.replace(/\.$/,"")} · ${s.items.length} soal`;
+  if(s.type==="passive") s.sub=`${s.items[0].q.replace(/\.$/,"")} · ${s.items.length} soal`;
+  if(s.type==="modal") s.sub=`Minta tolong & menawarkan · ${s.items.length} soal`;
+  return s; }
+SETS.forEach(prep);
+
+const store = { get(k){try{return JSON.parse(localStorage.getItem(k));}catch(e){return null;}}, set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}} };
+const shuffle = arr=>{const a=[...arr];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+// ================= GENERATOR (papan baru otomatis) =================
+const rnd = a=>a[Math.floor(Math.random()*a.length)];
+const GEN_SUBJ = [
+  {s:"I",sId:"Saya",qs:"you",qsId:"kamu"},{s:"he",sId:"Dia",qs:"he",qsId:"dia"},{s:"we",sId:"Kami",qs:"you",qsId:"kalian"},
+  {s:"they",sId:"Mereka",qs:"they",qsId:"mereka"},{s:"mother",sId:"Ibu",qs:"mother",qsId:"ibu"},{s:"father",sId:"Ayah",qs:"father",qsId:"ayah"},
+  {s:"ani",sId:"Ani",qs:"ani",qsId:"Ani"},{s:"budi",sId:"Budi",qs:"budi",qsId:"Budi"},{s:"you",sId:"Kamu",qs:"you",qsId:"kamu"}];
+const GEN_HABIT = [["every day","setiap hari"],["every morning","setiap pagi"],["every night","setiap malam"],["every week","setiap minggu"],["every weekend","setiap akhir pekan"],["every afternoon","setiap sore"]];
+const VB = (vId,vQ,v1,s,v2,v3,ing,objs,whId)=>({vId,vQ,v:{v1,s,v2,v3,ing},objs,whId:whId||"apa",wh:whId==="kemana"?"where":"what"});
+const GEN_VERBS = [
+  VB("makan","makan","eat","eats","ate","eaten","eating",[["nasi goreng","fried rice"],["roti","bread"],["apel","an apple","apples"],["mi","noodles"]]),
+  VB("minum","minum","drink","drinks","drank","drunk","drinking",[["teh","tea"],["susu","milk"],["jus jeruk","orange juice"]]),
+  VB("membaca","baca","read","reads","read","read","reading",[["koran","the newspaper"],["majalah","a magazine","magazines"],["novel","a novel","novels"]]),
+  VB("menulis","tulis","write","writes","wrote","written","writing",[["email","an email","emails"],["cerita","a story","stories"],["laporan","a report","reports"]]),
+  VB("membeli","beli","buy","buys","bought","bought","buying",[["buah","fruit"],["roti","bread"],["kopi","coffee"]]),
+  VB("memasak","masak","cook","cooks","cooked","cooked","cooking",[["nasi","rice"],["sup","soup"],["ikan","fish"]]),
+  VB("mencuci","cuci","wash","washes","washed","washed","washing",[["piring","the dishes"],["baju","the clothes"],["mobil","the car"]]),
+  VB("menonton","tonton","watch","watches","watched","watched","watching",[["TV","TV"],["berita","the news"],["film kartun","a cartoon","cartoons"]]),
+  VB("bermain","mainkan","play","plays","played","played","playing",[["gitar","the guitar"],["bulu tangkis","badminton"],["catur","chess"]]),
+  VB("belajar","pelajari","study","studies","studied","studied","studying",[["matematika","math"],["bahasa Inggris","English"],["sejarah","history"]]),
+  VB("membersihkan","bersihkan","clean","cleans","cleaned","cleaned","cleaning",[["kamar","the room"],["rumah","the house"],["meja","the table"]]),
+  VB("membuat","buat","make","makes","made","made","making",[["kue","a cake","cakes"],["kopi","coffee"],["teh","tea"]]),
+  VB("menjual","jual","sell","sells","sold","sold","selling",[["sayur","vegetables"],["kue","cakes"],["buah","fruit"]]),
+  VB("mengirim","kirim","send","sends","sent","sent","sending",[["surat","a letter","letters"],["pesan","a message","messages"],["paket","a package","packages"]]),
+  VB("mengendarai","kendarai","drive","drives","drove","driven","driving",[["mobil","the car"],["motor","the motorbike"]]),
+  VB("menggambar","gambar","draw","draws","drew","drawn","drawing",[["bunga","a flower","flowers"],["pemandangan","a landscape","landscapes"]]),
+  VB("pergi","pergi","go","goes","went","gone","going",[["ke sekolah","to school"],["ke kantor","to the office"],["ke pantai","to the beach"]],"kemana")
+];
+const PERSON = [{s:"he",sId:"Dia"},{s:"I",sId:"Aku"},{s:"they",sId:"Mereka"},{s:"we",sId:"Kami"},{s:"you",sId:"Kamu"},{s:"ani",sId:"Ani"},{s:"budi",sId:"Budi"}];
+const PV = (diId,base,v1,v2,v3,ing,thing)=>({diId,base,v:{v1,v2,v3,ing},thing});
+const GEN_PASSIVE = [
+  PV("dipukul","pukul = hit","hit","hit","hit","hitting"), PV("dicintai","cinta = love","love","loved","loved","loving"),
+  PV("dibantu","bantu = help","help","helped","helped","helping"), PV("dipuji","puji = praise","praise","praised","praised","praising"),
+  PV("dimarahi","marah = angry","scold","scolded","scolded","scolding"), PV("dilupakan","lupa = forget","forget","forgot","forgotten","forgetting"),
+  PV("ditinggalkan","tinggal = leave","leave","left","left","leaving"), PV("dihukum","hukum = punish","punish","punished","punished","punishing"),
+  PV("ditanya","tanya = ask","ask","asked","asked","asking"), PV("diajari","ajar = teach","teach","taught","taught","teaching"),
+  PV("dipilih","pilih = choose","choose","chose","chosen","choosing"), PV("ditipu","tipu = cheat","cheat","cheated","cheated","cheating"),
+  PV("dijual","jual = sell","sell","sold","sold","selling",["Rumah itu","the house"]), PV("dibuka","buka = open","open","opened","opened","opening",["Pintu itu","the door"]),
+  PV("ditutup","tutup = close","close","closed","closed","closing",["Jendela itu","the window"]), PV("dibersihkan","bersih = clean","clean","cleaned","cleaned","cleaning",["Kamar itu","the room"]),
+  PV("ditulis","tulis = write","write","wrote","written","writing",["Surat itu","the letter"]), PV("dimakan","makan = eat","eat","ate","eaten","eating",["Kue itu","the cake"]),
+  PV("dicuri","curi = steal","steal","stole","stolen","stealing",["Ponsel itu","the phone"]), PV("dibangun","bangun = build","build","built","built","building",["Jembatan itu","the bridge"]),
+  PV("diperbaiki","baik = good","repair","repaired","repaired","repairing",["Mobil itu","the car"]), PV("dikirim","kirim = send","send","sent","sent","sending",["Paket itu","the package"]),
+  PV("dicat","cat = paint","paint","painted","painted","painting",["Dinding itu","the wall"]), PV("dibaca","baca = read","read","read","read","reading",["Buku itu","the book"])
+];
+const MP = (vp,ing,past,id,we)=>({vp,ing,past,id,we:!!we});
+const GEN_MODAL = [
+  MP("open the window","opening the window","opened the window","membuka jendela"), MP("turn off the light","turning off the light","turned off the light","mematikan lampu"),
+  MP("carry this bag","carrying this bag","carried this bag","membawa tas ini"), MP("call a taxi","calling a taxi","called a taxi","memanggil taksi"),
+  MP("make some coffee","making some coffee","made some coffee","membuat kopi"), MP("clean the table","cleaning the table","cleaned the table","membersihkan meja"),
+  MP("send the file","sending the file","sent the file","mengirim file itu"), MP("check the report","checking the report","checked the report","memeriksa laporan itu"),
+  MP("buy some water","buying some water","bought some water","membeli air"), MP("close the door","closing the door","closed the door","menutup pintu"),
+  MP("eat lunch now","eating lunch now","ate lunch now","makan siang sekarang",1), MP("start the meeting","starting the meeting","started the meeting","memulai rapat",1),
+  MP("go home","going home","went home","pulang",1), MP("take a break","taking a break","took a break","istirahat",1)
+];
+let GEN_N = 0;
+function seenHas(k){ return (store.get("kt3_seen")||[]).includes(k); }
+function seenAdd(k){ const a=store.get("kt3_seen")||[]; a.push(k); store.set("kt3_seen",a.slice(-300)); }
+function freshPick(makeKey, tries=40){ let k; for(let i=0;i<tries;i++){ k=makeKey(); if(!seenHas(k.key)) break; } seenAdd(k.key); return k; }
+
+function genActive(){
+  const g = freshPick(()=>{ const vb=rnd(GEN_VERBS), o=rnd(vb.objs), su=rnd(GEN_SUBJ), h=rnd(GEN_HABIT); return {key:`A|${vb.vId}|${o[0]}|${su.s}`, vb,o,su,h}; });
+  const {vb,o,su,h}=g;
+  const a = {title:cap(`${vb.vId} ${o[0]}`), s:su.s, sId:su.sId, qs:su.qs, qsId:su.qsId, vId:vb.vId, vQ:vb.vQ, oId:o[0], whId:vb.whId, wh:vb.wh,
+    v:vb.v, obj:o[1], objH:o[2], habit:h[0], habitId:h[1]};
+  return prep({key:"g"+(++GEN_N), gen:true, type:"active", title:a.title, head:`${vb.vId} = ${vb.v.v1}`, forms:`${vb.v.v1} · ${vb.v.v2} · ${vb.v.v3}`, items:buildActive(a)});
+}
+function genPassive(){
+  const g = freshPick(()=>{ const pv=rnd(GEN_PASSIVE); const su = pv.thing ? null : rnd(PERSON); return {key:`P|${pv.diId}|${su?su.s:"t"}`, pv, su}; });
+  const {pv,su}=g; let sKey, sId;
+  if(pv.thing){ sKey="t_"+pv.thing[1]; SUBJ[sKey]={en:pv.thing[1], be:"is", was:"was", have:"has", do:"does", third:true}; sId=pv.thing[0]; }
+  else { sKey=su.s; sId=su.sId; }
+  const p={title:cap(pv.diId), base:pv.base, diId:pv.diId, s:sKey, sId, v:pv.v};
+  return prep({key:"g"+(++GEN_N), gen:true, type:"passive", title:p.title, head:`${p.base} → <b>${p.diId}</b>`, forms:`${p.v.v1} · ${p.v.v2} · ${p.v.v3}`, items:buildPassive(p)});
+}
+function genModal(){
+  const g = freshPick(()=>{ const ph=shuffle(GEN_MODAL.filter(x=>!x.we)).slice(0,2), we=rnd(GEN_MODAL.filter(x=>x.we)); return {key:`M|${ph.map(x=>x.vp).sort().join("+")}|${we.vp}`, ph, we}; });
+  const items=[];
+  for(const m of g.ph){
+    items.push({t:"will", q:`Maukah kamu ${m.id}? (ke teman)`, a:`Will you ${m.vp}?`, alt:[`Would you ${m.vp}?`,`Can you ${m.vp}?`], w:[`Shall you ${m.vp}?`,`Will you ${m.ing}?`,`Will you to ${m.vp}?`]});
+    items.push({t:"would", q:`Maukah Anda ${m.id}? (sopan)`, a:`Would you ${m.vp}?`, alt:[`Could you ${m.vp}?`], w:[`Would you ${m.ing}?`,`Would you to ${m.vp}?`,`Shall you ${m.vp}?`]});
+    items.push({t:"shall", q:`Haruskah saya ${m.id}? (menawarkan)`, a:`Shall I ${m.vp}?`, alt:[`Can I ${m.vp}?`,`May I ${m.vp}?`], w:[`Shall you ${m.vp}?`,`Shall I ${m.ing}?`,`Shall I to ${m.vp}?`]});
+  }
+  const w=g.we;
+  items.push({t:"shall", q:`Bagaimana kalau kita ${w.id}? (mengajak)`, a:`Shall we ${w.vp}?`, w:[`Shall we ${w.ing}?`,`Shall we to ${w.vp}?`,`Shall we ${w.past}?`]});
+  return prep({key:"g"+(++GEN_N), gen:true, type:"modal", title:"Will · Would · Shall (baru)", head:"Will · Would · Shall", forms:"kasual · sopan · menawarkan",
+    items:items.map(x=>({...x, kind:"m", f:FORM["m_"+x.t], e:MODAL_EXPL[x.t], altNote:MODAL_NOTE[x.t]}))});
+}
+const GEN_ADJ = [["lapar","hungry"],["sibuk","busy"],["capek","tired"],["senang","happy"],["sakit","sick"],["marah","angry"],["sedih","sad"],["bosan","bored"],
+  ["mengantuk","sleepy"],["takut","scared"],["gugup","nervous"],["haus","thirsty"],["sehat","healthy"],["bingung","confused"],["kenyang","full"],
+  ["kedinginan","cold"],["kepanasan","hot"],["malu","embarrassed"],["khawatir","worried"],["bersemangat","excited"],["kesepian","lonely"],["kesal","annoyed"]];
+function genAdj(){
+  const g=freshPick(()=>{ const a=rnd(GEN_ADJ), su=rnd(GEN_SUBJ); return {key:`J|${a[0]}|${su.s}`, a, su}; });
+  return prep(adjSet({adjId:g.a[0], adj:g.a[1], s:g.su.s, sId:g.su.sId, qs:g.su.qs, qsId:g.su.qsId}, "g"+(++GEN_N), true));
+}
+const GEN = {active:genActive, passive:genPassive, adj:genAdj, modal:genModal};
+
+// ================= CHECKING =================
+const LEAD_TIME = ["since this morning","every morning","every afternoon","every day","every night","every week","every weekend","every evening","every sunday","every saturday","yesterday","tomorrow"];
+const SYN = {movie:"film",movies:"film",films:"film",soccer:"football",mom:"mother",mum:"mother",mommy:"mother",dad:"father",daddy:"father",
+  bananas:"banana",minute:"moment",her:"him",cakes:"cake",messages:"message",packages:"package",emails:"email",stories:"story",reports:"report",magazines:"magazine",novels:"novel",apples:"apple",cartoons:"cartoon",flowers:"flower",landscapes:"landscape",books:"book",letters:"letter",vegetable:"vegetables",veggies:"vegetables",cannot:"can not",this:"the",that:"the",she:"he"};
+const DROP = new Set(["a","an","the","my","already","yet","some"]);
+function expand(s){
+  s = s.toLowerCase().replace(/[‘’`]/g,"'").replace(/[.,!?;:"()]/g," ");
+  s = s.replace(/\bcan't\b/g,"can not").replace(/\bwon't\b/g,"will not").replace(/n't\b/g," not")
+       .replace(/'re\b/g," are").replace(/'m\b/g," am").replace(/'ve\b/g," have").replace(/'ll\b/g," will").replace(/'d\b/g," had")
+       .replace(/\b(right now|at the moment|now)\b/g," ");
+  const variants = /'s\b/.test(s) ? [s.replace(/'s\b/g," is"), s.replace(/'s\b/g," has")] : [s];
+  return variants.map(v=>{
+    v = v.replace(/\s+/g," ").trim();
+    for(const p of LEAD_TIME){ if(v.startsWith(p+" ")){ v = v.slice(p.length+1)+" "+p; break; } }
+    return v.split(" ").map(w=>SYN[w]||w).join(" ").split(" ").filter(w=>w&&!DROP.has(w)).join(" ");
+  });
+}
+function matchSet(arr){ return new Set(arr.flatMap(expand)); }
+function isCorrect(input,item){
+  const u=expand(input);
+  if(u.some(v=>matchSet([item.a]).has(v))) return "a";
+  if(item.alt && u.some(v=>matchSet(item.alt).has(v))) return "alt";
+  return false;
+}
+
+// ================= APP =================
+const S = {mode:"mc", set:null, items:[], i:0, results:[], answered:false};
+const $ = id=>document.getElementById(id);
+const esc = s=>String(s).replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+$("modeChips").addEventListener("click",e=>{
+  const b=e.target.closest(".chip"); if(!b) return;
+  [...$("modeChips").children].forEach(c=>c.classList.toggle("on",c===b)); S.mode=b.dataset.v;
+});
+
+function setBtn(s,n,cls){
+  const best=store.get("kt3_best_"+s.key);
+  return `<button class="act ${cls}" data-k="${s.key}"><span class="num">${n}</span><span class="tx"><p class="tt">${esc(s.title)}</p><p class="st">${esc(s.sub)}</p></span>${best!=null?`<span class="best">${best}/${s.items.length}</span>`:""}</button>`;
+}
+const FIXED = ()=>SETS.filter(s=>s.type!=="mix");
+function nextBoard(type){
+  const pool = FIXED().filter(s=>!type||s.type===type);
+  const todo = pool.find(s=>store.get("kt3_best_"+s.key)==null);
+  if(todo) return todo;
+  const t = type || rnd(["active","passive","adj","modal"]);
+  return GEN[t]();
+}
+function renderMenu(){
+  const all=FIXED(), done=all.filter(s=>store.get("kt3_best_"+s.key)!=null).length, gdone=store.get("kt3_gen_done")||0;
+  $("progFill").style.width=`${done/all.length*100}%`;
+  const todo=all.find(s=>store.get("kt3_best_"+s.key)==null);
+  $("progNote").textContent = done<all.length
+    ? `${done} dari ${all.length} papan sudah dikerjakan.`
+    : `Semua ${all.length} papan sudah dikerjakan. Sekarang papan baru dibuat otomatis${gdone?` (sudah ${gdone} papan baru selesai)`:""}.`;
+  $("nextBoardBtn").textContent = todo ? `Lanjut: ${todo.title}` : "Buat papan baru";
+  $("actList").innerHTML = SETS.filter(s=>s.type==="active").map((s,i)=>setBtn(s,i+1,"")).join("");
+  $("pasList").innerHTML = SETS.filter(s=>s.type==="passive").map((s,i)=>setBtn(s,i+1,"pas")).join("");
+  $("adjList").innerHTML = SETS.filter(s=>s.type==="adj").map((s,i)=>setBtn(s,i+1,"")).join("");
+  $("modList").innerHTML = SETS.filter(s=>s.type==="modal").map((s,i)=>setBtn(s,i+1,"mix")).join("");
+}
+document.addEventListener("click",e=>{
+  const b=e.target.closest(".act[data-k]"); if(!b) return;
+  const s=SETS.find(x=>x.key===b.dataset.k); startSet(s, s.items);
+});
+$("mixBtn").addEventListener("click",()=>startMix());
+$("nextBoardBtn").addEventListener("click",()=>{ const s=nextBoard(); startSet(s,s.items); });
+document.querySelectorAll("[data-gen]").forEach(b=>b.addEventListener("click",()=>{ const s=GEN[b.dataset.gen](); startSet(s,s.items); }));
+function startMix(){
+  const pool=shuffle(SETS.flatMap(s=>s.items)).slice(0,10);
+  startSet({key:"mix", type:"mix", title:"Campuran acak"}, pool);
+}
+
+function show(id){
+  ["menu","quiz","rumus"].forEach(s=>$(s).classList.toggle("hidden",s!==id));
+  $("tabQuiz").classList.toggle("on",id!=="rumus");
+  $("tabRumus").classList.toggle("on",id==="rumus");
+  if(id==="menu") renderMenu();
+  window.scrollTo(0,0);
+}
+
+function startSet(set,items,base){
+  S.set=set; S.base=base||set; S.items=items; S.i=0; S.results=[];
+  $("scoreCard").classList.add("hidden"); $("panel").classList.remove("hidden");
+  show("quiz"); renderBoard(); renderQ();
+}
+
+function hl(text){
+  return esc(text).replace(/(\([^)]*\))/g,'<span style="color:#9a9282;font-size:.8em">$1</span>').replace(/\b(sedang|sudah|telah|akan|kemarin|besok|pernah|setiap(?: (?:hari|akhir) [A-Za-z]+| [a-z]+))\b/g,'<span class="kw">$1</span>');
+}
+function renderBoard(){
+  const set=S.set, items=S.items;
+  let h = set.type==="mix"
+    ? `<div class="head"><span class="word">Campuran acak</span><span class="forms">${items.length} soal</span></div>`
+    : `<div class="head"><span class="word">${set.head}</span><span class="forms">${esc(set.forms)}</span></div>`;
+  let lastKind=null;
+  items.forEach((it,j)=>{
+    if((set.type==="active"||set.type==="adj") && it.kind!==lastKind){ h+=`<div class="sec">${it.kind==="q"?"Pertanyaan":"Kalimat"}</div>`; lastKind=it.kind; }
+    const r=S.results[j];
+    const state = r ? "" : (j===S.i ? "cur" : "todo");
+    h+=`<div class="bl ${state}" id="bl${j}"><div class="idl"><span class="n">${j+1}</span><span style="flex:1">${hl(it.q)}</span>${set.type==="mix"?`<span class="mixw">${esc(it.set.title)}</span>`:""}</div>`;
+    if(r){
+      const T=TENSES[it.t];
+      h+=`<div class="enl ${r.ok?"ok":"bad"}">${esc(it.a)}<span class="mark">${r.ok?"✓":"✗"}</span><span class="tag" style="background:${T.color}">${T.short}</span><span class="fm">${esc(it.f)}</span></div>`;
+    }
+    h+=`</div>`;
+  });
+  $("board").innerHTML=h;
+}
+
+function renderQ(){
+  const it=S.items[S.i]; S.answered=false;
+  $("count").textContent=`${S.i+1} / ${S.items.length}`;
+  const k=$("kind");
+  k.textContent = it.kind==="q"?"Pertanyaan":it.kind==="p"?"Kalimat pasif":it.kind==="m"?"Will · Would · Shall":"Kalimat";
+  k.className = "kind "+(it.kind==="q"?"q":it.kind==="p"?"p":"");
+  $("qText").textContent=it.q;
+  $("feedback").innerHTML=""; $("nextBtn").classList.add("hidden");
+  if(S.mode==="mc"){
+    $("typeArea").classList.add("hidden");
+    $("opts").innerHTML=shuffle([it.a,...it.w]).map(o=>`<button class="opt" data-v="${esc(o)}">${esc(o)}</button>`).join("");
+    $("opts").classList.remove("hidden");
+  }else{
+    $("opts").classList.add("hidden"); $("opts").innerHTML="";
+    $("typeArea").classList.remove("hidden");
+    $("typeInput").value=""; $("typeInput").disabled=false; $("checkBtn").disabled=false;
+  }
+}
+
+$("opts").addEventListener("click",e=>{
+  const b=e.target.closest(".opt"); if(!b||S.answered) return;
+  const it=S.items[S.i], ok=b.dataset.v===it.a;
+  [...$("opts").children].forEach(o=>{ o.disabled=true; if(o.dataset.v===it.a) o.classList.add("correct"); });
+  if(!ok) b.classList.add("wrong");
+  answer(ok,b.dataset.v);
+});
+function checkTyped(){
+  if(S.answered) return;
+  const v=$("typeInput").value.trim(); if(!v){ $("typeInput").focus(); return; }
+  $("typeInput").disabled=true; $("checkBtn").disabled=true;
+  const r=isCorrect(v,S.items[S.i]); answer(!!r,v,r==="alt");
+}
+$("checkBtn").addEventListener("click",checkTyped);
+$("typeInput").addEventListener("keydown",e=>{ if(e.key==="Enter"&&!e.shiftKey){ e.preventDefault(); checkTyped(); } });
+
+function answer(ok,given,viaAlt){
+  S.answered=true;
+  const it=S.items[S.i], T=TENSES[it.t];
+  S.results[S.i]={ok,given};
+  const yours = !ok&&S.mode==="type" ? `<p class="yours">Jawabanmu: ${esc(given)}</p>` : "";
+  const override = !ok&&S.mode==="type" ? `<button class="linkbtn" id="overrideBtn">Jawaban saya sebenarnya benar</button>` : "";
+  $("feedback").innerHTML=`<div class="fb ${ok?"ok":"bad"}"><h3>${ok?"Benar!":"Belum tepat"}</h3>${yours}
+    <p class="ans">${esc(it.a)}</p>
+    <span class="formula" style="border-left:4px solid ${T.color}">${T.name}: ${esc(it.f)}</span>
+    <p>${esc(it.e)}</p>${viaAlt&&it.altNote?`<p style="margin-top:8px"><b>Catatan:</b> ${esc(it.altNote)}</p>`:""}${override}</div>`;
+  const ob=$("overrideBtn");
+  if(ob) ob.addEventListener("click",()=>{
+    S.results[S.i].ok=true; const fb=$("feedback").querySelector(".fb");
+    fb.className="fb ok"; fb.querySelector("h3").textContent="Oke, dihitung benar"; ob.remove(); renderBoard();
+  });
+  $("nextBtn").textContent = S.i===S.items.length-1 ? "Lihat hasil" : "Lanjut";
+  $("nextBtn").classList.remove("hidden");
+  renderBoard();
+  setTimeout(()=>$("nextBtn").scrollIntoView({behavior:"smooth",block:"nearest"}),60);
+}
+
+$("nextBtn").addEventListener("click",()=>{
+  if(S.i<S.items.length-1){
+    S.i++; renderBoard(); renderQ();
+    const el=$("bl"+S.i); if(el) el.scrollIntoView({behavior:"smooth",block:"center"});
+  } else finish();
+});
+
+function finish(){
+  const total=S.items.length, right=S.results.filter(r=>r&&r.ok).length, pct=right/total;
+  if(S.set.type!=="mix" && S.items===S.set.items){
+    if(S.set.gen) store.set("kt3_gen_done",(store.get("kt3_gen_done")||0)+1);
+    else { const prev=store.get("kt3_best_"+S.set.key); if(prev==null||right>prev) store.set("kt3_best_"+S.set.key,right); }
+  }
+  $("scoreBig").innerHTML=`${right}<small> / ${total}</small>`;
+  $("scoreMsg").textContent = pct===1?"Sempurna! Papan penuh tanpa salah.":pct>=.7?"Bagus! Lihat lagi yang merah di papan.":pct>=.5?"Lumayan. Pelajari pola di papan, lalu ulangi yang salah.":"Tidak apa-apa. Baca polanya di papan, lalu coba lagi.";
+  $("retryWrongBtn").parentElement.classList.toggle("hidden",right===total);
+  $("againBtn").textContent = S.base.type==="mix" ? "Campuran baru" : "Ulangi papan ini";
+  $("panel").classList.add("hidden"); $("scoreCard").classList.remove("hidden");
+  S.i=-1; renderBoard(); window.scrollTo({top:0,behavior:"smooth"});
+}
+$("retryWrongBtn").addEventListener("click",()=>{
+  const wrong=S.items.filter((_,j)=>!S.results[j].ok);
+  startSet({...S.set, key:S.set.key+"_retry", type:(S.set.type==="active"||S.set.type==="adj")?"retry":S.set.type}, wrong, S.base);
+});
+$("againBtn").addEventListener("click",()=>{ if(S.base.type==="mix") startMix(); else startSet(S.base,S.base.items); });
+$("nextAfterBtn").addEventListener("click",()=>{ const t=S.base.type==="mix"?null:S.base.type; const s=nextBoard(t); startSet(s,s.items); });
+$("menuBtn").addEventListener("click",()=>show("menu"));
+$("quitBtn").addEventListener("click",()=>show("menu"));
+$("tabQuiz").addEventListener("click",()=>show(S.items.length&&S.i>=0&&S.results.length?"quiz":"menu"));
+$("tabRumus").addEventListener("click",()=>show("rumus"));
+
+// ================= RUMUS =================
+function rumusTable(title,rows,note){
+  return `<div class="card"><p class="label">${title}</p><table class="rt"><thead><tr><th>Kata kunci</th><th>Rumus</th></tr></thead><tbody>${
+    rows.map(([k,f,ex])=>`<tr><td><span class="dot" style="background:${TENSES[k].color}"></span>${TENSES[k].short}</td><td>${f}<span class="ex">${ex}</span></td></tr>`).join("")
+  }</tbody></table>${note?`<p class="note" style="margin:12px 0 0">${note}</p>`:""}</div>`;
+}
+const VERBS=[["makan","eat","ate","eaten"],["minum","drink","drank","drunk"],["pergi","go","went","gone"],["membaca","read","read","read"],["menulis","write","wrote","written"],["membeli","buy","bought","bought"],["mengambil","take","took","taken"],["membawa","bring","brought","brought"],["menjauhi","avoid","avoided","avoided"],["menonton","watch","watched","watched"],["mengundang","invite","invited","invited"],["bermain","play","played","played"]];
+$("rumus").innerHTML =
+  rumusTable("Kalimat aktif",[
+    ["present","S + V1 (+s/es untuk he/she/it)","He drinks coffee every morning."],
+    ["cont","S + am/is/are + V-ing","He is drinking coffee."],
+    ["perfect","S + have/has + V3","He has drunk coffee."],
+    ["future","S + will + V1","He will drink coffee tomorrow."],
+    ["past","S + V2","He drank coffee yesterday."]]) +
+  rumusTable("Pertanyaan",[
+    ["present","(Wh) + do/does + S + V1?","What does he drink every morning?"],
+    ["cont","(Wh) + am/is/are + S + V-ing?","What is he drinking?"],
+    ["perfect","Have/Has + S + V3?","Has he drunk coffee?"],
+    ["future","(Wh) + will + S + V1?","What will he drink tomorrow?"],
+    ["past","(Wh) + did + S + V1?","What did he drink yesterday?"]]) +
+  rumusTable("Kalimat pasif (di-)",[
+    ["present","S + am/is/are + V3","He is avoided. (Dia dijauhi.)"],
+    ["cont","S + am/is/are + being + V3","He is being avoided."],
+    ["perfect","S + have/has + been + V3","He has been avoided."],
+    ["future","S + will + be + V3","He will be avoided."],
+    ["past","S + was/were + V3","He was avoided yesterday."],
+    ["ever","S + have/has + been + V3 + before","I have been hurt before. (Aku pernah disakiti.)"],
+    ["ever","Have/Has + S + ever + been + V3?","Have you ever been hurt?"]],
+    "Kuncinya: pasif selalu pakai be + V3. Yang berubah hanya bentuk be-nya. Ever paling pas di pertanyaan; di kalimat positif pakai before.") +
+  rumusTable("Kata sifat (pakai to be)",[
+    ["present","S + am/is/are + kata sifat","I am hungry. (Saya lapar.)"],
+    ["getting","S + am/is/are + getting + kata sifat","I am getting hungry. (Saya mulai lapar.)"],
+    ["perfect","S + have/has + been + kata sifat","I have been hungry since this morning."],
+    ["future","S + will + be + kata sifat","I will be hungry tomorrow."],
+    ["past","S + was/were + kata sifat","I was hungry yesterday."],
+    ["ever","S + have/has + been + kata sifat + before","I have been hungry before."]],
+    "Pertanyaan: pindahkan to be ke depan (Are you hungry? Were you busy? Will you be busy? Have you ever been sick?). Jangan pakai do/does/did, dan jangan beri -ing pada kata sifat.") +
+  rumusTable("Will · Would · Shall",[
+    ["will","Will + you + V1?","Will you help me? (santai, ke teman)"],
+    ["would","Would + you + V1?","Would you help me? (sopan / formal)"],
+    ["shall","Shall + I/we + V1?","Shall I help you? Shall we go? (menawarkan / mengajak)"]],
+    "Shall hanya dipakai dengan I atau we. Ketiganya diikuti V1.") +
+  `<div class="card"><p class="label">Bentuk to be &amp; have</p><table class="rt"><thead><tr><th>Subjek</th><th>Sekarang</th><th>Lampau</th><th>Have</th></tr></thead><tbody>
+    <tr><td>I</td><td>am</td><td>was</td><td>have</td></tr>
+    <tr><td>you / we / they</td><td>are</td><td>were</td><td>have</td></tr>
+    <tr><td>he / she / it</td><td>is</td><td>was</td><td>has</td></tr></tbody></table>
+    <p class="note" style="margin:12px 0 0">V3 dari be = been, bentuk -ing dari be = being.</p></div>` +
+  `<div class="card"><p class="label">Kata kerja (V1 – V2 – V3)</p><table class="rt"><thead><tr><th>Arti</th><th>V1</th><th>V2</th><th>V3</th></tr></thead><tbody>${
+    VERBS.map(v=>`<tr>${v.map((x,i)=>`<td style="${i?"font-weight:500":"color:var(--muted);font-weight:500"}">${x}</td>`).join("")}</tr>`).join("")}</tbody></table></div>`;
+
+renderMenu();
+</script>
+</body>
+</html>

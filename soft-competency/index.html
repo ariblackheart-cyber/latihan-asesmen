@@ -1,0 +1,1103 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Latihan Soft Competency</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#f4f5f2; --card:#fff; --ink:#18201d; --muted:#5f6b66; --line:#e2e6e1;
+    --accent:#0f5e57; --accent-soft:#e1efec; --warm:#c8661b; --warm-soft:#fbeee2;
+    --ok:#1d7f48; --ok-soft:#e3f4e9; --mid:#a8740c; --mid-soft:#fbf2dc; --bad:#b9402c; --bad-soft:#fae7e3;
+    --radius:16px;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Plus Jakarta Sans",system-ui,-apple-system,sans-serif;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:620px;margin:0 auto;padding:16px 16px 90px}
+  .top{display:flex;align-items:center;gap:10px;margin:4px 0 14px}
+  .top h1{font-size:19px;margin:0;font-weight:800;letter-spacing:-.01em}
+  .top .back{border:0;background:var(--card);border:1px solid var(--line);width:36px;height:36px;border-radius:10px;font-size:18px;cursor:pointer;color:var(--ink)}
+  .card{background:var(--card);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:12px}
+  .label{font-size:11.5px;font-weight:700;text-transform:uppercase;letter-spacing:.07em;color:var(--muted);margin:0 0 10px}
+  .muted{color:var(--muted)}
+  .small{font-size:13px}
+  p{line-height:1.55}
+  h2{font-size:18px;margin:0 0 6px;letter-spacing:-.01em}
+  h3{font-size:16px;margin:0 0 4px}
+  .btn{display:block;width:100%;border:0;font:inherit;font-weight:700;font-size:15px;padding:14px;border-radius:13px;cursor:pointer;background:var(--accent);color:#fff;text-align:center}
+  .btn.ghost{background:transparent;color:var(--accent);border:1.5px solid var(--accent)}
+  .btn.warm{background:var(--warm)}
+  .btn[disabled]{opacity:.45;cursor:default}
+  .row{display:flex;gap:10px} .row>*{flex:1}
+  .hidden{display:none !important}
+  .pill{display:inline-block;font-size:11.5px;font-weight:700;padding:3px 9px;border-radius:99px;background:var(--accent-soft);color:var(--accent)}
+  .pill.warm{background:var(--warm-soft);color:var(--warm)}
+  .pill.ok{background:var(--ok-soft);color:var(--ok)} .pill.mid{background:var(--mid-soft);color:var(--mid)} .pill.bad{background:var(--bad-soft);color:var(--bad)}
+
+  /* bottom nav */
+  nav.bottom{position:fixed;left:0;right:0;bottom:0;background:rgba(255,255,255,.96);backdrop-filter:blur(8px);border-top:1px solid var(--line);display:flex;justify-content:center;z-index:10;padding-bottom:env(safe-area-inset-bottom)}
+  nav.bottom .in{display:flex;max-width:620px;width:100%}
+  nav.bottom button{flex:1;min-width:0;border:0;background:none;font:inherit;font-size:10.5px;font-weight:600;color:var(--muted);padding:9px 2px 10px;cursor:pointer;display:flex;flex-direction:column;align-items:center;gap:3px}
+  nav.bottom button svg{width:22px;height:22px}
+  nav.bottom button.on{color:var(--accent)}
+
+  /* home */
+  .hero{background:linear-gradient(135deg,#0f5e57,#14786f);color:#fff;border:0}
+  .hero p{color:#d6ebe7;margin:6px 0 0;font-size:14px}
+  .hero h2{color:#fff}
+  .comp{display:flex;gap:12px;align-items:center;width:100%;text-align:left;font:inherit;color:var(--ink);background:var(--card);border:1.5px solid var(--line);border-radius:14px;padding:13px 14px;cursor:pointer;margin-bottom:9px}
+  .comp .ic{width:40px;height:40px;border-radius:12px;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:13px;flex-shrink:0}
+  .comp .tx{flex:1;min-width:0}
+  .comp .nm{font-weight:700;font-size:15px}
+  .comp .sb{font-size:12.5px;color:var(--muted);margin-top:2px}
+  .comp.focus{border-color:var(--warm)}
+  .mbar{height:5px;background:#e9ece8;border-radius:99px;overflow:hidden;margin-top:7px}
+  .mbar i{display:block;height:100%;background:var(--accent);border-radius:99px}
+
+  /* materi */
+  .kb{border-top:1px solid var(--line);padding:13px 0}
+  .kb:first-of-type{border-top:0;padding-top:4px}
+  .kb .h{display:flex;gap:10px}
+  .kb .n{width:24px;height:24px;border-radius:7px;background:var(--accent-soft);color:var(--accent);font-weight:800;font-size:12.5px;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px}
+  .kb .t{font-weight:700;font-size:14.5px}
+  .kb .en{font-size:12.5px;color:var(--muted);font-style:italic}
+  .kb .d{font-size:14px;margin:6px 0 0 34px;line-height:1.5}
+  .kb .ex{font-size:13.5px;margin:8px 0 0 34px;background:#f4f7f5;border-left:3px solid var(--accent);padding:8px 10px;border-radius:0 8px 8px 0;line-height:1.45}
+  .seg{display:flex;background:#e9ece8;border-radius:12px;padding:4px;margin-bottom:12px;overflow-x:auto}
+  .seg button{flex:1;border:0;background:none;font:inherit;font-size:13px;font-weight:600;color:var(--muted);padding:8px 8px;border-radius:9px;cursor:pointer;white-space:nowrap}
+  .seg button.on{background:var(--card);color:var(--ink);box-shadow:0 1px 3px rgba(0,0,0,.07)}
+
+  /* quiz */
+  .qmeta{display:flex;justify-content:space-between;align-items:center;margin-bottom:10px;gap:8px}
+  .qtext{font-size:16.5px;font-weight:600;line-height:1.5;margin:0}
+  .opts{display:grid;gap:9px;margin-top:14px}
+  .opt{border:1.5px solid var(--line);background:var(--card);text-align:left;font:inherit;font-size:14.5px;padding:13px 14px;border-radius:12px;cursor:pointer;color:var(--ink);line-height:1.45}
+  .opt .why{display:block;font-size:13px;color:var(--muted);margin-top:6px}
+  .opt.correct{border-color:var(--ok);background:var(--ok-soft)}
+  .opt.wrong{border-color:var(--bad);background:var(--bad-soft)}
+  .opt[disabled]{cursor:default}
+  .ropt{display:flex;gap:12px;align-items:flex-start}
+  .rbadge{flex-shrink:0;width:30px;height:30px;border-radius:9px;border:1.5px dashed #c9cfc9;display:flex;align-items:center;justify-content:center;font-weight:800;font-size:15px;color:var(--muted)}
+  .opt.ranked{border-color:var(--accent);background:#f3f9f8}
+  .opt.ranked .rbadge{background:var(--accent);border:0;color:#fff}
+  .rres{display:flex;gap:10px;align-items:center;margin-top:8px;font-size:12.5px;font-weight:700}
+  .rres .pts{margin-left:auto}
+  .series{font-size:22px;font-weight:700;letter-spacing:.02em;margin-top:10px;line-height:1.5}
+  .figq{display:flex;justify-content:center;padding:12px 0 2px}
+  .fopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
+  .fopt{display:flex;align-items:center;justify-content:center;position:relative;padding:10px}
+  .flab{position:absolute;top:7px;left:9px;font-weight:800;font-size:13px;color:var(--muted)}
+  .tbar{height:4px;background:#e9ece8;border-radius:99px;overflow:hidden;margin:-4px 0 12px}
+  .tbar i{display:block;height:100%;width:100%;background:var(--accent);transition:width .2s linear}
+  .fb{border-radius:12px;padding:13px 15px;margin-top:12px;font-size:14px;line-height:1.5}
+  .fb.ok{background:var(--ok-soft)} .fb.bad{background:var(--bad-soft)}
+  .fb b.h{display:block;font-size:15px;margin-bottom:3px}
+  .fb.ok b.h{color:var(--ok)} .fb.bad b.h{color:var(--bad)}
+  .progress{height:6px;background:#e3e7e2;border-radius:99px;overflow:hidden;margin-bottom:12px}
+  .progress i{display:block;height:100%;background:var(--accent);transition:width .3s}
+
+  /* star */
+  .field{margin-bottom:12px}
+  .field label{display:flex;gap:8px;align-items:baseline;font-weight:700;font-size:14px;margin-bottom:5px}
+  .field label span{font-weight:500;font-size:12.5px;color:var(--muted)}
+  textarea,input[type=text]{width:100%;border:1.5px solid var(--line);border-radius:11px;padding:11px 12px;font:inherit;font-size:15px;color:var(--ink);background:#fff;resize:vertical}
+  textarea:focus,input:focus{outline:none;border-color:var(--accent)}
+  .letter{display:inline-flex;width:22px;height:22px;border-radius:6px;background:var(--accent);color:#fff;font-size:12px;align-items:center;justify-content:center}
+  .qcard{border:1.5px solid var(--line);border-radius:12px;padding:12px 13px;margin-bottom:8px;cursor:pointer;background:#fff;font:inherit;text-align:left;width:100%;color:var(--ink);font-size:14.5px;line-height:1.45}
+  .qcard.on{border-color:var(--accent);background:var(--accent-soft)}
+  .evalkb{display:flex;gap:10px;padding:9px 0;border-top:1px solid var(--line);font-size:14px;line-height:1.45}
+  .evalkb:first-child{border-top:0}
+  .evalkb .st{flex-shrink:0;width:74px}
+  .score{display:flex;align-items:center;gap:14px}
+  .score .big{font-size:40px;font-weight:800;letter-spacing:-.03em;line-height:1}
+  .score .big small{font-size:18px;color:var(--muted)}
+  ul.clean{margin:6px 0 0;padding-left:18px;font-size:14px;line-height:1.55}
+  .check{display:flex;gap:10px;align-items:flex-start;padding:8px 0;border-top:1px solid var(--line);font-size:14px;cursor:pointer}
+  .check:first-child{border-top:0}
+  .check input{margin-top:3px;width:18px;height:18px;accent-color:var(--accent)}
+  .spinner{display:inline-block;width:16px;height:16px;border:2.5px solid rgba(255,255,255,.4);border-top-color:#fff;border-radius:50%;animation:sp 0.8s linear infinite;vertical-align:-3px;margin-right:8px}
+  .spinner.dark{border-color:rgba(15,94,87,.25);border-top-color:var(--accent)}
+  @keyframes sp{to{transform:rotate(360deg)}}
+
+  /* chat */
+  .chat{display:flex;flex-direction:column;gap:9px;margin-bottom:12px}
+  .msg{max-width:86%;padding:10px 13px;border-radius:14px;font-size:14.5px;line-height:1.5;white-space:pre-wrap}
+  .msg.them{background:var(--card);border:1px solid var(--line);align-self:flex-start;border-bottom-left-radius:4px}
+  .msg.me{background:var(--accent);color:#fff;align-self:flex-end;border-bottom-right-radius:4px}
+  .msg .who{display:block;font-size:11.5px;font-weight:700;color:var(--muted);margin-bottom:2px}
+  .composer{display:flex;gap:8px;align-items:flex-end}
+  .composer textarea{flex:1;min-height:46px;max-height:140px}
+  .composer .btn{width:auto;padding:12px 16px}
+  .notice{font-size:13px;background:var(--mid-soft);color:#6d4c08;padding:10px 12px;border-radius:10px;line-height:1.45}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<nav class="bottom"><div class="in" id="nav"></div></nav>
+
+<script>
+// ===================== DATA =====================
+const COMP = [
+ {id:"gc", name:"Gaining Commitment", idn:"Mendapatkan komitmen", color:"#c8661b", focus:true,
+  def:"Menggunakan teknik dan gaya interpersonal yang sesuai untuk membuat orang lain menerima suatu gagasan atau rencana; menyesuaikan perilaku dengan tugas, situasi, maupun orang lain yang terlibat.",
+  kb:[
+   ["Membuka diskusi dengan efektif","Opens discussion effectively","Menjelaskan harapan, tujuan, atau permintaan dengan cara yang jelas dan menarik.","Membuka rapat dengan: \"Hari ini kita sepakati jadwal pengecekan meter transaksi, supaya susut di penghantar ini bisa turun.\""],
+   ["Mengembangkan gagasan orang lain dan diri sendiri","Develops others' and own ideas","Menyampaikan gagasan pribadi; meminta dan mengembangkan saran dari orang lain; membuat saran atau usulan.","Menyampaikan usulan sendiri, lalu bertanya \"Menurut Bapak bagian mana yang perlu disesuaikan?\" dan mengembangkan saran itu menjadi rencana."],
+   ["Mengelola hubungan","Maintain relationships","Membangun hubungan interpersonal yang baik dengan cara membuat orang lain merasa bernilai, dihargai dan dilibatkan dalam diskusi (meningkatkan harga diri, berempati, melibatkan, terbuka, memberi dukungan).","Mengapresiasi pengalaman teknisi senior: \"Bapak paling paham kondisi lapangan, saya butuh masukan Bapak.\""],
+   ["Memperjelas situasi saat ini","Clarifies current situation","Mencari, memberikan dan merangkum informasi; memastikan orang lain dapat memahami situasi atau isu yang dihadapi.","Menunjukkan tren susut 3 bulan terakhir, lalu bertanya untuk memastikan semua peserta memahami masalahnya."],
+   ["Mendorong terjadinya kesepakatan","Encourages mutual agreement","Menggunakan strategi yang sesuai untuk mempengaruhi orang lain (misalnya menunjukkan keuntungan atau memberi penghargaan); gigih menggunakan berbagai pendekatan untuk mendapatkan kesepakatan.","Menunjukkan manfaat program bagi KPI unit mitra, dan menawarkan jadwal alternatif ketika usulan pertama ditolak."],
+   ["Menutup diskusi dengan ringkasan yang jelas","Closes discussion with clear summary","Merangkum hasil diskusi dan menetapkan langkah tindak lanjut jika diperlukan.","Menutup rapat: \"Jadi kita sepakat: pengecekan tiap Senin, PIC Pak Andi, laporan pertama tanggal 20.\""]
+  ],
+  star:["Ceritakan pengalaman ketika Anda harus meyakinkan pihak yang awalnya menolak gagasan atau rencana Anda.",
+        "Ceritakan saat Anda memimpin diskusi antar unit/bagian untuk mencapai kesepakatan.",
+        "Ceritakan saat Anda harus mengajak atasan atau rekan senior mendukung perubahan cara kerja."]},
+ {id:"ad", name:"Adaptability", idn:"Kemampuan beradaptasi", color:"#2b6cb0",
+  def:"Secara efektif mengelola perubahan lingkungan; mengambil tindakan segera untuk menjawab tantangan perubahan; termasuk tantangan bisnis, teknologi, dan lainnya.",
+  kb:[
+   ["Mencoba memahami perubahan","Understands change","Mencoba memahami perubahan dalam tugas, situasi dan lingkungan kerja sesuai logika atau dasarnya; aktif mencari informasi mengenai situasi kerja yang baru.","Mencari tahu alasan penggantian aplikasi pelaporan gangguan dan bertanya ke tim TI tentang fitur barunya."],
+   ["Menyikapi perubahan dengan pikiran positif","Responds change in a positive manner","Memperlakukan perubahan sebagai kesempatan belajar atau berkembang; fokus pada aspek yang menguntungkan; membicarakan perubahan secara positif kepada orang lain.","Menyebut reorganisasi sebagai kesempatan belajar bidang baru dan menceritakan sisi positifnya ke rekan yang cemas."],
+   ["Menyesuaikan perilaku","Adjusts behavior","Cepat dan efektif memodifikasi perilaku menghadapi perubahan; siap mencoba pendekatan baru; tidak mempertahankan perilaku yang tidak efektif.","Meninggalkan pencatatan manual yang sering salah dan beralih ke metode inspeksi berbasis aplikasi."],
+   ["Bertindak mandiri","Takes independent actions","Menerapkan gagasan atau pemecahan baru tanpa diminta; tidak menunggu perintah orang lain untuk bertindak.","Memperbaiki format checklist inspeksi yang membingungkan tanpa menunggu diminta atasan."],
+   ["Melakukan lebih dari yang diminta","Goes above and beyond","Mengambil tindakan yang melebihi persyaratan untuk mencapai sasaran.","Setelah target selesai, menambahkan analisis tren susut per penghantar yang tidak diminta tapi membantu sasaran unit."],
+   ["Menyesuaikan interaksi antar pribadi","Responds interpersonal situations accordingly","Menyesuaikan gaya interpersonal untuk berinteraksi secara efektif dengan berbagai individu.","Berbicara teknis dan detail dengan engineer, tetapi sederhana dan to the point dengan mitra non-teknis."]
+  ],
+  star:["Ceritakan perubahan besar di pekerjaan Anda (sistem, struktur, teknologi, atasan) dan bagaimana Anda menyikapinya.",
+        "Ceritakan saat Anda mengambil tindakan atau ide baru tanpa menunggu perintah.",
+        "Ceritakan saat Anda harus menyesuaikan cara berkomunikasi dengan orang yang sangat berbeda gayanya."]},
+ {id:"aj", name:"Analysis And Judgement", idn:"Analisis dan pengambilan keputusan", color:"#6b46c1",
+  def:"Mengidentifikasi dan memahami isu, permasalahan, dan kesempatan; membandingkan data dari berbagai sumber untuk membuat kesimpulan; menggunakan pendekatan yang efektif untuk memilih tindakan atau mengembangkan solusi yang tepat.",
+  kb:[
+   ["Mengumpulkan informasi","Gathers information","Mengidentifikasi kebutuhan dan mengumpulkan informasi untuk memahami isu, permasalahan dan peluang dengan lebih baik.","Mengumpulkan data meter, beban, dan riwayat pemeliharaan sebelum membahas kenaikan susut."],
+   ["Mengidentifikasi isu, permasalahan, dan kesempatan","Identifies issues, problems and opportunities","Mengenali isu, permasalahan, atau peluang dan menentukan apakah suatu tindakan perlu dilakukan.","Melihat lonjakan angka susut di dashboard dan memutuskan hal itu perlu ditindaklanjuti, bukan sekadar fluktuasi."],
+   ["Menguraikan permasalahan yang kompleks","Outline the complex problem","Menguraikan masalah kompleks secara sistematis menjadi bagian yang mudah dipahami untuk menemukan akar penyebab.","Memecah masalah susut menjadi faktor teknis, akurasi meter, dan administrasi data untuk mencari akar penyebab."],
+   ["Menghasilkan kesimpulan","Formulate conclusions","Membuat kesimpulan logis atas permasalahan atau menentukan tindakan sesuai level kewenangannya.","Menyimpulkan bahwa penyebab utama adalah CT meter yang drift, lalu mengajukan kalibrasi sesuai kewenangannya."],
+   ["Mempertimbangkan berbagai sudut pandang","Consider various perspectives","Membahas masalah/peluang dari berbagai sudut pandang; mengembangkan alternatif solusi yang relevan.","Menyusun tiga alternatif solusi dan menilainya dari sisi biaya, risiko K3, dan dampak ke pelanggan."],
+   ["Berkomitmen untuk bertindak","Commits to action","Melaksanakan keputusan atau mengambil tindakan sesuai waktu terbaik.","Menjadwalkan kalibrasi pada jam beban rendah minggu itu juga, tidak menunda sampai data \"sempurna\"."]
+  ],
+  star:["Ceritakan masalah kompleks yang Anda analisis sampai menemukan akar penyebabnya.",
+        "Ceritakan keputusan penting yang Anda ambil saat data atau waktu terbatas.",
+        "Ceritakan saat Anda menemukan peluang perbaikan dari data yang orang lain lewatkan."]},
+ {id:"bt", name:"Building Trust", idn:"Membangun kepercayaan", color:"#1d7f48",
+  def:"Berinteraksi dengan cara yang membuat orang lain merasa yakin atas tujuan individu maupun organisasi, menaati aturan serta peduli terhadap lingkungan sekitar.",
+  kb:[
+   ["Bekerja dengan integritas","Works with integrity","Jujur; menjaga komitmen; konsisten; bertanggung jawab atas hasil kerja; mengakui kesalahan; menaati peraturan perusahaan (K3LH, kepatuhan, disiplin, dll).","Mengakui salah input data ke atasan, segera mengirim koreksi, dan selalu memakai APD walau pekerjaan \"cuma sebentar\"."],
+   ["Terbuka mengenai posisi diri sendiri","Shares disclosures","Menyampaikan pemikiran, perasaan dan alasan yang rasional sehingga orang lain memahami posisinya.","\"Saya keberatan dengan jadwal ini karena tim saya sedang menangani dua gangguan; ini alasan dan datanya.\""],
+   ["Terbuka terhadap gagasan yang berbeda","Opens for different ideas","Mendengarkan dan secara objektif mempertimbangkan ide dan opini orang lain meskipun bertentangan.","Mendengarkan usulan junior yang berbeda dengan pendapatnya sampai selesai, lalu menimbangnya dengan data."],
+   ["Mendukung orang lain","Supports others","Memperlakukan orang lain dengan martabat, hormat, dan adil; memberi penghargaan yang sesuai; membela yang berhak meski menghadapi tantangan.","Menyebut nama teknisi yang menemukan masalah di depan manajemen dan membelanya saat disalahkan tanpa dasar."],
+   ["Tidak mengutamakan tujuan kelompok sendiri","Sets aside self-interest priorities","Menempatkan tujuan organisasi di atas tujuan kelompok sendiri; mengantisipasi dampak keputusan kelompok terhadap hubungan kemitraan.","Tetap mendahulukan pekerjaan pendukung unit lain meski KPI timnya sendiri jadi kurang menonjol bulan itu."],
+   ["Menampilkan keteladanan","Being a model","Menampilkan contoh perilaku yang sesuai etika, standar dan nilai-nilai.","Selalu tepat waktu di apel K3, mengikuti SOP, dan menolak gratifikasi dari vendor."]
+  ],
+  star:["Ceritakan saat Anda melakukan kesalahan dalam pekerjaan dan bagaimana Anda menanganinya.",
+        "Ceritakan saat Anda harus menegakkan aturan (misalnya K3 atau kepatuhan) walaupun tidak populer.",
+        "Ceritakan saat Anda mendahulukan kepentingan perusahaan di atas kepentingan tim/pribadi."]},
+ {id:"co", name:"Coaching", idn:"Membimbing", color:"#b83280",
+  def:"Melibatkan individu dalam mengembangkan dan berkomitmen pada rencana tindakan untuk mengembangkan perilaku, keterampilan, atau pengetahuan spesifik yang dibutuhkan untuk meningkatkan kinerja atau menyiapkan tanggung jawab baru.",
+  kb:[
+   ["Menetapkan tantangan kinerja","Defines the performance challenge","Menjelaskan kebutuhan pengembangan atau persiapan untuk peluang baru; menjelaskan dampaknya bagi individu, tim, dan organisasi; memberi contoh spesifik dan data relevan.","\"Tiga laporan inspeksi bulan ini terlambat 2–4 hari; akibatnya analisis susut unit ikut mundur.\""],
+   ["Melibatkan dan mengikutsertakan","Engages and involves","Bertanya untuk mengklarifikasi isu dan penyebabnya; mengembangkan rencana bersama dari ide orang lain; menyeimbangkan bertanya dan memberi tahu.","Bertanya \"Menurutmu apa yang paling menghambat?\" lalu menyusun rencana dari ide staf tersebut."],
+   ["Menyelaraskan ekspektasi diskusi","Aligns expectations for the discussion","Membuka sesi bimbingan dengan menjelaskan tujuan dan pentingnya diskusi; memeriksa pemahaman.","\"Tujuan obrolan kita 30 menit ini: menyusun cara supaya laporanmu tepat waktu. Oke dengan itu?\""],
+   ["Menyusun rencana tindakan","Establishes action plan","Menyimpulkan tindakan spesifik; menentukan akuntabilitas, waktu, ukuran kemajuan, dan tindak lanjut; memastikan komitmen; memantau dan mengarahkan kembali.","Menyepakati: laporan dikirim maks. H+1, dicek tiap Jumat, evaluasi bersama dua minggu lagi."],
+   ["Menawarkan dukungan","Offers support","Memberi bantuan langsung/lewat orang lain: saran, contoh praktik terbaik, sumber belajar, peluang mencoba; menyatakan yakin pada kemampuan individu.","Memberi contoh laporan terbaik, menghubungkan dengan mentor senior, dan berkata \"Saya yakin kamu bisa.\""],
+   ["Mempertahankan motivasi","Maintains motivation","Mengakui nilai, kemajuan, dan kontribusi tanpa mengurangi tantangan kinerja; berempati sambil tetap menekankan tanggung jawab yang disepakati.","\"Keterlambatanmu sudah turun separuh, bagus. Target kita tetap H+1, ayo kita cari yang masih menghambat.\""]
+  ],
+  star:["Ceritakan saat Anda membimbing rekan atau bawahan untuk meningkatkan kinerjanya.",
+        "Ceritakan saat Anda menyiapkan seseorang untuk tugas atau tanggung jawab baru.",
+        "Ceritakan saat orang yang Anda bimbing kehilangan semangat dan bagaimana Anda menanganinya."]},
+ {id:"cl", name:"Collaboration", idn:"Kerja sama", color:"#0f7c8c",
+  def:"Menunjukkan sikap terbuka dan kesediaan bekerja dengan orang lain secara efektif dan kooperatif; membangun dan menjaga hubungan kerja yang baik demi saling mendukung pencapaian tujuan bersama.",
+  kb:[
+   ["Mencari peluang","Seeks opportunities","Secara proaktif berupaya membangun hubungan kerja yang efektif dengan orang lain.","Proaktif mengenal tim unit distribusi sebelum ada kebutuhan mendesak, agar koordinasi data susut lancar."],
+   ["Menyamakan pemahaman","Seeks mutual understanding","Membangun hubungan dan berupaya memahami orang dari budaya dan latar belakang berbeda (isu, norma sosial, pendekatan, kecenderungan pengambilan keputusan).","Mempelajari cara kerja dan kebiasaan rekan dari daerah lain agar tidak terjadi salah paham."],
+   ["Mengesampingkan tujuan pribadi","Sets aside personal interests","Menempatkan tujuan bersama di atas tujuan pribadi; membantu menyediakan sumber daya untuk keberhasilan bersama.","Meminjamkan alat ukur timnya ke unit lain agar target bersama tercapai, meski timnya jadi harus menjadwal ulang."],
+   ["Meminta bantuan dan mendorong keterlibatan","Involves others","Memanfaatkan keterampilan orang lain dan mendapatkan dukungan dengan meminta ide, pendapat, dan partisipasi saat memecahkan masalah dan melaksanakan rencana.","Mengajak engineer proteksi dan tim SCADA memberi ide saat menganalisis gangguan berulang."],
+   ["Menawarkan bantuan","Offers assistance","Menawarkan diri membantu orang lain mencapai sasaran.","\"Laporanmu banyak minggu ini, mau saya bantu olah data meternya?\""],
+   ["Menjaga hubungan baik","Maintains relationships","Membuat orang lain merasa bernilai, dihargai dan dilibatkan dalam diskusi (meningkatkan harga diri, berempati, melibatkan, terbuka, memberi dukungan).","Berterima kasih secara spesifik kepada unit mitra dan melibatkan mereka dalam evaluasi hasil."]
+  ],
+  star:["Ceritakan pengalaman bekerja sama dengan unit/pihak lain untuk mencapai tujuan bersama.",
+        "Ceritakan saat Anda membantu rekan di luar tugas utama Anda.",
+        "Ceritakan saat kerja sama tim terhambat perbedaan cara kerja atau latar belakang, dan apa yang Anda lakukan."]}
+];
+
+// SJT: c = index of best option; k = key behavior numbers
+const SJT = {
+ gc:[
+  {q:"Anda mengusulkan program pengecekan meter transaksi mingguan untuk menekan susut. Manajer bagian pemeliharaan menolak karena timnya sudah sibuk. Apa yang paling efektif?",
+   o:[["Meminta atasan Anda menerbitkan memo agar program wajib dijalankan.","Bisa membuat patuh, tapi tidak membangun komitmen; penolakan akan muncul lagi di lapangan."],
+      ["Menemui beliau, menjelaskan tujuan dan data susut, menanyakan kendala timnya, lalu menyusun jadwal bersama yang tidak membebani.","Membuka dengan tujuan jelas, memperjelas situasi dengan data, mendengar kendala, dan mencari kesepakatan bersama."],
+      ["Menunda program sampai tim pemeliharaan tidak terlalu sibuk.","Pasif; tidak ada upaya meyakinkan, dan program bisa tertunda tanpa batas."],
+      ["Menjalankan pengecekan sendiri tanpa melibatkan tim pemeliharaan.","Menghindari tantangan; tidak ada komitmen dari pihak yang seharusnya terlibat."]], c:1, k:[1,4,5]},
+  {q:"Rapat koordinasi dengan empat unit menghasilkan banyak ide, tetapi waktu hampir habis. Apa yang sebaiknya Anda lakukan?",
+   o:[["Menutup rapat; notulen nanti dikirim oleh sekretaris.","Tanpa ringkasan bersama, tiap unit bisa pulang dengan pemahaman berbeda."],
+      ["Memperpanjang rapat sampai semua ide dibahas tuntas.","Tidak menghargai waktu peserta dan belum tentu menghasilkan keputusan."],
+      ["Merangkum keputusan yang sudah disepakati, PIC, dan tenggat, lalu menjadwalkan tindak lanjut untuk ide yang belum dibahas.","Menutup diskusi dengan ringkasan jelas dan langkah tindak lanjut."],
+      ["Meminta tiap unit menyimpulkan hasil rapat menurut versi masing-masing.","Berisiko menimbulkan kesimpulan yang berbeda-beda."]], c:2, k:[6]},
+  {q:"Saat diskusi, seorang teknisi senior mengusulkan cara inspeksi yang berbeda dari rencana Anda. Respons terbaik?",
+   o:[["Tetap pada rencana Anda karena sudah disetujui atasan.","Menutup diskusi dan membuat teknisi merasa tidak dihargai."],
+      ["Menerima usulannya sepenuhnya agar suasana tetap baik.","Menjaga hubungan, tetapi tanpa mengembangkan gagasan secara objektif."],
+      ["Mengapresiasi usulannya, menanyakan detail dan alasannya, lalu menggabungkan kelebihannya ke dalam rencana.","Mengembangkan gagasan orang lain dan diri sendiri sambil membuatnya merasa dihargai."],
+      ["Meminta usulannya dibahas di luar rapat supaya rapat tidak molor.","Menunda tanpa alasan kuat, dan bisa terasa seperti mengabaikan."]], c:2, k:[2,3]},
+  {q:"Kepala unit lain ragu mendukung kebijakan baru karena belum memahami dampaknya bagi unitnya. Apa langkah terbaik?",
+   o:[["Mengirimkan dokumen kebijakan lengkap agar beliau membacanya sendiri.","Informasi ada, tetapi tidak memastikan pemahaman maupun membahas keraguannya."],
+      ["Menegaskan bahwa ini sudah keputusan manajemen dan harus dijalankan.","Bersandar pada otoritas; tidak membangun komitmen."],
+      ["Menyajikan data kondisi saat ini, memastikan beliau memahami dengan bertanya, lalu menunjukkan manfaatnya bagi unit beliau.","Memperjelas situasi dan mendorong kesepakatan dengan menunjukkan manfaat."],
+      ["Menunggu sampai beliau bertanya.","Pasif; keraguan bisa berubah menjadi penolakan."]], c:2, k:[4,5]}
+ ],
+ ad:[
+  {q:"Perusahaan mengganti aplikasi pelaporan gangguan dengan sistem digital baru. Banyak rekan mengeluh karena repot. Apa yang paling tepat?",
+   o:[["Ikut mengeluh, tapi tetap memakai aplikasi baru.","Tetap patuh, tetapi memperkuat suasana negatif tentang perubahan."],
+      ["Mempelajari alasan dan fitur aplikasi baru, mencobanya lebih dulu, lalu membagikan tips dan manfaatnya ke rekan.","Memahami perubahan, menyikapinya positif, dan membicarakannya secara positif."],
+      ["Tetap memakai cara lama sampai ada teguran.","Mempertahankan perilaku lama yang tidak lagi sesuai."],
+      ["Menunggu pelatihan resmi sebelum mencoba.","Tidak salah, tetapi pasif; tidak aktif mencari informasi."]], c:1, k:[1,2]},
+  {q:"Terjadi gangguan di penghantar saat atasan sedang cuti, dan SOP tidak mengatur kondisi persis seperti ini. Apa yang Anda lakukan?",
+   o:[["Menunggu atasan bisa dihubungi sebelum bertindak.","Tidak bertindak mandiri; gangguan bisa berdampak lebih luas."],
+      ["Mengambil tindakan sesuai kewenangan dan prinsip K3, berkoordinasi dengan pihak terkait, lalu segera melapor.","Bertindak mandiri tanpa menunggu perintah, tetap dalam batas kewenangan dan aturan."],
+      ["Mengambil keputusan besar di luar kewenangan agar cepat selesai.","Inisiatif tanpa batas kewenangan berisiko secara K3 dan kepatuhan."],
+      ["Mencatat kejadian dan membahasnya di rapat minggu depan.","Terlalu lambat untuk situasi yang perlu ditangani segera."]], c:1, k:[4]},
+  {q:"Target pekerjaan Anda selesai lebih cepat dari jadwal. Apa yang paling menunjukkan adaptability?",
+   o:[["Memanfaatkan sisa waktu untuk analisis tambahan, misalnya tren susut per penghantar, yang mendukung sasaran unit.","Melakukan lebih dari yang diminta untuk mencapai sasaran."],
+      ["Beristirahat karena target sudah tercapai.","Wajar, tetapi tidak menunjukkan upaya ekstra."],
+      ["Menunggu atasan memberi tugas baru.","Menunggu perintah, tidak menunjukkan inisiatif."],
+      ["Mengerjakan hal yang Anda sukai walau tidak terkait prioritas unit.","Inisiatif, tetapi tidak diarahkan ke sasaran organisasi."]], c:0, k:[5]},
+  {q:"Anda pindah ke tim baru. Gaya bicara Anda yang langsung dianggap kurang sopan oleh beberapa rekan senior. Apa yang sebaiknya dilakukan?",
+   o:[["Mempertahankan gaya Anda karena lebih efisien.","Tidak menyesuaikan diri dengan lingkungan baru."],
+      ["Mengamati gaya komunikasi tim, menyesuaikan cara bicara, dan meminta masukan dari rekan.","Menyesuaikan interaksi antar pribadi dan perilaku dengan situasi baru."],
+      ["Mengurangi bicara dengan rekan senior.","Menghindar justru merusak kerja sama."],
+      ["Meminta pindah ke tim yang lebih cocok.","Menghindari tantangan perubahan."]], c:1, k:[6,3]}
+ ],
+ aj:[
+  {q:"Susut di salah satu penghantar naik 0,5% dalam tiga bulan. Langkah pertama terbaik?",
+   o:[["Langsung mengusulkan penggantian konduktor.","Mengambil solusi sebelum penyebab diketahui."],
+      ["Melaporkan kenaikan ke atasan dan menunggu arahan.","Masalahnya teridentifikasi, tetapi belum dianalisis."],
+      ["Mengumpulkan data meter, beban, dan riwayat pemeliharaan, lalu menguraikan kemungkinan penyebab teknis maupun non-teknis.","Mengumpulkan informasi dan menguraikan masalah secara sistematis untuk mencari akar penyebab."],
+      ["Menganggapnya fluktuasi biasa dan memantau bulan depan.","Berisiko melewatkan masalah nyata."]], c:2, k:[1,3]},
+  {q:"Anda menemukan dua laporan dengan angka energi yang berbeda untuk periode yang sama. Apa yang Anda lakukan?",
+   o:[["Memakai laporan yang paling baru.","Belum tentu yang terbaru benar."],
+      ["Mengambil rata-rata kedua angka.","Menutupi masalah tanpa mengetahui mana yang benar."],
+      ["Menelusuri sumber dan metode tiap laporan, lalu memverifikasi ke data lapangan sebelum menyimpulkan.","Membandingkan data dari berbagai sumber sebelum membuat kesimpulan."],
+      ["Memakai angka yang paling sesuai dengan target.","Tidak objektif dan bertentangan dengan integritas."]], c:2, k:[1,4]},
+  {q:"Ada beberapa alternatif solusi dan anggota tim berbeda pendapat. Bagaimana memilihnya?",
+   o:[["Memilih yang paling murah.","Hanya satu sudut pandang."],
+      ["Mengikuti pendapat orang paling senior.","Tidak menilai alternatif secara objektif."],
+      ["Membandingkan alternatif dari sisi teknis, biaya, risiko K3, dan dampak ke pelanggan, sambil melibatkan pihak terkait.","Mempertimbangkan berbagai sudut pandang sebelum memilih."],
+      ["Melakukan voting agar cepat.","Cepat, tetapi tanpa dasar analisis."]], c:2, k:[5]},
+  {q:"Analisis Anda sudah cukup lengkap dan keputusan ada di kewenangan Anda, tetapi Anda masih ragu. Apa yang terbaik?",
+   o:[["Menunda sampai datanya sempurna.","Data jarang sempurna; menunda bisa memperbesar dampak."],
+      ["Mengambil keputusan pada waktu terbaik, menyiapkan mitigasi risiko, lalu mengomunikasikannya.","Berkomitmen untuk bertindak sesuai waktu terbaik."],
+      ["Menyerahkan keputusan ke atasan.","Menghindari tanggung jawab yang sebenarnya ada di kewenangan Anda."],
+      ["Menjadwalkan rapat tambahan untuk membahas ulang.","Menambah waktu tanpa informasi baru."]], c:1, k:[6,4]}
+ ],
+ bt:[
+  {q:"Anda salah memasukkan data, sehingga laporan susut bulanan yang sudah dikirim ke manajemen keliru. Apa yang Anda lakukan?",
+   o:[["Memperbaiki diam-diam di laporan bulan depan.","Tidak jujur dan tidak bertanggung jawab."],
+      ["Menyebut ada kendala sistem.","Menyalahkan pihak lain; merusak kepercayaan."],
+      ["Segera memberi tahu atasan, mengirim koreksi, menjelaskan penyebab, dan memperbaiki proses agar tidak terulang.","Bekerja dengan integritas: mengakui kesalahan dan bertanggung jawab."],
+      ["Menunggu apakah ada yang menyadarinya.","Menghindari tanggung jawab."]], c:2, k:[1]},
+  {q:"Rekan senior naik ke struktur tanpa APD lengkap karena pekerjaannya \"cuma sebentar\". Apa yang Anda lakukan?",
+   o:[["Membiarkan karena beliau lebih senior dan berpengalaman.","Mengabaikan aturan K3 dan risiko keselamatan."],
+      ["Menghentikan dengan sopan, mengingatkan aturan dan risikonya, sambil memberi contoh memakai APD sendiri.","Menaati aturan K3 dan menampilkan keteladanan."],
+      ["Melaporkan ke atasan tanpa menegur langsung.","Ada tindakan, tetapi risiko di lapangan tetap terjadi saat itu."],
+      ["Ikut melonggarkan agar pekerjaan cepat selesai.","Melanggar aturan dan menjadi contoh buruk."]], c:1, k:[1,6]},
+  {q:"Dalam rapat, junior Anda mengusulkan ide yang bertentangan dengan pendapat Anda. Respons terbaik?",
+   o:[["Langsung menjelaskan mengapa idenya kurang tepat.","Tidak memberi ruang mempertimbangkan ide berbeda."],
+      ["Mendengarkan sampai selesai, menanyakan alasannya, lalu menimbangnya secara objektif dengan data.","Terbuka terhadap gagasan yang berbeda."],
+      ["Mengabaikan dan melanjutkan agenda.","Membuat junior merasa tidak dihargai."],
+      ["Menyetujui tanpa pertimbangan agar junior senang.","Tidak objektif; bukan keterbukaan yang sebenarnya."]], c:1, k:[3]},
+  {q:"Tim Anda bisa menunda pekerjaan pendukung untuk unit lain agar KPI tim sendiri terlihat lebih baik bulan ini. Apa yang Anda lakukan?",
+   o:[["Mendahulukan KPI tim karena itu yang dinilai.","Mengutamakan kepentingan kelompok di atas organisasi."],
+      ["Memprioritaskan tujuan organisasi, lalu mengatur jadwal dan berkoordinasi agar keduanya tetap tercapai sebaik mungkin.","Tidak mengutamakan tujuan kelompok sendiri dan menjaga hubungan kemitraan."],
+      ["Diam saja dan menunggu unit lain menagih.","Pasif dan merusak kepercayaan unit mitra."],
+      ["Meminta unit lain mengerjakannya sendiri.","Melempar tanggung jawab."]], c:1, k:[5]}
+ ],
+ co:[
+  {q:"Junior Anda sering terlambat mengirim laporan inspeksi. Bagaimana cara terbaik membuka sesi bimbingan?",
+   o:[["Langsung menegurnya dengan tegas.","Bukan coaching; cenderung membuatnya defensif."],
+      ["Menjelaskan tujuan sesi, menyampaikan data keterlambatan dan dampaknya bagi tim, lalu memeriksa pemahamannya.","Menyelaraskan ekspektasi dan menetapkan tantangan kinerja dengan data."],
+      ["Menyinggungnya di grup WhatsApp tim.","Mempermalukan di depan umum."],
+      ["Tidak membahasnya dan mengerjakan laporannya sendiri.","Masalah tidak terselesaikan dan junior tidak berkembang."]], c:1, k:[3,1]},
+  {q:"Saat coaching, Anda sebenarnya sudah punya solusi untuk masalah staf. Apa yang sebaiknya dilakukan?",
+   o:[["Langsung memberi tahu solusi Anda supaya cepat.","Terlalu banyak memberi tahu; staf kurang merasa memiliki rencananya."],
+      ["Bertanya untuk menggali penyebab dan idenya, lalu membangun rencana bersama, sambil menambahkan masukan Anda bila perlu.","Melibatkan dan mengikutsertakan; menyeimbangkan bertanya dan memberi tahu."],
+      ["Membiarkannya mencari solusi sendiri tanpa arahan.","Kurang dukungan."],
+      ["Menyuruhnya membaca SOP lagi.","Tidak menggali penyebab sebenarnya."]], c:1, k:[2]},
+  {q:"Sesi coaching hampir selesai. Bagaimana menutupnya dengan efektif?",
+   o:[["\"Semangat ya, saya yakin kamu bisa.\"","Memberi motivasi, tetapi tanpa rencana yang jelas."],
+      ["Menyepakati tindakan spesifik, target waktu, ukuran kemajuan, dan jadwal pemantauan, lalu memastikan komitmennya.","Menyusun rencana tindakan yang jelas dan terukur."],
+      ["Memintanya membuat rencana sendiri dan mengirimkannya kapan saja.","Tanpa akuntabilitas dan tenggat."],
+      ["Berjanji akan memantau, tanpa detail.","Tidak ada ukuran kemajuan."]], c:1, k:[4]},
+  {q:"Dua minggu kemudian, kinerjanya membaik tetapi belum mencapai target, dan ia mulai putus asa. Apa yang Anda lakukan?",
+   o:[["Menurunkan target agar ia tidak tertekan.","Mengurangi tantangan kinerja."],
+      ["Menegurnya karena belum mencapai target.","Mengabaikan kemajuan dan menurunkan motivasi."],
+      ["Mengakui kemajuannya, mendengarkan kekhawatirannya, tetap menekankan target yang disepakati, dan menawarkan bantuan tambahan.","Mempertahankan motivasi sekaligus menawarkan dukungan."],
+      ["Menyerahkan masalahnya ke atasan.","Melepas tanggung jawab sebagai coach."]], c:2, k:[6,5]}
+ ],
+ cl:[
+  {q:"Proyek Anda membutuhkan data dari unit distribusi yang belum pernah bekerja sama dengan Anda. Apa yang paling efektif?",
+   o:[["Mengirim surat permintaan data resmi dan menunggu balasan.","Prosedural, tetapi tidak membangun hubungan kerja."],
+      ["Menghubungi langsung, berkenalan, memahami kebutuhan dan cara kerja mereka, lalu menawarkan manfaat timbal balik.","Mencari peluang membangun hubungan dan menyamakan pemahaman."],
+      ["Meminta atasan yang menghubungi.","Tidak proaktif."],
+      ["Memakai data lama yang sudah ada.","Menghindari kerja sama; hasil kurang akurat."]], c:1, k:[1,2]},
+  {q:"Unit lain kekurangan personel untuk pekerjaan pemeliharaan yang mendukung target bersama. Tim Anda punya sedikit kelonggaran. Apa yang Anda lakukan?",
+   o:[["Diam saja karena itu bukan pekerjaan tim Anda.","Mengutamakan kepentingan sendiri."],
+      ["Menawarkan bantuan personel atau peralatan yang bisa dibagi, tanpa mengorbankan tugas inti tim Anda.","Menawarkan bantuan dan menempatkan tujuan bersama sebagai prioritas."],
+      ["Membantu hanya jika diminta secara resmi.","Reaktif."],
+      ["Membantu dengan syarat mereka membalas di lain waktu.","Transaksional, kurang tulus."]], c:1, k:[5,3]},
+  {q:"Gangguan berulang terjadi dan penyebabnya melibatkan beberapa bidang (proteksi, SCADA, pemeliharaan). Apa pendekatan terbaik?",
+   o:[["Menyelesaikan sendiri supaya cepat.","Tidak memanfaatkan keahlian bidang lain."],
+      ["Mengundang perwakilan tiap bidang, meminta ide dan masukan, lalu melibatkan mereka dalam keputusan dan pelaksanaan.","Meminta bantuan dan mendorong keterlibatan orang lain."],
+      ["Menunggu keputusan dari atasan.","Pasif."],
+      ["Menyerahkan ke bidang yang paling sering disalahkan.","Menyalahkan, bukan bekerja sama."]], c:1, k:[4]},
+  {q:"Rekan baru dari daerah lain punya cara kerja dan gaya komunikasi berbeda sehingga sering terjadi salah paham. Apa yang Anda lakukan?",
+   o:[["Memintanya menyesuaikan diri dengan cara tim.","Satu arah; tidak berusaha memahami."],
+      ["Mengajaknya berbincang untuk memahami kebiasaannya, berbagi cara kerja tim, lalu menyepakati cara kerja bersama.","Menyamakan pemahaman dan menjaga hubungan baik."],
+      ["Mengurangi interaksi dengannya.","Merusak kerja sama."],
+      ["Melaporkan ke atasan.","Terlalu dini; belum ada upaya memahami."]], c:1, k:[2,6]}
+ ]
+};
+
+// Urutan ideal (indeks pilihan, dari paling efektif ke paling tidak efektif)
+const RANK = {
+ gc:[[1,0,3,2],[2,0,1,3],[2,3,1,0],[2,0,1,3]],
+ ad:[[1,3,0,2],[1,0,3,2],[0,3,2,1],[1,0,2,3]],
+ aj:[[2,1,3,0],[2,0,1,3],[2,0,3,1],[1,3,0,2]],
+ bt:[[2,0,3,1],[1,2,0,3],[1,0,3,2],[1,0,2,3]],
+ co:[[1,0,3,2],[1,0,3,2],[1,3,2,0],[2,0,1,3]],
+ cl:[[1,0,2,3],[1,2,3,0],[1,0,2,3],[1,0,3,2]]
+};
+
+// Roleplay scenarios
+const RP = [
+ {comp:"gc", title:"Meyakinkan supervisor gardu induk", who:"Pak Darmo", role:"Supervisor Gardu Induk senior (25 tahun pengalaman)",
+  you:"Anda engineer yang ingin mengajak tim Pak Darmo melakukan pengecekan meter transaksi tiap minggu untuk menekan susut di penghantar yang susutnya naik 0,5% dalam 3 bulan.",
+  hidden:"Timmu kekurangan 2 orang. Kamu skeptis karena program serupa tahun lalu berhenti di tengah jalan. Kamu ingin dihargai pengalamanmu. Kamu mau mendukung jika: tujuan dan data jelas, kekhawatiranmu didengar, jadwalnya fleksibel (misal 2 minggu sekali di awal), dan timmu mendapat pengakuan.",
+  open:"Program pengecekan meter lagi? Tahun lalu juga ada yang begitu, ujung-ujungnya berhenti. Tim saya sudah kurang orang, Mas."},
+ {comp:"co", title:"Membimbing staf yang laporannya terlambat", who:"Rina", role:"Staf junior (2 tahun bekerja)",
+  you:"Anda atasan langsung Rina. Tiga laporan inspeksinya bulan ini terlambat 2–4 hari dan kurang lengkap. Lakukan sesi coaching.",
+  hidden:"Kamu kewalahan karena sering diminta membantu urusan administrasi lain, dan kamu belum terbiasa dengan aplikasi laporan baru. Kamu malu mengakuinya. Kamu akan terbuka jika atasan bertanya dengan empati, dan akan berkomitmen jika rencananya disusun bersama dan jelas.",
+  open:"Bapak/Ibu memanggil saya? Ada apa ya?"},
+ {comp:"cl", title:"Mengajak unit lain berbagi data", who:"Bu Sari", role:"Asisten manajer di unit distribusi",
+  you:"Anda butuh data pengukuran dari unit Bu Sari untuk analisis susut di titik transaksi. Unit Anda belum pernah bekerja sama dengan unitnya.",
+  hidden:"Unitmu sedang dikejar target pelaporan akhir bulan. Kamu khawatir datamu dipakai untuk menyalahkan unitmu. Kamu mau bekerja sama jika manfaatnya jelas untuk kedua unit, ada kesepakatan penggunaan data, dan permintaannya tidak menambah beban besar.",
+  open:"Data pengukuran kami? Untuk apa ya? Jujur, tim saya lagi sibuk sekali menjelang akhir bulan."},
+ {comp:"bt", title:"Melaporkan kesalahan ke atasan", who:"Pak Hendra", role:"Manajer bagian (atasan Anda)",
+  you:"Anda baru menyadari salah input data sehingga laporan susut bulanan yang sudah dikirim ke kantor induk keliru (susut tercatat lebih rendah 0,3%). Sampaikan ke Pak Hendra.",
+  hidden:"Kamu tegas tetapi menghargai kejujuran. Awalnya kamu kecewa dan bertanya bagaimana bisa terjadi. Kamu akan tenang jika bawahan mengakui dengan jujur, menjelaskan penyebab, sudah menyiapkan koreksi, dan mengusulkan perbaikan proses.",
+  open:"Ya, ada apa? Saya ada rapat 15 menit lagi."},
+ {comp:"ad", title:"Menyikapi perubahan sistem kerja", who:"Mas Yoga", role:"Rekan kerja yang menolak aplikasi baru",
+  you:"Unit Anda beralih ke aplikasi pelaporan digital. Mas Yoga, rekan Anda, terus memakai form kertas dan mengajak rekan lain menolak. Bicaralah dengannya.",
+  hidden:"Kamu tidak percaya diri dengan aplikasi baru dan takut terlihat lambat. Kamu akan mau mencoba jika diajak dengan positif, diberi alasan perubahan, dan dibantu, bukan dihakimi.",
+  open:"Aplikasi baru itu ribet. Form kertas sudah jalan bertahun-tahun, kenapa harus diganti sih?"},
+ {comp:"aj", title:"Menjelaskan analisis ke atasan", who:"Bu Lina", role:"Manajer yang meminta rekomendasi cepat",
+  you:"Bu Lina meminta rekomendasi tentang kenaikan susut di satu penghantar. Jelaskan analisis Anda dan rekomendasi tindakannya.",
+  hidden:"Kamu ingin jawaban yang terstruktur: data apa yang dikumpulkan, kemungkinan penyebab, alternatif solusi beserta risikonya, dan rekomendasi yang tegas. Tanyakan hal kritis jika penjelasannya melompat ke solusi tanpa data.",
+  open:"Saya dengar susut di penghantar itu naik. Apa yang terjadi dan apa usulanmu?"}
+];
+
+// ===================== STATE =====================
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+const P = store.get("sc_prog",{}); // {sjt:{gc:best%}, kb:{gc:best%}, star:{gc:count}, rp:{gc:count}}
+["sjt","kb","rank","star","rp"].forEach(k=>P[k]=P[k]||{});
+const save=()=>store.set("sc_prog",P);
+RP.push(...store.get("sc_gen_rp",[]));
+const $=s=>document.querySelector(s);
+const esc=s=>String(s??"").replace(/[&<>"]/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const C=id=>COMP.find(c=>c.id===id);
+const ini=n=>n.split(" ").filter(w=>w.length>2||w==="&").map(w=>w[0]).join("").slice(0,2);
+
+// ===================== BANK SOAL + GENERATOR AI =====================
+const GKEY={sjt:c=>"sc_gen_sjt_"+c, kb:c=>"sc_gen_kb_"+c, star:c=>"sc_gen_star_"+c};
+function sjtPool(c){ return SJT[c.id].map((x,i)=>({id:`${c.id}-${i}`,q:x.q,o:x.o,c:x.c,r:RANK[c.id][i],k:x.k})).concat(store.get(GKEY.sjt(c.id),[])); }
+function kbPool(c){ return c.kb.map((k,i)=>({id:`${c.id}-kb${i}`,kb:i,ex:k[3]})).concat(store.get(GKEY.kb(c.id),[])); }
+function starList(c){ return c.star.concat(store.get(GKEY.star(c.id),[])); }
+const SEEN=store.get("sc_seen",{}); ["sjt","rank","kb"].forEach(k=>SEEN[k]=SEEN[k]||[]);
+const isSeen=(kind,id)=>SEEN[kind].includes(id);
+function markSeen(kind,id){ if(id&&!SEEN[kind].includes(id)){ SEEN[kind].push(id); store.set("sc_seen",SEEN); } }
+const poolOf=(kind,c)=>kind==="kb"?kbPool(c):sjtPool(c);
+const unseenOf=(kind,c)=>poolOf(kind,c).filter(x=>!isSeen(kind,x.id)).length;
+const uid=()=>"g"+Date.now().toString(36)+Math.random().toString(36).slice(2,6);
+
+const CTX="Konteks: pegawai PLN di bidang transmisi, misalnya unit pelaksana transmisi, gardu induk, penghantar/SUTT, susut energi, meter transaksi, pemeliharaan, proteksi, SCADA, K3, koordinasi dengan unit distribusi atau pembangkit, rapat kerja, digitalisasi, dan pelayanan. Variasikan situasi (termasuk situasi kantor umum), tokoh, dan tingkat jabatan.";
+const brief=c=>`KOMPETENSI: ${c.name}\nDEFINISI: ${c.def}\nKEY BEHAVIOR:\n${kbList(c)}`;
+async function ask(prompt){ const res=await sample(prompt,{modelTier:"default"}); return parseJSON(res.text); }
+
+async function genSJT(c,n=4){
+  const j=await ask(`Kamu penyusun soal Situational Judgement Test untuk asesmen soft competency.
+${brief(c)}
+${CTX}
+
+Buat ${n} soal BARU yang situasinya berbeda dari soal yang sudah ada:
+${sjtPool(c).map(x=>"- "+x.q).join("\n")}
+
+Aturan tiap soal:
+- Situasi kerja realistis 1–3 kalimat, diakhiri pertanyaan seperti "Apa yang paling efektif?".
+- Tepat 4 pilihan tindakan, semuanya masuk akal, panjangnya mirip. Pilihan terbaik TIDAK boleh selalu yang paling panjang atau selalu di posisi yang sama.
+- Pilihan terbaik menunjukkan 1–3 key behavior kompetensi ini.
+- "why": alasan singkat (maks. 20 kata) mengapa pilihan itu efektif atau kurang efektif.
+- "urutan": indeks pilihan (0–3) dari paling efektif ke paling tidak efektif.
+- "kb": nomor key behavior (1–6) yang ditunjukkan pilihan terbaik.
+- Bahasa Indonesia baku yang ringkas.
+
+Balas HANYA JSON valid:
+{"soal":[{"q":"...","o":[{"t":"...","why":"..."},{"t":"...","why":"..."},{"t":"...","why":"..."},{"t":"...","why":"..."}],"urutan":[2,0,3,1],"kb":[1,4]}]}`);
+  const out=(j.soal||[]).filter(x=>x&&x.q&&Array.isArray(x.o)&&x.o.length===4&&Array.isArray(x.urutan)&&x.urutan.map(Number).sort().join()==="0,1,2,3").map(x=>{
+    const r=x.urutan.map(Number), k=(x.kb||[]).map(Number).filter(n=>n>=1&&n<=6);
+    return {id:uid(),q:String(x.q),o:x.o.map(o=>[String(o.t??o),String(o.why??"")]),c:r[0],r,k:k.length?k:[1],ai:true}; });
+  if(!out.length) throw new Error("empty");
+  store.set(GKEY.sjt(c.id),store.get(GKEY.sjt(c.id),[]).concat(out)); return out.length;
+}
+async function genKB(c){
+  const j=await ask(`Kamu penyusun soal latihan asesmen soft competency.
+${brief(c)}
+${CTX}
+
+Buat 6 contoh perilaku BARU, satu untuk tiap key behavior (1–6). Tiap contoh 1–2 kalimat, konkret, menggambarkan tindakan nyata seseorang (boleh kutipan ucapan). Jangan menyebut nama key behavior-nya secara langsung. Hindari kemiripan dengan contoh yang sudah ada:
+${kbPool(c).map(x=>"- "+x.ex).join("\n")}
+
+Balas HANYA JSON valid: {"contoh":[{"kb":1,"ex":"..."}]}`);
+  const out=(j.contoh||[]).filter(x=>x&&x.ex&&+x.kb>=1&&+x.kb<=6).map(x=>({id:uid(),kb:+x.kb-1,ex:String(x.ex),ai:true}));
+  if(!out.length) throw new Error("empty");
+  store.set(GKEY.kb(c.id),store.get(GKEY.kb(c.id),[]).concat(out)); return out.length;
+}
+async function genStar(c){
+  const j=await ask(`Kamu asesor yang menyusun pertanyaan Behavioral Event Interview.
+${brief(c)}
+${CTX}
+
+Buat 3 pertanyaan wawancara BARU yang menggali pengalaman nyata (diawali "Ceritakan…"), masing-masing menyasar key behavior yang berbeda. Jangan mirip dengan:
+${starList(c).map(x=>"- "+x).join("\n")}
+
+Balas HANYA JSON valid: {"pertanyaan":["...","...","..."]}`);
+  const out=(j.pertanyaan||[]).map(String).filter(x=>x.length>15);
+  if(!out.length) throw new Error("empty");
+  store.set(GKEY.star(c.id),store.get(GKEY.star(c.id),[]).concat(out)); return out.length;
+}
+async function genRP(c){
+  const j=await ask(`Kamu perancang simulasi role play untuk asesmen soft competency.
+${brief(c)}
+${CTX}
+
+Buat 1 skenario role play BARU (berbeda dari: ${RP.filter(r=>r.comp===c.id).map(r=>r.title).join("; ")}). Peserta berbicara dengan satu tokoh yang punya kekhawatiran tersembunyi. Tokoh baru mau bekerja sama jika peserta menunjukkan key behavior kompetensi ini.
+
+Balas HANYA JSON valid:
+{"title":"judul singkat","who":"nama tokoh, misal Pak Arif","role":"jabatan dan sifat singkat","you":"peran dan tujuan peserta, 1-2 kalimat, sapa peserta dengan 'Anda'","hidden":"kekhawatiran tersembunyi tokoh dan syarat agar ia mau bekerja sama","open":"kalimat pembuka tokoh"}`);
+  if(!j.title||!j.who||!j.open) throw new Error("empty");
+  const r={comp:c.id,title:String(j.title),who:String(j.who),role:String(j.role||""),you:String(j.you||""),hidden:String(j.hidden||""),open:String(j.open),ai:true};
+  const all=store.get("sc_gen_rp",[]); all.push(r); store.set("sc_gen_rp",all); RP.push(r); return RP.length-1;
+}
+const errMsg=e=>e&&e.code==="rate_limited"?"Terlalu banyak permintaan ke AI. Tunggu sebentar lalu coba lagi.":e&&e.code==="not_granted"?"Akses AI tidak diizinkan.":"AI gagal membuat soal baru. Coba lagi nanti.";
+const loadingView=(title,back,text)=>topbar(title,back)+`<div class="card" style="text-align:center;padding:30px 18px"><span class="spinner dark" style="width:26px;height:26px"></span><p style="margin:14px 0 4px;font-weight:700">${text}</p><p class="small muted" style="margin:0">Biasanya selesai dalam beberapa detik.</p></div>`;
+async function waitSample(){ for(let i=0;i<40&&!sampleChecked;i++) await new Promise(r=>setTimeout(r,250)); }
+
+let sample=null, sampleChecked=false;
+(async()=>{ await null; try{ if(window.claude&&claude.use){ sample=await claude.use("sample"); } }catch(e){ sample=null; }
+  sampleChecked=true; const t=parts().tab; if((t==="star"&&parts().arg)||t==="sim") render(); })();
+
+// ===================== NAV / ROUTER =====================
+const TABS=[
+ ["home","Beranda",'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>'],
+ ["materi","Materi",'<path d="M4 5a2 2 0 0 1 2-2h13v16H6a2 2 0 0 0-2 2z"/><path d="M4 21V5"/>'],
+ ["kasus","Studi kasus",'<path d="M9 11l3 3 8-8"/><path d="M20 12v7a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h9"/>'],
+ ["star","STAR",'<path d="M12 3l2.7 5.6 6.1.9-4.4 4.3 1 6.1L12 17l-5.4 2.9 1-6.1L3.2 9.5l6.1-.9z"/>'],
+ ["sim","Simulasi",'<path d="M21 12a8 8 0 0 1-11.6 7.1L4 21l1.9-5.4A8 8 0 1 1 21 12z"/>'],
+ ["tes","Psikotes",'<rect x="3" y="3" width="7" height="7" rx="1.5"/><rect x="14" y="3" width="7" height="7" rx="1.5" transform="rotate(15 17.5 6.5)"/><path d="M4 17h6M7 14v6"/><path d="M15 15l5 5M20 15l-5 5"/>']
+];
+function renderNav(cur){
+  $("#nav").innerHTML=TABS.map(([k,l,ic])=>`<button class="${cur===k?"on":""}" onclick="go('${k}')"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round">${ic}</svg>${l}</button>`).join("");
+}
+function go(h){ if(location.hash.slice(1)===h) render(); else location.hash=h; window.scrollTo(0,0); }
+window.addEventListener("hashchange",()=>{render();window.scrollTo(0,0);});
+function parts(){ const h=location.hash.slice(1)||"home"; const [tab,...rest]=h.split("-"); return {tab:TABS.some(t=>t[0]===tab)?tab:"home", arg:rest.join("-")}; }
+function topbar(title,back){ return `<div class="top">${back?`<button class="back" onclick="go('${back}')">‹</button>`:""}<h1>${title}</h1></div>`; }
+
+function render(){
+  const {tab,arg}=parts(); renderNav(tab);
+  const app=$("#app");
+  if(tab==="home") app.innerHTML=homeView();
+  else if(tab==="materi") app.innerHTML = arg? materiDetail(arg) : pickComp("Materi key behavior","materi","Definisi, 6 key behavior, dan contoh perilaku di lapangan.");
+  else if(tab==="kasus") { if(arg) startQuiz(arg); else app.innerHTML=kasusMenu(); }
+  else if(tab==="star") { if(arg) starView(arg); else app.innerHTML=pickComp("Latihan wawancara STAR","star","Jawab pertanyaan wawancara berbasis perilaku dengan format STAR, lalu nilai dengan AI atau checklist."); }
+  else if(tab==="sim") { if(arg!=="") simView(arg); else app.innerHTML=simMenu(); }
+  else if(tab==="tes") { if(PS) clearInterval(PS.tick); app.innerHTML=psikoMenu(); bindPsikoMenu(); }
+}
+
+// ===================== HOME =====================
+function compProgress(c){
+  const parts=[P.sjt[c.id], P.rank[c.id], P.kb[c.id], P.star[c.id]?100:null, P.rp[c.id]?100:null];
+  const done=parts.filter(x=>x!=null);
+  return done.length? Math.round(done.reduce((a,b)=>a+b,0)/5) : 0;
+}
+function homeView(){
+  return `<div class="card hero"><h2>Latihan Soft Competency</h2><p>Latihan mandiri untuk asesmen kompetensi: pahami key behavior, kerjakan studi kasus, latih jawaban STAR, dan simulasi role play dengan AI.</p></div>
+  <div class="card" style="border-color:var(--warm);background:var(--warm-soft)">
+    <p class="label" style="color:var(--warm)">Prioritas pengembangan</p>
+    <h3>Gaining Commitment · gap 1 rating</h3>
+    <p class="small" style="margin:4px 0 12px">Mulai dari sini: baca key behavior-nya, lalu coba simulasi meyakinkan supervisor gardu induk.</p>
+    <div class="row"><button class="btn warm" onclick="go('materi-gc')">Pelajari</button><button class="btn ghost" style="border-color:var(--warm);color:var(--warm)" onclick="go('sim-0')">Simulasi</button></div>
+  </div>
+  <button class="comp" onclick="go('tes')"><span class="ic" style="background:#2b6cb01a;color:#2b6cb0">↻</span><span class="tx"><div class="nm">Psikotes</div><div class="sb">Gambar diputar, deret &amp; hitungan angka, sinonim/antonim/analogi</div></span><span class="muted">›</span></button>
+  <p class="label" style="margin:18px 2px 10px">Semua kompetensi</p>
+  ${COMP.map(c=>{const p=compProgress(c);return `<button class="comp ${c.focus?"focus":""}" onclick="go('materi-${c.id}')">
+    <span class="ic" style="background:${c.color}1a;color:${c.color}">${ini(c.name)}</span>
+    <span class="tx"><div class="nm">${c.name} ${c.focus?'<span class="pill warm">Prioritas</span>':""}</div>
+    <div class="sb">${c.idn}${P.sjt[c.id]!=null?` · studi kasus ${P.sjt[c.id]}%`:""}</div>
+    <div class="mbar"><i style="width:${p}%;background:${c.color}"></i></div></span></button>`;}).join("")}
+  <div class="card" style="margin-top:14px"><p class="label">Cara menjawab saat asesmen</p>
+    <ul class="clean">
+      <li>Ceritakan <b>pengalaman nyata</b> yang spesifik (kapan, di mana, siapa), bukan "biasanya saya…".</li>
+      <li>Fokus pada <b>apa yang Anda lakukan</b> ("saya"), bukan "kami" atau tim.</li>
+      <li>Pakai format <b>STAR</b>: Situasi, Tugas, Aksi, Hasil. Bagian Aksi paling banyak dinilai.</li>
+      <li>Sebutkan <b>hasil yang terukur</b> bila ada (angka susut, waktu, biaya).</li>
+    </ul></div>
+  <p class="small muted" style="text-align:center;margin-top:16px">Alat latihan mandiri, bukan bagian dari sistem asesmen resmi.</p>`;
+}
+function pickComp(title,tab,desc){
+  return topbar(title)+`<p class="small muted" style="margin:-4px 2px 14px">${desc}</p>`+
+   COMP.map(c=>`<button class="comp ${c.focus?"focus":""}" onclick="go('${tab}-${c.id}')"><span class="ic" style="background:${c.color}1a;color:${c.color}">${ini(c.name)}</span><span class="tx"><div class="nm">${c.name} ${c.focus?'<span class="pill warm">Prioritas</span>':""}</div><div class="sb">${c.idn}</div></span><span class="muted">›</span></button>`).join("");
+}
+
+// ===================== MATERI =====================
+function materiDetail(id){
+  const c=C(id); if(!c) return pickComp("Materi","materi","");
+  return topbar(c.name,"materi")+`
+  <div class="card"><p class="label">Definisi</p><p style="margin:0;font-size:15px">${c.def}</p></div>
+  <div class="card"><p class="label">6 key behavior + contoh</p>
+   ${c.kb.map((k,i)=>`<div class="kb"><div class="h"><span class="n">${i+1}</span><div><div class="t">${k[0]}</div><div class="en">${k[1]}</div></div></div><div class="d">${k[2]}</div><div class="ex">Contoh: ${k[3]}</div></div>`).join("")}
+  </div>
+  <div class="row" style="margin-bottom:10px"><button class="btn" onclick="go('kasus-kb-${id}')">Kuis key behavior</button><button class="btn ghost" onclick="go('kasus-rank-${id}')">Urutkan pilihan</button></div>
+  <div class="row"><button class="btn ghost" onclick="go('star-${id}')">Latihan STAR</button><button class="btn ghost" onclick="go('sim-${RP.findIndex(r=>r.comp===id)}')">Simulasi</button></div>`;
+}
+
+// ===================== QUIZ (SJT + KB) =====================
+function kasusMenu(){
+  return topbar("Studi kasus")+`<p class="small muted" style="margin:-4px 2px 14px">Tiga jenis latihan: <b>pilih satu</b> tindakan paling efektif, <b>urutkan</b> semua pilihan dari paling sampai paling tidak efektif, dan <b>kuis key behavior</b>.</p>
+  <button class="btn" style="margin-bottom:8px" onclick="go('kasus-sjt-all')">Pilih satu · campuran (12 soal)</button>
+  <button class="btn" style="margin-bottom:8px" onclick="go('kasus-rank-all')">Urutkan pilihan · campuran (12 soal)</button>
+  <button class="btn ghost" style="margin-bottom:16px" onclick="go('kasus-kb-all')">Kuis key behavior campuran (12 soal)</button>
+  <p class="small muted" style="margin:0 2px 12px">Soal yang belum dikerjakan selalu didahulukan. Kalau soal di suatu kompetensi habis, AI otomatis membuat soal baru${sampleChecked&&!sample?" (saat halaman dibuka di claude.ai)":""}.</p>
+  <p class="label" style="margin:6px 2px 10px">Per kompetensi</p>
+  ${COMP.map(c=>`<div class="card" style="padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px"><b>${c.name}</b>${c.focus?'<span class="pill warm">Prioritas</span>':""}</div>
+   <div class="small muted" style="margin-bottom:10px">${sjtPool(c).length} soal studi kasus · belum dikerjakan: pilih satu ${unseenOf("sjt",c)}, urutkan ${unseenOf("rank",c)}, kuis KB ${unseenOf("kb",c)}</div>
+   <div class="row"><button class="btn ghost" style="padding:10px;font-size:13.5px" onclick="go('kasus-sjt-${c.id}')">Pilih satu${P.sjt[c.id]!=null?` · ${P.sjt[c.id]}%`:""}</button><button class="btn ghost" style="padding:10px;font-size:13.5px" onclick="go('kasus-rank-${c.id}')">Urutkan${P.rank[c.id]!=null?` · ${P.rank[c.id]}%`:""}</button><button class="btn ghost" style="padding:10px;font-size:13.5px" onclick="go('kasus-kb-${c.id}')">Kuis KB${P.kb[c.id]!=null?` · ${P.kb[c.id]}%`:""}</button></div></div>`).join("")}`;
+}
+let Q=null;
+async function startQuiz(arg){
+  const [kind,cid]=arg.split("-");
+  const comps = cid==="all"?COMP:[C(cid)].filter(Boolean);
+  if(!comps.length) return go("kasus");
+  const per = kind==="kb"?6:4, need = cid==="all"?12:per;
+  const title = kind==="sjt"?"Studi kasus":kind==="rank"?"Urutkan pilihan":"Kuis key behavior";
+  const total=()=>comps.reduce((a,c)=>a+unseenOf(kind,c),0);
+  let note="";
+  if(total()<need){
+    await waitSample();
+    if(sample){
+      const targets = cid==="all" ? comps.slice().sort((a,b)=>unseenOf(kind,a)-unseenOf(kind,b)).slice(0,3) : comps;
+      $("#app").innerHTML=loadingView(title,"kasus","Membuat soal baru dengan AI…");
+      try{ for(const c of targets){ if(kind==="kb") await genKB(c); else await genSJT(c,4); } note="Soal baru buatan AI sudah ditambahkan."; }
+      catch(e){ note=errMsg(e)+" Untuk sementara soal lama diulang."; if(e&&e.code==="not_granted") sample=null; }
+    } else note="Semua soal di sini sudah pernah dikerjakan, jadi soal diulang acak. Soal baru dibuat otomatis oleh AI saat halaman dibuka di claude.ai.";
+  }
+  const entries=[]; comps.forEach(c=>poolOf(kind,c).forEach(x=>entries.push({c,x})));
+  const chosen=shuffle(shuffle(entries.filter(e=>!isSeen(kind,e.x.id))).concat(shuffle(entries.filter(e=>isSeen(kind,e.x.id)))).slice(0,need));
+  const items=chosen.map(({c,x})=>{
+    if(kind==="kb"){ const i=x.kb, others=shuffle(c.kb.map((_,j)=>j).filter(j=>j!==i)).slice(0,3);
+      return {type:"kb",c,id:x.id,ai:x.ai,q:x.ex,opts:shuffle([i,...others].map(j=>({t:c.kb[j][0],why:c.kb[j][2],ok:j===i}))),k:[i+1]}; }
+    if(kind==="rank") return {type:"rank",c,id:x.id,ai:x.ai,q:x.q,opts:shuffle(x.o.map((o,i)=>({t:o[0],why:o[1],ideal:x.r.indexOf(i)+1}))),k:x.k};
+    return {type:"sjt",c,id:x.id,ai:x.ai,q:x.q,opts:shuffle(x.o.map((o,i)=>({t:o[0],why:o[1],ok:i===x.c}))),k:x.k};
+  });
+  Q={arg,kind,cid,items,i:0,score:0,max:0,answered:false,note};
+  if(kind==="rank") renderRank(); else renderQuiz();
+}
+function qmeta(it){
+  return `${Q.note&&Q.i===0?`<div class="notice" style="margin-bottom:12px">${esc(Q.note)}</div>`:""}<div class="qmeta"><span><span class="pill" style="background:${it.c.color}1a;color:${it.c.color}">${it.c.name}</span>${it.ai?' <span class="pill mid">Soal AI</span>':""}</span><span class="small muted">${Q.i+1} / ${Q.items.length}</span></div>`;
+}
+function renderQuiz(){
+  const it=Q.items[Q.i], title=Q.kind==="sjt"?"Studi kasus":"Kuis key behavior";
+  $("#app").innerHTML=topbar(title,"kasus")+`
+   <div class="progress"><i style="width:${Q.i/Q.items.length*100}%"></i></div>
+   <div class="card">
+    ${qmeta(it)}
+    <p class="small muted" style="margin:0 0 6px">${Q.kind==="sjt"?"Tindakan mana yang paling efektif?":"Perilaku ini menunjukkan key behavior apa?"}</p>
+    <p class="qtext">${esc(it.q)}</p>
+    <div class="opts">${it.opts.map((o,j)=>`<button class="opt" data-j="${j}">${esc(o.t)}<span class="why hidden">${esc(o.why)}</span></button>`).join("")}</div>
+    <div id="qfb"></div>
+   </div>
+   <button class="btn hidden" id="qnext">${Q.i===Q.items.length-1?"Lihat hasil":"Lanjut"}</button>`;
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answerQuiz(+b.dataset.j));
+  $("#qnext").onclick=()=>{ if(Q.i<Q.items.length-1){Q.i++;renderQuiz();window.scrollTo(0,0);} else quizResult(); };
+}
+function answerQuiz(j){
+  const it=Q.items[Q.i]; const ok=it.opts[j].ok; if(ok) Q.score++; markSeen(Q.kind,it.id);
+  document.querySelectorAll(".opt").forEach((b,x)=>{ b.disabled=true; b.querySelector(".why").classList.remove("hidden"); if(it.opts[x].ok) b.classList.add("correct"); else if(x===j) b.classList.add("wrong"); });
+  const kbs=it.k.map(n=>`${n}. ${it.c.kb[n-1][0]}`).join(", ");
+  $("#qfb").innerHTML=`<div class="fb ${ok?"ok":"bad"}"><b class="h">${ok?"Tepat!":"Kurang tepat"}</b>${Q.kind==="sjt"?`Key behavior yang ditunjukkan jawaban terbaik: <b>${kbs}</b>.`:`Jawabannya <b>${kbs}</b>: ${esc(it.c.kb[it.k[0]-1][2])}`}</div>`;
+  $("#qnext").classList.remove("hidden");
+  setTimeout(()=>{const n=$("#qnext"); if(n) n.scrollIntoView({behavior:"smooth",block:"nearest"});},50);
+}
+let ORDER=[];
+function renderRank(){
+  const it=Q.items[Q.i]; ORDER=[];
+  $("#app").innerHTML=topbar("Urutkan pilihan","kasus")+`
+   <div class="progress"><i style="width:${Q.i/Q.items.length*100}%"></i></div>
+   <div class="card">
+    ${qmeta(it)}
+    <p class="small muted" style="margin:0 0 6px">Ketuk pilihan berurutan: <b>1 = paling efektif</b>, 4 = paling tidak efektif. Ketuk lagi untuk membatalkan.</p>
+    <p class="qtext">${esc(it.q)}</p>
+    <div class="opts" id="ropts"></div>
+    <div id="qfb"></div>
+   </div>
+   <div class="row" id="rctl"><button class="btn ghost" id="rreset">Ulang urutan</button><button class="btn" id="rcheck" disabled>Cek urutan</button></div>
+   <button class="btn hidden" id="qnext">${Q.i===Q.items.length-1?"Lihat hasil":"Lanjut"}</button>`;
+  drawRank();
+  $("#rreset").onclick=()=>{ORDER=[];drawRank();};
+  $("#rcheck").onclick=checkRank;
+  $("#qnext").onclick=()=>{ if(Q.i<Q.items.length-1){Q.i++;renderRank();window.scrollTo(0,0);} else quizResult(); };
+}
+function drawRank(done){
+  const it=Q.items[Q.i];
+  $("#ropts").innerHTML=it.opts.map((o,j)=>{ const r=ORDER.indexOf(j)+1;
+    let res="";
+    if(done){ const pts=3-Math.abs(r-o.ideal); res=`<div class="rres"><span>Urutanmu: ${r}</span><span>Ideal: ${o.ideal}</span><span class="pts pill ${pts===3?"ok":pts>=2?"mid":"bad"}">+${pts}</span></div><span class="why">${esc(o.why)}</span>`; }
+    return `<button class="opt ${r?"ranked":""}" data-j="${j}" ${done?"disabled":""}><div class="ropt"><span class="rbadge">${r||""}</span><div style="flex:1">${esc(o.t)}${res}</div></div></button>`; }).join("");
+  if(!done) document.querySelectorAll("#ropts .opt").forEach(b=>b.onclick=()=>{ const j=+b.dataset.j, x=ORDER.indexOf(j);
+    if(x>=0) ORDER=ORDER.slice(0,x); else ORDER.push(j);
+    if(ORDER.length===it.opts.length-1) ORDER.push(it.opts.findIndex((_,k)=>!ORDER.includes(k)));
+    drawRank(); });
+  const c=$("#rcheck"); if(c) c.disabled=ORDER.length<it.opts.length;
+}
+function checkRank(){
+  const it=Q.items[Q.i];
+  let pts=0; it.opts.forEach((o,j)=>pts+=3-Math.abs((ORDER.indexOf(j)+1)-o.ideal));
+  const max=it.opts.length*3; Q.score+=pts; Q.max+=max; markSeen("rank",it.id);
+  drawRank(true); $("#rctl").classList.add("hidden");
+  const ideal=it.opts.map((o,j)=>({o,j})).sort((a,b)=>a.o.ideal-b.o.ideal);
+  const kbs=it.k.map(n=>`${n}. ${it.c.kb[n-1][0]}`).join(", ");
+  $("#qfb").innerHTML=`<div class="fb ${pts>=max*0.75?"ok":"bad"}"><b class="h">Skor ${pts} / ${max}</b>
+    Urutan ideal:<ol style="margin:6px 0 8px;padding-left:20px">${ideal.map(x=>`<li>${esc(x.o.t)}</li>`).join("")}</ol>
+    Key behavior pada pilihan terbaik: <b>${kbs}</b>.<br><span class="small muted">Tiap pilihan bernilai 3 jika posisinya tepat, berkurang 1 untuk setiap selisih posisi.</span></div>`;
+  $("#qnext").classList.remove("hidden");
+  setTimeout(()=>{const n=$("#qfb"); if(n) n.scrollIntoView({behavior:"smooth",block:"start"});},50);
+}
+function quizResult(){
+  if(Q.kind==="rank"){
+    const pct=Math.round(Q.score/Q.max*100);
+    if(Q.cid!=="all"){ if(P.rank[Q.cid]==null||pct>P.rank[Q.cid]) P.rank[Q.cid]=pct; save(); }
+    $("#app").innerHTML=topbar("Hasil","kasus")+`<div class="card" style="text-align:center;padding:26px 18px">
+      <div style="font-size:46px;font-weight:800;letter-spacing:-.03em">${pct}%</div>
+      <p class="muted" style="margin:4px 0 4px">${Q.score} dari ${Q.max} poin</p>
+      <p class="muted" style="margin:6px 0 18px">${pct>=85?"Sangat baik. Penilaianmu sejalan dengan urutan ideal.":pct>=70?"Bagus. Perhatikan pilihan yang posisinya meleset jauh.":"Coba baca lagi penjelasan tiap pilihan dan key behavior-nya."}</p>
+      <button class="btn" style="margin-bottom:8px" onclick="startQuiz('${Q.arg}')">Ulangi</button>
+      ${Q.cid!=="all"?`<button class="btn ghost" style="margin-bottom:8px" onclick="go('materi-${Q.cid}')">Baca materi</button>`:""}
+      <button class="btn ghost" onclick="go('kasus')">Pilih latihan lain</button></div>`;
+    return;
+  }
+  const pct=Math.round(Q.score/Q.items.length*100);
+  if(Q.cid!=="all"){ const bucket=Q.kind==="sjt"?P.sjt:P.kb; if(bucket[Q.cid]==null||pct>bucket[Q.cid]) bucket[Q.cid]=pct; save(); }
+  $("#app").innerHTML=topbar("Hasil","kasus")+`<div class="card" style="text-align:center;padding:26px 18px">
+    <div style="font-size:46px;font-weight:800;letter-spacing:-.03em">${Q.score}<span style="font-size:20px;color:var(--muted)"> / ${Q.items.length}</span></div>
+    <p class="muted" style="margin:6px 0 18px">${pct===100?"Sempurna!":pct>=75?"Bagus. Tinggal sedikit lagi.":pct>=50?"Lumayan. Baca lagi materi key behavior-nya.":"Pelajari materinya dulu, lalu coba lagi."}</p>
+    <button class="btn" style="margin-bottom:8px" onclick="startQuiz('${Q.arg}')">Ulangi</button>
+    ${Q.cid!=="all"?`<button class="btn ghost" style="margin-bottom:8px" onclick="go('materi-${Q.cid}')">Baca materi</button>`:""}
+    <button class="btn ghost" onclick="go('kasus')">Pilih latihan lain</button></div>`;
+}
+
+// ===================== STAR =====================
+let starQ={}, STAR_AUTO={};
+function starView(id){
+  const c=C(id); if(!c) return go("star");
+  const list=starList(c), doneQ=store.get("sc_stardone_"+id,[]);
+  const qi=Math.min(starQ[id]??list.findIndex((_,i)=>!doneQ.includes(i)),list.length-1)<0?0:Math.min(starQ[id]??list.findIndex((_,i)=>!doneQ.includes(i)),list.length-1);
+  const draft=store.get("sc_star_"+id+"_"+qi,{s:"",t:"",a:"",r:""});
+  $("#app").innerHTML=topbar("STAR · "+c.name,"star")+`
+   <div class="card"><p class="label">Pilih pertanyaan</p>
+    ${list.map((q,i)=>`<button class="qcard ${i===qi?"on":""}" data-i="${i}">${doneQ.includes(i)?'<span class="pill ok" style="margin-right:6px">Sudah</span>':""}${i>=c.star.length?'<span class="pill mid" style="margin-right:6px">AI</span>':""}${esc(q)}</button>`).join("")}
+    <div id="starGen"></div>
+   </div>
+   <div class="card">
+    ${field("s","S","Situasi","Kapan, di mana, apa konteksnya? (1–2 kalimat)",draft.s,2)}
+    ${field("t","T","Tugas","Apa tanggung jawab atau target Anda?",draft.t,2)}
+    ${field("a","A","Aksi","Apa yang ANDA lakukan, langkah demi langkah? Bagian ini paling dinilai.",draft.a,6)}
+    ${field("r","R","Hasil","Apa hasilnya? Pakai angka bila ada. Apa yang Anda pelajari?",draft.r,3)}
+    <div id="aiArea"></div>
+   </div>
+   <div id="evalOut"></div>`;
+  document.querySelectorAll(".qcard").forEach(b=>b.onclick=()=>{starQ[id]=+b.dataset.i;starView(id);});
+  ["s","t","a","r"].forEach(k=>$("#f_"+k).oninput=()=>store.set("sc_star_"+id+"_"+qi,getStar()));
+  $("#aiArea").innerHTML = !sampleChecked ? `<p class="small muted" style="text-align:center"><span class="spinner dark"></span>Menyiapkan penilaian…</p>` : sample
+    ? `<button class="btn" id="evalBtn">Nilai dengan AI</button><p class="small muted" style="margin:8px 0 0;text-align:center">AI menilai bukti perilaku untuk tiap key behavior dan memberi pertanyaan lanjutan seperti asesor.</p>`
+    : `<button class="btn" id="selfBtn">Nilai sendiri dengan checklist</button><p class="small muted" style="margin:8px 0 0;text-align:center">Penilaian AI hanya tersedia saat halaman dibuka di claude.ai.</p>`;
+  if(sample) $("#evalBtn").onclick=()=>evalStar(c,list[qi],qi);
+  const allDone=list.every((_,i)=>doneQ.includes(i));
+  if(sample){
+    $("#starGen").innerHTML=`<button class="btn ghost" id="genStarBtn" style="margin-top:4px">${allDone?"Semua sudah dijawab · buat pertanyaan baru (AI)":"+ Pertanyaan baru (AI)"}</button>`;
+    const run=async()=>{ const b=$("#genStarBtn"); if(!b) return; b.disabled=true; b.innerHTML=`<span class="spinner dark"></span>Membuat pertanyaan…`;
+      try{ const before=starList(c).length; await genStar(c); starQ[id]=before; starView(id); }
+      catch(e){ $("#starGen").innerHTML=`<div class="notice" style="margin-top:6px">${errMsg(e)}</div>`; } };
+    $("#genStarBtn").onclick=run;
+    if(allDone && !STAR_AUTO[id]){ STAR_AUTO[id]=true; run(); }
+  }
+  else $("#selfBtn").onclick=()=>selfCheck(c);
+}
+function field(k,L,name,hint,val,rows){ return `<div class="field"><label><span class="letter">${L}</span>${name} <span>${hint}</span></label><textarea id="f_${k}" rows="${rows}">${esc(val)}</textarea></div>`; }
+function getStar(){ return {s:$("#f_s").value.trim(),t:$("#f_t").value.trim(),a:$("#f_a").value.trim(),r:$("#f_r").value.trim()}; }
+function kbList(c){ return c.kb.map((k,i)=>`${i+1}. ${k[0]} (${k[1]}): ${k[2]}`).join("\n"); }
+function parseJSON(t){ const m=String(t).match(/\{[\s\S]*\}/); if(!m) throw new Error("no json"); return JSON.parse(m[0]); }
+
+async function evalStar(c,question,qi){
+  const st=getStar();
+  if((st.a+st.s).length<40){ $("#evalOut").innerHTML=`<div class="notice">Ceritakan lebih lengkap dulu, terutama bagian Situasi dan Aksi.</div>`; return; }
+  const btn=$("#evalBtn"); btn.disabled=true; btn.innerHTML=`<span class="spinner"></span>Menilai…`;
+  const prompt=`Kamu adalah asesor kompetensi berpengalaman yang memakai metode Behavioral Event Interview. Nilai jawaban peserta untuk kompetensi berikut.
+
+KOMPETENSI: ${c.name}
+DEFINISI: ${c.def}
+KEY BEHAVIOR:
+${kbList(c)}
+
+PERTANYAAN: ${question}
+JAWABAN PESERTA (format STAR):
+Situasi: ${st.s||"-"}
+Tugas: ${st.t||"-"}
+Aksi: ${st.a||"-"}
+Hasil: ${st.r||"-"}
+
+Aturan penilaian:
+- Nilai hanya perilaku nyata yang benar-benar dilakukan peserta di masa lalu (kata "saya"), bukan rencana, opini, atau apa yang dilakukan tim.
+- Jawaban yang umum atau hipotetis ("biasanya saya…") dinilai lemah.
+- Skala skor 1–5: 1 = hampir tidak ada bukti, 2 = bukti lemah, 3 = memenuhi, 4 = kuat, 5 = sangat kuat dan bisa jadi teladan.
+- Status per key behavior: "kuat", "sebagian", atau "belum".
+- Gunakan bahasa Indonesia yang ringkas dan langsung.
+
+Balas HANYA dengan JSON valid, tanpa teks lain:
+{"skor":3,"ringkasan":"1-2 kalimat","kb":[{"no":1,"status":"kuat|sebagian|belum","catatan":"bukti singkat atau apa yang kurang"}],"kekuatan":["..."],"perbaikan":["saran konkret untuk memperkuat jawaban"],"pertanyaan_lanjutan":["pertanyaan probing yang mungkin diajukan asesor"]}
+Isi kb untuk keenam key behavior (no 1-6).`;
+  try{
+    const res=await sample(prompt,{modelTier:"default"});
+    const j=parseJSON(res.text);
+    P.star[c.id]=(P.star[c.id]||0)+1; save();
+    const d=store.get("sc_stardone_"+c.id,[]); if(!d.includes(qi)){ d.push(qi); store.set("sc_stardone_"+c.id,d); }
+    showEval(c,j);
+  }catch(e){
+    $("#evalOut").innerHTML=`<div class="notice">${e&&e.code==="rate_limited"?"Terlalu banyak permintaan. Tunggu sebentar lalu coba lagi.":e&&e.code==="not_granted"?"Akses AI tidak diizinkan. Gunakan checklist mandiri.":"Penilaian gagal. Coba lagi sebentar lagi."}</div>`;
+    if(e&&e.code==="not_granted"){ sample=null; }
+  }
+  btn.disabled=false; btn.textContent="Nilai ulang dengan AI";
+}
+const stPill=s=>s==="kuat"?'<span class="pill ok">Kuat</span>':s==="sebagian"?'<span class="pill mid">Sebagian</span>':'<span class="pill bad">Belum</span>';
+function showEval(c,j,title){
+  const kb=(j.kb||[]).slice().sort((a,b)=>a.no-b.no);
+  $("#evalOut").innerHTML=`<div class="card">
+   <div class="score"><div class="big">${esc(j.skor)}<small> / 5</small></div><div class="small" style="line-height:1.5">${esc(j.ringkasan)}</div></div></div>
+   <div class="card"><p class="label">${title||"Bukti per key behavior"}</p>
+    ${kb.map(k=>`<div class="evalkb"><div class="st">${stPill(k.status)}</div><div><b>${k.no}. ${esc((c.kb[k.no-1]||[""])[0])}</b><br><span class="muted">${esc(k.catatan)}</span></div></div>`).join("")}</div>
+   ${(j.kekuatan||[]).length?`<div class="card"><p class="label">Kekuatan</p><ul class="clean">${j.kekuatan.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
+   ${(j.perbaikan||[]).length?`<div class="card"><p class="label">Cara memperkuat</p><ul class="clean">${j.perbaikan.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}
+   ${(j.pertanyaan_lanjutan||[]).length?`<div class="card"><p class="label">Pertanyaan lanjutan asesor</p><ul class="clean">${j.pertanyaan_lanjutan.map(x=>`<li>${esc(x)}</li>`).join("")}</ul></div>`:""}`;
+  $("#evalOut").scrollIntoView({behavior:"smooth",block:"start"});
+}
+function selfCheck(c){
+  $("#evalOut").innerHTML=`<div class="card"><p class="label">Centang key behavior yang terlihat jelas di bagian Aksi</p>
+   ${c.kb.map((k,i)=>`<label class="check"><input type="checkbox" class="sc"><span><b>${i+1}. ${k[0]}</b><br><span class="muted small">${k[2]}</span></span></label>`).join("")}
+   <div id="scRes" style="margin-top:10px"></div></div>`;
+  const upd=()=>{ const n=[...document.querySelectorAll(".sc")].filter(x=>x.checked).length;
+    $("#scRes").innerHTML=`<div class="fb ${n>=4?"ok":"bad"}"><b class="h">${n} dari 6 key behavior</b>${n>=4?"Jawaban sudah cukup kuat. Pastikan ada hasil yang terukur.":"Tambahkan tindakan spesifik untuk key behavior yang belum tercentang."}</div>`;
+    if(n>0){P.star[c.id]=(P.star[c.id]||0)+1;save();} };
+  document.querySelectorAll(".sc").forEach(x=>x.onchange=upd); upd();
+  $("#evalOut").scrollIntoView({behavior:"smooth",block:"start"});
+}
+
+// ===================== SIMULASI =====================
+function simMenu(){
+  return topbar("Simulasi role play")+`<p class="small muted" style="margin:-4px 2px 14px">AI memerankan lawan bicara dengan kekhawatiran tersembunyi. Yakinkan, bimbing, atau ajak kerja sama, lalu dapatkan penilaian per key behavior.</p>
+  ${!sample&&sampleChecked?`<div class="notice" style="margin-bottom:12px">Simulasi membutuhkan AI dan hanya berjalan saat halaman dibuka di claude.ai.</div>`:""}
+  ${RP.map((r,i)=>{const c=C(r.comp);const dn=(store.get("sc_rpdone",[])).includes(i);return `<button class="comp ${c.focus?"focus":""}" onclick="go('sim-${i}')"><span class="ic" style="background:${c.color}1a;color:${c.color}">${ini(c.name)}</span><span class="tx"><div class="nm">${esc(r.title)} ${r.ai?'<span class="pill mid">AI</span>':""}${dn?' <span class="pill ok">Sudah</span>':""}</div><div class="sb">${c.name} · lawan bicara: ${esc(r.who)}</div></span><span class="muted">›</span></button>`;}).join("")}
+  ${sample?`<div class="card" style="margin-top:14px"><p class="label">Skenario baru dari AI</p><p class="small muted" style="margin:-4px 0 12px">Pilih kompetensi, AI akan membuat situasi dan tokoh baru.</p>
+    <div style="display:flex;flex-wrap:wrap;gap:8px" id="rpGen">${COMP.map(c=>`<button class="pill" style="border:0;cursor:pointer;padding:8px 12px;font-size:13px;background:${c.color}1a;color:${c.color}" onclick="newRP('${c.id}')">${c.name}</button>`).join("")}</div><div id="rpGenMsg"></div></div>`:""}`;
+}
+async function newRP(cid){
+  $("#app").innerHTML=loadingView("Simulasi role play","sim","Membuat skenario baru dengan AI…");
+  try{ const i=await genRP(C(cid)); SIM=null; go("sim-"+i); }
+  catch(e){ $("#app").innerHTML=simMenu(); $("#rpGenMsg").innerHTML=`<div class="notice" style="margin-top:10px">${errMsg(e)}</div>`; }
+}
+let SIM=null;
+function simView(arg){
+  const i=+arg, r=RP[i]; if(!r) return go("sim");
+  if(!SIM||SIM.i!==i) SIM={i,msgs:[{role:"assistant",content:r.open}],busy:false,done:false};
+  const c=C(r.comp);
+  $("#app").innerHTML=topbar(r.title,"sim")+`
+   <div class="card"><span class="pill" style="background:${c.color}1a;color:${c.color}">${c.name}</span>${r.ai?' <span class="pill mid">Skenario AI</span>':""}
+    <p style="margin:10px 0 6px;font-size:14.5px"><b>Peran Anda:</b> ${esc(r.you)}</p>
+    <p class="small muted" style="margin:0"><b>Lawan bicara:</b> ${esc(r.who)}, ${esc(r.role)}. Disarankan 5–8 kali bicara, lalu tekan "Selesai &amp; nilai".</p></div>
+   ${!sample&&sampleChecked?`<div class="notice" style="margin-bottom:12px">Simulasi membutuhkan AI dan hanya berjalan saat halaman dibuka di claude.ai. Anda tetap bisa memakai skenario ini untuk latihan dengan rekan.</div>`:""}
+   <div class="chat" id="chat"></div>
+   <div id="simCtl"></div>
+   <div id="evalOut"></div>`;
+  drawChat(); drawCtl();
+}
+function drawChat(){
+  const r=RP[SIM.i];
+  $("#chat").innerHTML=SIM.msgs.map(m=>`<div class="msg ${m.role==="assistant"?"them":"me"}">${m.role==="assistant"?`<span class="who">${esc(r.who)}</span>`:""}${esc(m.content)}</div>`).join("")+(SIM.busy?`<div class="msg them"><span class="spinner dark"></span>${esc(r.who)} sedang menjawab…</div>`:"");
+}
+function drawCtl(){
+  if(SIM.done){ $("#simCtl").innerHTML=`<div class="row"><button class="btn ghost" onclick="SIM=null;simView('${SIM.i}')">Ulangi simulasi</button><button class="btn ghost" onclick="go('sim')">Skenario lain</button></div>${sample?`<button class="btn" style="margin-top:10px" onclick="newRP('${RP[SIM.i].comp}')">Skenario baru dari AI (${C(RP[SIM.i].comp).name})</button>`:""}`; return; }
+  const turns=SIM.msgs.filter(m=>m.role==="user").length;
+  $("#simCtl").innerHTML=`<div class="composer"><textarea id="simIn" rows="2" placeholder="Ketik ucapan Anda…" ${!sample||SIM.busy?"disabled":""}></textarea><button class="btn" id="simSend" ${!sample||SIM.busy?"disabled":""}>Kirim</button></div>
+   <button class="btn ghost" id="simEnd" style="margin-top:10px" ${!sample||SIM.busy||turns<2?"disabled":""}>Selesai &amp; nilai${turns<2?" (minimal 2 kali bicara)":""}</button>`;
+  if(!sample) return;
+  $("#simSend").onclick=sendSim;
+  $("#simIn").onkeydown=e=>{ if(e.key==="Enter"&&!e.shiftKey){e.preventDefault();sendSim();} };
+  $("#simEnd").onclick=evalSim;
+}
+function personaPrompt(r){
+  const c=C(r.comp);
+  return `Kamu sedang membantu simulasi asesmen kompetensi (role play) untuk pegawai perusahaan listrik. Kamu memerankan ${r.who}, ${r.role}.
+Situasi peserta: ${r.you}
+Karakter dan kekhawatiran tersembunyimu (jangan diungkapkan langsung kecuali peserta menggali dengan baik): ${r.hidden}
+Kompetensi yang sedang diuji dari peserta: ${c.name}.
+
+Aturan:
+- Selalu bicara sebagai ${r.who}, dalam bahasa Indonesia percakapan kantor yang sopan dan realistis.
+- Jawab singkat: 1–3 kalimat. Jangan pernah keluar dari peran, jangan memberi nilai atau saran kepada peserta.
+- Jangan langsung setuju. Menjadi lebih terbuka secara bertahap hanya jika peserta menunjukkan perilaku yang baik (menjelaskan tujuan, bertanya, mendengarkan, menghargai, menunjukkan manfaat, merangkum).
+- Jika peserta memaksa, menyalahkan, atau tidak jelas, tunjukkan keberatan yang wajar.
+
+Kalimat pembukamu sudah diucapkan. Lanjutkan percakapan.`;
+}
+async function sendSim(){
+  const v=$("#simIn").value.trim(); if(!v||SIM.busy) return;
+  SIM.msgs.push({role:"user",content:v}); SIM.busy=true; drawChat(); drawCtl();
+  const r=RP[SIM.i];
+  const conv=[{role:"user",content:personaPrompt(r)+"\n\n(Mulai.)"}, ...SIM.msgs];
+  try{
+    let live=null;
+    const res=await sample(conv,{cache:false,modelTier:"default",onText:({text})=>{ live=text; const last=$("#chat").lastElementChild; if(last&&text&&text!=="Thinking...") last.innerHTML=`<span class="who">${esc(r.who)}</span>${esc(text)}`; }});
+    SIM.msgs.push({role:"assistant",content:(res.text||live||"…").trim()});
+  }catch(e){
+    SIM.msgs.pop(); $("#evalOut").innerHTML=`<div class="notice" style="margin-top:10px">${e&&e.code==="rate_limited"?"Terlalu banyak permintaan, tunggu sebentar.":"Gagal mendapat jawaban. Coba kirim lagi."}</div>`;
+    setTimeout(()=>{ if($("#simIn")) $("#simIn").value=v; },0);
+  }
+  SIM.busy=false; drawChat(); drawCtl();
+  window.scrollTo({top:document.body.scrollHeight,behavior:"smooth"});
+}
+async function evalSim(){
+  const r=RP[SIM.i], c=C(r.comp);
+  SIM.busy=true; drawCtl(); $("#simEnd").innerHTML=`<span class="spinner dark"></span>Menilai…`;
+  const transcript=SIM.msgs.map(m=>`${m.role==="assistant"?r.who:"Peserta"}: ${m.content}`).join("\n");
+  const prompt=`Kamu adalah asesor kompetensi berpengalaman. Nilai perilaku PESERTA dalam simulasi role play berikut.
+
+KOMPETENSI: ${c.name}
+DEFINISI: ${c.def}
+KEY BEHAVIOR:
+${kbList(c)}
+
+SITUASI PESERTA: ${r.you}
+LAWAN BICARA: ${r.who}, ${r.role}
+
+TRANSKRIP:
+${transcript}
+
+Aturan: nilai hanya ucapan dan tindakan peserta di transkrip. Skala 1–5 (3 = memenuhi). Status tiap key behavior: "kuat", "sebagian", atau "belum". Di "perbaikan", beri contoh kalimat konkret yang bisa diucapkan peserta. Bahasa Indonesia ringkas.
+
+Balas HANYA dengan JSON valid:
+{"skor":3,"ringkasan":"1-2 kalimat","kb":[{"no":1,"status":"kuat|sebagian|belum","catatan":"..."}],"kekuatan":["..."],"perbaikan":["..."],"pertanyaan_lanjutan":[]}
+Isi kb untuk keenam key behavior (no 1-6).`;
+  try{
+    const res=await sample(prompt,{modelTier:"default"});
+    const j=parseJSON(res.text);
+    P.rp[c.id]=(P.rp[c.id]||0)+1; save();
+    const rd=store.get("sc_rpdone",[]); if(!rd.includes(SIM.i)){ rd.push(SIM.i); store.set("sc_rpdone",rd); }
+    SIM.busy=false; SIM.done=true; drawCtl(); showEval(c,j);
+  }catch(e){
+    SIM.busy=false; drawCtl();
+    $("#evalOut").innerHTML=`<div class="notice" style="margin-top:10px">Penilaian gagal. Coba tekan "Selesai &amp; nilai" lagi.</div>`;
+  }
+}
+
+
+// ===================== PSIKOTES =====================
+const rint=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pickR=a=>a[Math.floor(Math.random()*a.length)];
+const fmt=n=>{ const s=(Math.round(n*100)/100).toString().split("."); return s[0].replace(/\B(?=(\d{3})+(?!\d))/g,".")+(s[1]?","+s[1]:""); };
+function numOpts(ans,cands){ const out=[ans]; for(const c of shuffle(cands)){ if(out.length>=4) break; if(Number.isFinite(c)&&!out.includes(c)) out.push(c); }
+  let k=1; while(out.length<4){ const c=ans+k*(k%2?1:-1)*rint(1,3); if(!out.includes(c)) out.push(c); k++; } return out; }
+
+// ---------- gambar ----------
+const norm=cs=>{ const mx=Math.min(...cs.map(c=>c[0])), my=Math.min(...cs.map(c=>c[1])); return cs.map(([x,y])=>[x-mx,y-my]).sort((a,b)=>a[0]-b[0]||a[1]-b[1]); };
+const key=cs=>norm(cs).map(c=>c.join(",")).join(";");
+const cw=cs=>norm(cs.map(([x,y])=>[-y,x]));
+const ccw=cs=>norm(cs.map(([x,y])=>[y,-x]));
+const mir=cs=>norm(cs.map(([x,y])=>[-x,y]));
+const rotN=(cs,n)=>{ let r=norm(cs); for(let i=0;i<((n%4)+4)%4;i++) r=cw(r); return r; };
+function polyomino(){
+  for(let t=0;t<500;t++){
+    const n=rint(5,6), cells=[[0,0]];
+    while(cells.length<n){ const [x,y]=pickR(cells), [dx,dy]=pickR([[1,0],[-1,0],[0,1],[0,-1]]), c=[x+dx,y+dy];
+      if(!cells.some(e=>e[0]===c[0]&&e[1]===c[1])) cells.push(c); }
+    const s=norm(cells), rots=[0,1,2,3].map(k=>key(rotN(s,k))), mk=[0,1,2,3].map(k=>key(rotN(mir(s),k)));
+    if(Math.max(...s.map(c=>c[0]))>3||Math.max(...s.map(c=>c[1]))>3) continue;
+    if(new Set(rots).size===4 && !mk.some(m=>rots.includes(m))) return s;
+  }
+  return norm([[0,0],[1,0],[2,0],[2,1],[0,1],[0,2]]);
+}
+function polySVG(cs,size=86){
+  const w=Math.max(...cs.map(c=>c[0]))+1, h=Math.max(...cs.map(c=>c[1]))+1, u=Math.floor((size-10)/4), ox=(size-w*u)/2, oy=(size-h*u)/2;
+  return `<svg width="${size}" height="${size}" viewBox="0 0 ${size} ${size}">${cs.map(([x,y])=>`<rect x="${ox+x*u}" y="${oy+y*u}" width="${u}" height="${u}" rx="2" fill="#0f5e57" stroke="#fff" stroke-width="2"/>`).join("")}</svg>`;
+}
+const FLAG=`<path d="M0,-30 L13,-12 L5,-12 L5,26 L-5,26 L-5,-12 L-13,-12 Z" fill="#0f5e57"/><rect x="5" y="2" width="15" height="10" rx="1.5" fill="#c8661b"/><circle cx="-1" cy="-20" r="0" />`;
+const flagSVG=(ang,flip,size=86)=>`<svg width="${size}" height="${size}" viewBox="-43 -43 86 86"><circle r="40" fill="#f2f5f2"/><g transform="rotate(${ang}) scale(${flip?-1:1},1)">${FLAG}</g></svg>`;
+
+function genFigure(){
+  const t=pickR(["sama","putar","deret"]);
+  if(t==="sama"){
+    const s=polyomino(), k=rint(1,3), ok=rotN(s,k), m=shuffle([0,1,2,3]).slice(0,3).map(j=>rotN(mir(s),j));
+    const opts=shuffle([{h:polySVG(ok),ok:true},...m.map(x=>({h:polySVG(x),ok:false}))]);
+    return {cat:"gambar",sub:"Rotasi bangun",q:"Gambar mana yang sama dengan gambar soal jika hanya <b>diputar</b> (tidak dibalik/dicerminkan)?",fig:polySVG(s,110),opts,
+      ex:`Jawaban benar adalah gambar soal yang diputar ${k*90}° searah jarum jam. Tiga pilihan lain adalah bayangan cermin (dibalik), sehingga tidak bisa didapat hanya dengan memutar.`};
+  }
+  if(t==="putar"){
+    const s=polyomino(), dir=pickR(["searah","berlawanan arah"]), good=dir==="searah"?cw(s):ccw(s), wrong=dir==="searah"?ccw(s):cw(s);
+    const opts=shuffle([{h:polySVG(good),ok:true},{h:polySVG(wrong),ok:false},{h:polySVG(rotN(s,2)),ok:false},{h:polySVG(mir(good)),ok:false}]);
+    return {cat:"gambar",sub:"Putar 90°",q:`Jika gambar soal diputar <b>90° ${dir} jarum jam</b>, hasilnya adalah…`,fig:polySVG(s,110),opts,
+      ex:`Bayangkan bagian paling atas gambar: diputar 90° ${dir} jarum jam, bagian itu pindah ke sisi ${dir==="searah"?"kanan":"kiri"}. Pilihan lain adalah putaran ke arah sebaliknya, putaran 180°, atau gambar yang dicerminkan.`};
+  }
+  const step=pickR([45,90,135])*pickR([1,-1]), a0=pickR([0,45,90,180,270]), ans=a0+3*step;
+  const opts=shuffle([{h:flagSVG(ans,false),ok:true},{h:flagSVG(ans+step,false),ok:false},{h:flagSVG(ans-2*step,false),ok:false},{h:flagSVG(ans,true),ok:false}]);
+  return {cat:"gambar",sub:"Deret putaran",q:"Gambar berikut berputar dengan pola tetap. Gambar berikutnya adalah…",
+    fig:`<div style="display:flex;gap:6px;align-items:center;justify-content:center">${[0,1,2].map(i=>flagSVG(a0+i*step,false,74)).join("")}<div style="width:74px;height:74px;border:2px dashed #c9cfc9;border-radius:50%;display:flex;align-items:center;justify-content:center;font-weight:800;color:#9aa39e;font-size:22px">?</div></div>`,opts,
+    ex:`Setiap langkah gambar berputar ${Math.abs(step)}° ${step>0?"searah":"berlawanan arah"} jarum jam. Perhatikan juga bendera oranye: pilihan yang benderanya pindah sisi adalah gambar yang dicerminkan.`};
+}
+
+// ---------- angka ----------
+function genSeries(){
+  const t=pickR(["arit","bertingkat","geo","seling","kali","kuadrat","fibo"]);
+  let seq,ans,ex,c=[];
+  if(t==="arit"){ const a=rint(2,60), d=pickR([1,-1])*rint(3,14); seq=[0,1,2,3,4].map(i=>a+i*d); if(seq.some(x=>x<0)) return genSeries(); ans=a+5*d; ex=`Setiap suku ${d>0?"ditambah":"dikurangi"} ${Math.abs(d)}.`; c=[ans+d,ans-d,ans+1,ans-2]; }
+  if(t==="bertingkat"){ const a=rint(1,20), d=rint(1,5), inc=rint(1,4); seq=[a]; let dd=d; for(let i=0;i<4;i++){ seq.push(seq[i]+dd); dd+=inc; } ans=seq[4]+dd; ex=`Selisihnya bertambah ${inc} setiap langkah: ${[0,1,2,3].map(i=>"+"+(d+i*inc)).join(", ")}, lalu +${dd}.`; c=[ans-inc,ans+inc,seq[4]+dd-1+inc*2,ans+1]; }
+  if(t==="geo"){ const a=rint(1,6), r=pickR([2,3]); seq=[0,1,2,3,4].map(i=>a*r**i); ans=a*r**5; ex=`Setiap suku dikali ${r}.`; c=[seq[4]+(seq[4]-seq[3]),ans+r,ans-a*r,ans*r/ (r===2?1.5:2)]; }
+  if(t==="seling"){ const a=rint(2,20), p=rint(2,9), b=rint(10,40), q=pickR([1,-1])*rint(2,6); seq=[]; for(let i=0;i<7;i++) seq.push(i%2===0? a+(i/2)*p : b+((i-1)/2)*q); if(seq.some(x=>x<0)) return genSeries(); ans=b+3*q; ex=`Ada dua deret yang berselang-seling. Suku ganjil: ${a}, ${a+p}, … (+${p}). Suku genap: ${b}, ${b+q}, … (${q>0?"+":""}${q}). Suku ke-8 masuk deret genap.`; c=[a+4*p,ans+q,ans-q,seq[6]+p]; }
+  if(t==="kali"){ const a=rint(1,6), m=pickR([2,3]), k=pickR([-1,1,2]); seq=[a]; for(let i=0;i<4;i++) seq.push(seq[i]*m+k); ans=seq[4]*m+k; ex=`Setiap suku dikali ${m} lalu ${k>0?"ditambah":"dikurangi"} ${Math.abs(k)}.`; c=[seq[4]*m,ans+k*2,seq[4]*m-k,ans+m]; }
+  if(t==="kuadrat"){ const s=rint(1,6), k=pickR([0,1,-1,2,3]); seq=[0,1,2,3,4].map(i=>(s+i)**2+k); ans=(s+5)**2+k; ex=`Polanya bilangan kuadrat ${k?(k>0?"ditambah "+k:"dikurangi "+(-k)):""}: ${s}², ${s+1}², ${s+2}², … sehingga berikutnya ${s+5}²${k?(k>0?" + "+k:" − "+(-k)):""}.`; c=[ans+1,ans-(2*(s+5)-1),ans+2*(s+5)+1,ans-2]; }
+  if(t==="fibo"){ const a=rint(1,6), b=rint(2,9); seq=[a,b]; for(let i=0;i<4;i++) seq.push(seq[i]+seq[i+1]); ans=seq[4]+seq[5]; ex="Setiap suku adalah jumlah dua suku sebelumnya."; c=[ans+1,ans-seq[4]+seq[3],seq[5]*2,ans-1]; }
+  return {cat:"angka",sub:"Deret angka",q:`Lanjutkan deret berikut:<div class="series">${seq.map(fmt).join(", ")}, <b>…</b></div>`,opts:numOpts(ans,c.map(Math.round)).map(v=>({h:fmt(v),ok:v===ans})),ex};
+}
+function genArith(){
+  const t=pickR(["persen","susut","pecahan","persamaan","jarak","kerja","rasio"]);
+  let q,ans,ex,c;
+  if(t==="persen"){ const p=pickR([5,10,12,15,20,25,30,40,60,75]), n=rint(4,60)*20; ans=p*n/100; q=`Berapa ${p}% dari ${fmt(n)}?`; ex=`${p}% × ${fmt(n)} = ${fmt(n)} × ${p}/100 = ${fmt(ans)}.`; c=[ans*2,ans/2,ans+n/10,ans-p]; }
+  if(t==="susut"){ const s=pickR([1.5,2,2.5,3,4,5]), e=rint(10,60)*200; const terima=e*(1-s/100); ans=s; q=`Energi yang dikirim ${fmt(e)} MWh dan energi yang diterima ${fmt(terima)} MWh. Berapa persen susutnya?`; ex=`Susut = (${fmt(e)} − ${fmt(terima)}) / ${fmt(e)} × 100% = ${fmt(e-terima)} / ${fmt(e)} × 100% = ${fmt(s)}%.`;
+    return {cat:"angka",sub:"Hitungan",q,opts:shuffle([s,...shuffle([1,1.5,2,2.5,3,3.5,4,4.5,5,6].filter(x=>x!==s)).slice(0,3)]).map(v=>({h:fmt(v)+"%",ok:v===s})),ex}; }
+  if(t==="pecahan"){ const b=pickR([3,4,5,6,8]), a=rint(1,b-1), n=b*rint(3,25); ans=a*n/b; q=`Berapa ${a}/${b} dari ${fmt(n)}?`; ex=`${fmt(n)} : ${b} = ${fmt(n/b)}, lalu × ${a} = ${fmt(ans)}.`; c=[n/b,ans+n/b,ans-1,n-ans]; }
+  if(t==="persamaan"){ const x=rint(2,15), a=rint(2,9), b=rint(1,30), r=a*x+b; ans=x; q=`Jika ${a}x + ${b} = ${r}, berapakah x?`; ex=`${a}x = ${r} − ${b} = ${r-b}, maka x = ${r-b} : ${a} = ${x}.`; c=[x+1,x-1,Math.round(r/a),x+2]; }
+  if(t==="jarak"){ const v=pickR([40,45,50,60,75,80]), tm=pickR([1.5,2,2.5,3,4]); ans=v*tm; q=`Mobil patroli jaringan melaju rata-rata ${v} km/jam selama ${fmt(tm)} jam. Berapa km jarak yang ditempuh?`; ex=`Jarak = kecepatan × waktu = ${v} × ${fmt(tm)} = ${fmt(ans)} km.`; c=[ans+v/2,ans-v/2,v*Math.floor(tm),ans+10]; }
+  if(t==="kerja"){ const [x,y,z]=pickR([[3,6,2],[4,12,3],[6,12,4],[10,15,6],[12,24,8],[20,30,12],[6,3,2]]); ans=z; q=`Tim A dapat menyelesaikan pemeliharaan dalam ${x} hari, tim B dalam ${y} hari. Jika bekerja bersama, berapa hari pekerjaan selesai?`; ex=`Dalam sehari: 1/${x} + 1/${y} = 1/${z}. Jadi bersama-sama selesai dalam ${z} hari.`; c=[(x+y)/2,Math.min(x,y)-1,z+1,z+2].map(Math.round); }
+  if(t==="rasio"){ const a=rint(2,5), b=rint(2,7); if(a===b) return genArith(); const k=rint(3,12), tot=(a+b)*k; ans=a*k; q=`Perbandingan pegawai laki-laki dan perempuan di sebuah unit ${a} : ${b}. Jika jumlah seluruh pegawai ${tot} orang, berapa pegawai laki-laki?`; ex=`Laki-laki = ${a}/(${a}+${b}) × ${tot} = ${a}/${a+b} × ${tot} = ${ans}.`; c=[b*k,ans+k,ans-k,tot/2]; }
+  return {cat:"angka",sub:"Hitungan",q,opts:numOpts(ans,c.map(v=>Math.round(v*100)/100)).map(v=>({h:fmt(v),ok:v===ans})),ex};
+}
+
+// ---------- bahasa ----------
+const SINONIM=[["kendala","hambatan"],["akurat","tepat"],["konkret","nyata"],["kredibel","terpercaya"],["evaluasi","penilaian"],["kontribusi","sumbangan"],["fluktuasi","gejolak"],["signifikan","berarti"],["kompeten","cakap"],["inovasi","pembaruan"],["adaptasi","penyesuaian"],["asumsi","anggapan"],["defisit","kekurangan"],["eksplisit","tersurat"],["implisit","tersirat"],["integritas","kejujuran"],["konsisten","ajek"],["mutakhir","terbaru"],["nisbi","relatif"],["otonom","mandiri"],["persepsi","tanggapan"],["prestise","gengsi"],["rasional","logis"],["sahih","valid"],["vakum","kosong"],["wahana","sarana"],["zenit","puncak"],["galat","kesalahan"],["laik","layak"],["mafhum","paham"],["perigi","sumur"],["tenggat","batas waktu"],["urgen","mendesak"],["verifikasi","pemeriksaan"],["efektif","mangkus"],["efisien","sangkil"],["delegasi","perwakilan"],["kapabel","mampu"],["konsensus","mufakat"],["prognosis","ramalan"],["absah","sah"],["bahtera","kapal"],["candala","hina"],["fana","sementara"],["imbas","pengaruh"],["kudus","suci"],["lugas","apa adanya"],["nirmala","bersih"],["pakem","patokan"],["semenjana","sedang"]];
+const ANTONIM=[["efisien","boros"],["optimis","pesimis"],["surplus","defisit"],["statis","dinamis"],["makro","mikro"],["konkret","abstrak"],["mayoritas","minoritas"],["temporer","permanen"],["vertikal","horizontal"],["ekspor","impor"],["inferior","superior"],["eksternal","internal"],["proaktif","reaktif"],["sentralisasi","desentralisasi"],["heterogen","homogen"],["maksimum","minimum"],["objektif","subjektif"],["fiktif","nyata"],["formal","informal"],["absolut","relatif"],["ofensif","defensif"],["transparan","tertutup"],["ekstrovert","introvert"],["kontra","pro"],["progresif","konservatif"],["sporadis","terus-menerus"],["agresif","pasif"],["skeptis","yakin"],["amatir","profesional"],["deflasi","inflasi"],["rigid","fleksibel"],["prolog","epilog"],["sekunder","primer"],["mahir","canggung"],["fana","abadi"],["hulu","hilir"],["sintesis","analisis"],["artifisial","alami"],["rendah hati","sombong"],["netral","memihak"]];
+const ANALOGI=[["Pilot","Pesawat","Masinis","Kereta api"],["kWh meter","Energi listrik","Amperemeter","Arus listrik"],["Termometer","Suhu","Barometer","Tekanan udara"],["Volt","Tegangan","Ohm","Hambatan"],["Watt","Daya","Joule","Energi"],["Lebah","Madu","Sapi","Susu"],["Pena","Penulis","Kuas","Pelukis"],["Mata","Melihat","Telinga","Mendengar"],["Kabel","Arus listrik","Pipa","Air"],["Jam","Waktu","Timbangan","Berat"],["Pohon","Hutan","Bintang","Galaksi"],["Benih","Pohon","Telur","Ayam"],["Rem","Berhenti","Gas","Melaju"],["Bab","Buku","Adegan","Film"],["Kertas","Kayu","Kaca","Pasir"],["Kemarau","Kekeringan","Hujan deras","Banjir"],["Haus","Minum","Kantuk","Tidur"],["Pelari","Lintasan","Perenang","Kolam"],["Kata","Kalimat","Nada","Lagu"],["Roda","Mobil","Sayap","Pesawat"],["Sekring","Arus lebih","Penangkal petir","Sambaran petir"],["Petani","Sawah","Nelayan","Laut"],["Dokter","Stetoskop","Tukang kayu","Gergaji"],["Panas","Api","Dingin","Es"],["Kaki","Sepatu","Tangan","Sarung tangan"],["Guru","Sekolah","Hakim","Pengadilan"],["Gelap","Lampu","Sunyi","Musik"],["Ikan","Insang","Manusia","Paru-paru"],["Kompas","Arah","Peta","Lokasi"],["Atap","Rumah","Tutup","Botol"]];
+function genVerbal(){
+  const t=pickR(["sinonim","antonim","analogi"]);
+  const vs=store.get("sc_vseen",[]), mark=k=>{ if(!vs.includes(k)){ vs.push(k); store.set("sc_vseen",vs.slice(-400)); } };
+  const fresh=(bank,keyf)=>{ const un=bank.filter(x=>!vs.includes(keyf(x))); return un.length?pickR(un):pickR(bank); };
+  if(t==="analogi"){ const bank=ANALOGI.concat(store.get("sc_gen_analogi",[])); const a=fresh(bank,x=>"an:"+x[0]+x[2]); mark("an:"+a[0]+a[2]);
+    const others=shuffle(bank.filter(x=>x!==a).map(x=>x[3])).filter(x=>x!==a[3]).slice(0,3);
+    return {cat:"bahasa",sub:"Analogi",q:`<b>${a[0]}</b> : <b>${a[1]}</b> = <b>${a[2]}</b> : …`,opts:shuffle([a[3],...others]).map(v=>({h:esc(v),ok:v===a[3]})),ex:`Hubungan ${a[0]} dengan ${a[1]} sama dengan hubungan ${a[2]} dengan ${a[3]}.`}; }
+  const bank=(t==="sinonim"?SINONIM:ANTONIM).concat(store.get("sc_gen_"+t,[])); const w=fresh(bank,x=>t+":"+x[0]); mark(t+":"+w[0]);
+  const others=shuffle(bank.filter(x=>x!==w).map(x=>x[1])).filter(x=>x!==w[1]&&x!==w[0]).slice(0,3);
+  return {cat:"bahasa",sub:t==="sinonim"?"Sinonim":"Antonim",q:`${t==="sinonim"?"Persamaan kata (sinonim)":"Lawan kata (antonim)"} dari <b>${esc(w[0].toUpperCase())}</b> adalah…`,opts:shuffle([w[1],...others]).map(v=>({h:esc(v),ok:v===w[1]})),ex:`${cap1(w[0])} ${t==="sinonim"?"artinya sama dengan":"berlawanan dengan"} ${w[1]}.`};
+}
+const cap1=s=>s.charAt(0).toUpperCase()+s.slice(1);
+async function topUpVerbal(){
+  if(!sample) return;
+  const vs=store.get("sc_vseen",[]);
+  const left=t=>{ const bank=t==="analogi"?ANALOGI.concat(store.get("sc_gen_analogi",[])):(t==="sinonim"?SINONIM:ANTONIM).concat(store.get("sc_gen_"+t,[]));
+    return bank.filter(x=>!vs.includes(t==="analogi"?"an:"+x[0]+x[2]:t+":"+x[0])).length; };
+  const need=["sinonim","antonim","analogi"].filter(t=>left(t)<5); if(!need.length) return;
+  for(const t of need){
+    const bank=t==="analogi"?ANALOGI.concat(store.get("sc_gen_analogi",[])):(t==="sinonim"?SINONIM:ANTONIM).concat(store.get("sc_gen_"+t,[]));
+    const j=await ask(t==="analogi"
+      ? `Buat 15 soal analogi bahasa Indonesia BARU untuk tes potensi akademik/psikotes kerja. Format tiap soal: [A, B, C, D] dengan hubungan A:B sama dengan C:D. Hubungan harus jelas dan hanya satu jawaban yang tepat. Sebagian boleh berkaitan dengan listrik/kantor. Jangan mengulang: ${bank.map(x=>x.join(":")).join("; ")}\nBalas HANYA JSON: {"soal":[["A","B","C","D"]]}`
+      : `Buat 20 pasangan ${t} bahasa Indonesia BARU untuk tes potensi akademik/psikotes kerja, tingkat kesulitan sedang sampai sulit, sesuai KBBI. Format [kata, ${t}nya] dengan ${t} berupa satu atau dua kata. Jangan mengulang kata: ${bank.map(x=>x[0]).join(", ")}\nBalas HANYA JSON: {"soal":[["kata","${t}"]]}`);
+    const ok=(j.soal||[]).filter(x=>Array.isArray(x)&&x.length===(t==="analogi"?4:2)&&x.every(y=>typeof y==="string"&&y.trim()));
+    store.set("sc_gen_"+t,store.get("sc_gen_"+t,[]).concat(ok));
+  }
+}
+
+// ---------- sesi tes ----------
+const PCAT={gambar:{name:"Gambar diputar",desc:"Rotasi bangun, putaran 90°, dan deret putaran",gen:genFigure,color:"#0f5e57"},
+  angka:{name:"Angka",desc:"Deret angka dan hitungan (persen, susut, pecahan, persamaan, soal cerita)",gen:()=>Math.random()<.5?genSeries():genArith(),color:"#2b6cb0"},
+  bahasa:{name:"Bahasa",desc:"Sinonim, antonim, dan analogi",gen:genVerbal,color:"#b83280"},
+  campur:{name:"Campuran",desc:"Gabungan ketiganya, seperti tes sebenarnya",gen:()=>pickR([genFigure,genSeries,genArith,genVerbal])(),color:"#c8661b"}};
+let PT={n:10,timer:30}, PS=null;
+function psikoMenu(){
+  const best=store.get("sc_psiko",{});
+  return topbar("Psikotes")+`<p class="small muted" style="margin:-4px 2px 14px">Soal gambar dan angka dibuat acak oleh program, jadi tidak pernah habis. Soal bahasa ditambah AI kalau bank katanya hampir habis.</p>
+  <div class="card"><p class="label">Pengaturan</p>
+   <div class="small" style="font-weight:700;margin-bottom:6px">Jumlah soal</div>
+   <div class="seg" id="pN">${[10,20,30].map(n=>`<button class="${PT.n===n?"on":""}" data-v="${n}">${n}</button>`).join("")}</div>
+   <div class="small" style="font-weight:700;margin-bottom:6px">Batas waktu per soal</div>
+   <div class="seg" id="pT" style="margin-bottom:0">${[[0,"Bebas"],[20,"20 detik"],[30,"30 detik"],[45,"45 detik"]].map(([v,l])=>`<button class="${PT.timer===v?"on":""}" data-v="${v}">${l}</button>`).join("")}</div>
+  </div>
+  ${Object.entries(PCAT).map(([k,c])=>`<button class="comp" onclick="startPsiko('${k}')"><span class="ic" style="background:${c.color}1a;color:${c.color}">${k==="gambar"?"↻":k==="angka"?"123":k==="bahasa"?"Aa":"★"}</span><span class="tx"><div class="nm">${c.name}</div><div class="sb">${c.desc}${best[k]!=null?` · terbaik ${best[k]}%`:""}</div></span><span class="muted">›</span></button>`).join("")}`;
+}
+function bindPsikoMenu(){
+  [["#pN","n"],["#pT","timer"]].forEach(([sel,k])=>document.querySelectorAll(sel+" button").forEach(b=>b.onclick=()=>{ PT[k]=+b.dataset.v; document.querySelectorAll(sel+" button").forEach(x=>x.classList.toggle("on",x===b)); }));
+}
+async function startPsiko(cat){
+  if(cat==="bahasa"||cat==="campur"){ await waitSample(); if(sample){ $("#app").innerHTML=loadingView("Psikotes","tes","Menyiapkan soal…"); try{ await topUpVerbal(); }catch(e){} } }
+  const items=[]; for(let i=0;i<PT.n;i++){ let it; let tries=0; const sig=x=>x.q+(x.fig||"")+x.opts.map(o=>o.h).join("|"); do{ it=PCAT[cat].gen(); tries++; }while(tries<30&&items.some(x=>sig(x)===sig(it))); items.push(it); }
+  PS={cat,items,i:0,res:[],t0:Date.now(),timer:PT.timer,tick:null};
+  renderPsiko();
+}
+function renderPsiko(){
+  clearInterval(PS.tick);
+  const it=PS.items[PS.i];
+  $("#app").innerHTML=topbar("Psikotes · "+PCAT[PS.cat].name,"tes")+`
+   <div class="progress"><i style="width:${PS.i/PS.items.length*100}%"></i></div>
+   <div class="card">
+    <div class="qmeta"><span class="pill">${it.sub}</span><span class="small muted">${PS.i+1} / ${PS.items.length}${PS.timer?` · <b id="pclock">${PS.timer}</b> dtk`:""}</span></div>
+    ${PS.timer?`<div class="tbar"><i id="tfill"></i></div>`:""}
+    <div class="qtext">${it.q}</div>
+    ${it.fig?`<div class="figq">${it.fig}</div>`:""}
+    <div class="${it.cat==="gambar"?"fopts":"opts"}">${it.opts.map((o,j)=>`<button class="opt ${it.cat==="gambar"?"fopt":""}" data-j="${j}">${it.cat==="gambar"?`<span class="flab">${"ABCD"[j]}</span>`:""}${o.h}</button>`).join("")}</div>
+    <div id="pfb"></div>
+   </div>
+   <button class="btn hidden" id="pnext">${PS.i===PS.items.length-1?"Lihat hasil":"Lanjut"}</button>`;
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answerPsiko(+b.dataset.j));
+  $("#pnext").onclick=()=>{ if(PS.i<PS.items.length-1){ PS.i++; renderPsiko(); window.scrollTo(0,0);} else psikoResult(); };
+  PS.qStart=Date.now(); PS.done=false;
+  if(PS.timer){ PS.tick=setInterval(()=>{ const left=Math.max(0,PS.timer-(Date.now()-PS.qStart)/1000); const c=$("#pclock"), f=$("#tfill");
+    if(!c){ clearInterval(PS.tick); return; } c.textContent=Math.ceil(left); f.style.width=(left/PS.timer*100)+"%"; f.style.background=left<6?"var(--bad)":"var(--accent)";
+    if(left<=0){ clearInterval(PS.tick); answerPsiko(-1); } },200); }
+}
+function answerPsiko(j){
+  if(PS.done) return; PS.done=true; clearInterval(PS.tick);
+  const it=PS.items[PS.i], ok=j>=0&&it.opts[j].ok, sec=(Date.now()-PS.qStart)/1000;
+  PS.res.push({ok,sub:it.sub,sec,timeout:j<0});
+  document.querySelectorAll(".opt").forEach((b,x)=>{ b.disabled=true; if(it.opts[x].ok) b.classList.add("correct"); else if(x===j) b.classList.add("wrong"); });
+  $("#pfb").innerHTML=`<div class="fb ${ok?"ok":"bad"}"><b class="h">${ok?"Benar!":j<0?"Waktu habis":"Kurang tepat"}</b>${esc(it.ex)}</div>`;
+  $("#pnext").classList.remove("hidden");
+  setTimeout(()=>{const n=$("#pnext"); if(n) n.scrollIntoView({behavior:"smooth",block:"nearest"});},50);
+}
+function psikoResult(){
+  clearInterval(PS.tick);
+  const n=PS.res.length, ok=PS.res.filter(r=>r.ok).length, pct=Math.round(ok/n*100), avg=PS.res.reduce((a,r)=>a+r.sec,0)/n;
+  const best=store.get("sc_psiko",{}); if(best[PS.cat]==null||pct>best[PS.cat]){ best[PS.cat]=pct; store.set("sc_psiko",best); }
+  const by={}; PS.res.forEach(r=>{ by[r.sub]=by[r.sub]||{ok:0,n:0}; by[r.sub].n++; if(r.ok) by[r.sub].ok++; });
+  $("#app").innerHTML=topbar("Hasil psikotes","tes")+`<div class="card" style="text-align:center;padding:24px 18px">
+    <div style="font-size:46px;font-weight:800;letter-spacing:-.03em">${ok}<span style="font-size:20px;color:var(--muted)"> / ${n}</span></div>
+    <p class="muted" style="margin:4px 0 0">Rata-rata ${fmt(Math.round(avg*10)/10)} detik per soal${PS.res.some(r=>r.timeout)?` · ${PS.res.filter(r=>r.timeout).length} soal waktu habis`:""}</p></div>
+   <div class="card"><p class="label">Per jenis soal</p>${Object.entries(by).map(([k,v])=>`<div style="display:flex;justify-content:space-between;padding:7px 0;border-top:1px solid var(--line);font-size:14px"><span>${k}</span><b>${v.ok} / ${v.n}</b></div>`).join("")}</div>
+   <button class="btn" style="margin-bottom:8px" onclick="startPsiko('${PS.cat}')">Soal baru</button>
+   <button class="btn ghost" onclick="go('tes')">Pilih jenis lain</button>`;
+}
+
+render();
+</script>
+</body>
+</html>
