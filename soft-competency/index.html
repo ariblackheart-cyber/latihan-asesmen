@@ -84,6 +84,10 @@
   .opt.ranked .rbadge{background:var(--accent);border:0;color:#fff}
   .rres{display:flex;gap:10px;align-items:center;margin-top:8px;font-size:12.5px;font-weight:700}
   .rres .pts{margin-left:auto}
+  .passage{background:#f6f7f4;border:1px solid var(--line);border-radius:12px;padding:12px 14px;margin-bottom:12px;font-size:14.5px;line-height:1.55}
+  .passage ul.clues{margin:6px 0 0;padding-left:18px}
+  .passage ul.clues li{margin:3px 0}
+  .passage p.read{margin:0}
   .series{font-size:22px;font-weight:700;letter-spacing:.02em;margin-top:10px;line-height:1.5}
   .figq{display:flex;justify-content:center;padding:12px 0 2px}
   .fopts{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:14px}
@@ -536,7 +540,7 @@ function homeView(){
     <p class="small" style="margin:4px 0 12px">Mulai dari sini: baca key behavior-nya, lalu coba simulasi meyakinkan supervisor gardu induk.</p>
     <div class="row"><button class="btn warm" onclick="go('materi-gc')">Pelajari</button><button class="btn ghost" style="border-color:var(--warm);color:var(--warm)" onclick="go('sim-0')">Simulasi</button></div>
   </div>
-  <button class="comp" onclick="go('tes')"><span class="ic" style="background:#2b6cb01a;color:#2b6cb0">↻</span><span class="tx"><div class="nm">Psikotes</div><div class="sb">Gambar diputar, deret &amp; hitungan angka, sinonim/antonim/analogi</div></span><span class="muted">›</span></button>
+  <button class="comp" onclick="go('tes')"><span class="ic" style="background:#2b6cb01a;color:#2b6cb0">↻</span><span class="tx"><div class="nm">Psikotes</div><div class="sb">Gambar diputar, angka, bahasa, cerita &amp; penalaran</div></span><span class="muted">›</span></button>
   <p class="label" style="margin:18px 2px 10px">Semua kompetensi</p>
   ${COMP.map(c=>{const p=compProgress(c);return `<button class="comp ${c.focus?"focus":""}" onclick="go('materi-${c.id}')">
     <span class="ic" style="background:${c.color}1a;color:${c.color}">${ini(c.name)}</span>
@@ -1028,28 +1032,146 @@ async function topUpVerbal(){
   }
 }
 
+
+// ---------- cerita & penalaran ----------
+const NAMES=["Andi","Budi","Citra","Dewi","Eko","Fajar","Gita","Hana","Indra","Joko","Rina","Sari"];
+const PERMS5=(()=>{ const out=[]; const rec=(a,r)=>{ if(!r.length){out.push(a);return;} r.forEach((x,i)=>rec([...a,x],r.filter((_,j)=>j!==i))); }; rec([],[0,1,2,3,4]); return out; })();
+const nameOpts=(ans,pool)=>shuffle([ans,...shuffle(pool.filter(x=>x!==ans)).slice(0,3)]).map(v=>({h:v,ok:v===ans}));
+
+function genSeating(){
+  for(let t=0;t<200;t++){
+    const nm=shuffle(NAMES).slice(0,5), truth=shuffle([0,1,2,3,4]); // truth[pos]=person index
+    const pos=i=>truth.indexOf(i), N=i=>nm[i];
+    const mk=[];
+    const pairs=[]; for(let a=0;a<5;a++) for(let b=0;b<5;b++) if(a!==b) pairs.push([a,b]);
+    shuffle(pairs).forEach(([a,b])=>{
+      const pa=pos(a), pb=pos(b);
+      if(pa===pb+1) mk.push({t:`${N(a)} duduk tepat di sebelah kanan ${N(b)}.`,f:p=>p.indexOf(a)===p.indexOf(b)+1});
+      else if(pa<pb && pb-pa>1) mk.push({t:`${N(a)} duduk di sebelah kiri ${N(b)}, tetapi tidak bersebelahan.`,f:p=>p.indexOf(a)<p.indexOf(b)&&p.indexOf(b)-p.indexOf(a)>1});
+      if(Math.abs(pa-pb)===2 && a<b) mk.push({t:`Di antara ${N(a)} dan ${N(b)} ada tepat satu orang.`,f:p=>Math.abs(p.indexOf(a)-p.indexOf(b))===2});
+      if(Math.abs(pa-pb)>1 && a<b) mk.push({t:`${N(a)} tidak duduk bersebelahan dengan ${N(b)}.`,f:p=>Math.abs(p.indexOf(a)-p.indexOf(b))>1});
+    });
+    const ends=[]; if(true){ const e=pickR([0,4,2]); const who=truth[e]; ends.push({t:e===2?`${N(who)} duduk tepat di tengah.`:`${N(who)} duduk paling ${e===0?"kiri":"kanan"}.`,f:p=>p[e]===who}); }
+    const clues=[...ends]; let sols=PERMS5;
+    for(const c of shuffle(mk)){ if(sols.length===1) break; const ns=sols.filter(c.f); if(ns.length<sols.length){ clues.push(c); sols=ns; } }
+    sols=sols.filter(p=>clues.every(c=>c.f(p)));
+    if(sols.length!==1||clues.length>6) continue;
+    const order=truth.map(N).join(" – ");
+    let q,ans;
+    if(Math.random()<.5){ const k=rint(0,4); q=`Siapa yang duduk di posisi ke-${k+1} dari kiri?`; ans=N(truth[k]); }
+    else { const k=rint(0,3); q=`Siapa yang duduk tepat di sebelah kanan ${N(truth[k])}?`; ans=N(truth[k+1]); }
+    return {cat:"cerita",sub:"Urutan duduk",tmul:3,passage:`Lima pegawai, yaitu ${nm.slice().sort().join(", ")}, duduk berderet dalam satu baris menghadap ke depan.<ul class="clues">${shuffle(clues).map(c=>`<li>${c.t}</li>`).join("")}</ul>`,
+      q,opts:nameOpts(ans,nm),ex:`Susunan dari kiri ke kanan: ${order}. Kerjakan dari petunjuk yang paling pasti dulu (posisi ujung/tengah), lalu petunjuk "tepat di sebelah".`};
+  }
+  return genSyllogism();
+}
+const ATTR=[["nilai ujiannya","lebih tinggi","lebih rendah","paling tinggi","paling rendah"],["masa kerjanya","lebih lama","lebih singkat","paling lama","paling singkat"],["rumahnya","lebih jauh dari kantor","lebih dekat ke kantor","paling jauh dari kantor","paling dekat ke kantor"],["badannya","lebih tinggi","lebih pendek","paling tinggi","paling pendek"]];
+function genCompare(){
+  for(let t=0;t<200;t++){
+    const n=rint(4,5), nm=shuffle(NAMES).slice(0,n), rank=shuffle([...Array(n).keys()]); // rank[0] = top person index
+    const at=pickR(ATTR), r=i=>rank.indexOf(i);
+    const all=[]; for(let a=0;a<n;a++) for(let b=0;b<n;b++) if(a!==b&&r(a)<r(b)) all.push([a,b]);
+    const perms=PERMS5.filter(p=>p.length===5).map(p=>p.filter(x=>x<n)).filter((p,i,arr)=>arr.findIndex(q=>q.join()===p.join())===i);
+    let sols=perms, clues=[];
+    for(const [a,b] of shuffle(all)){ if(sols.length===1) break; const f=p=>p.indexOf(a)<p.indexOf(b); const ns=sols.filter(f); if(ns.length<sols.length){ clues.push(Math.random()<.5?`${at[0][0].toUpperCase()+at[0].slice(1).replace(/nya$/,"")} ${nm[a]} ${at[1]} daripada ${nm[b]}.`:`${at[0][0].toUpperCase()+at[0].slice(1).replace(/nya$/,"")} ${nm[b]} ${at[2]} daripada ${nm[a]}.`); sols=ns; } }
+    if(sols.length!==1||clues.length>5) continue;
+    const k=pickR([0,n-1,1,2]); const ans=nm[rank[k]];
+    const qtxt=k===0?`Siapa yang ${at[0]} ${at[3]}?`:k===n-1?`Siapa yang ${at[0]} ${at[4]}?`:`Siapa yang berada di urutan ke-${k+1} jika diurutkan dari yang ${at[0].replace(/nya$/,"")} ${at[3]}?`;
+    return {cat:"cerita",sub:"Perbandingan",tmul:2.5,passage:`Ada ${n} orang: ${nm.slice().sort().join(", ")}.<ul class="clues">${clues.map(c=>`<li>${c}</li>`).join("")}</ul>`,
+      q:qtxt,opts:nameOpts(ans,nm),ex:`Urutan dari yang ${at[3]}: ${rank.map(i=>nm[i]).join(" > ")}. Tips: tulis nama berderet dan geser sesuai tiap petunjuk.`};
+  }
+  return genSyllogism();
+}
+const SYL=[
+ {n:"teknisi pemeliharaan",p:"wajib memakai APD lengkap",np:"tidak wajib memakai APD lengkap",g:"pegawai UPT"},
+ {n:"pegawai yang lulus sertifikasi K3",p:"boleh bekerja di ketinggian",np:"tidak boleh bekerja di ketinggian",g:"peserta pelatihan"},
+ {n:"laporan gangguan",p:"diverifikasi supervisor",np:"tidak diverifikasi supervisor",g:"dokumen di unit itu"},
+ {n:"gardu induk tipe GIS",p:"dipantau melalui SCADA",np:"tidak dipantau melalui SCADA",g:"gardu induk di wilayah itu"},
+ {n:"pegawai yang datang tepat waktu",p:"mendapat poin disiplin",np:"tidak mendapat poin disiplin",g:"pegawai bagian keuangan"},
+ {n:"peserta rapat koordinasi",p:"menerima notulen",np:"tidak menerima notulen",g:"asisten manajer"},
+ {n:"penghantar bertegangan 150 kV",p:"diinspeksi setiap bulan",np:"tidak diinspeksi setiap bulan",g:"jaringan di area itu"},
+ {n:"pegawai yang menyelesaikan e-learning",p:"memperoleh sertifikat",np:"tidak memperoleh sertifikat",g:"pegawai baru"}
+];
+const CHAINS=[["beban puncak naik","arus di penghantar naik","rugi-rugi jaringan meningkat","susut energi bertambah"],
+ ["hujan deras turun","pekerjaan di ketinggian dihentikan","jadwal pemeliharaan mundur","laporan pemeliharaan terlambat"],
+ ["data meter tidak akurat","perhitungan susut keliru","analisis penyebab susut salah","tindakan perbaikan tidak tepat"],
+ ["pegawai mengikuti pelatihan","kompetensi pegawai meningkat","kualitas pekerjaan membaik","gangguan berkurang"]];
+function genSyllogism(){
+  const s=pickR(SYL), X=pickR(NAMES), isThing=/laporan|gardu|penghantar/.test(s.n), subj=isThing?`${cap1(s.n.split(" ")[0])} ${pickR(["A","B","X","Y"])}`:X;
+  const be=isThing?"merupakan":"adalah";
+  const t=pickR(["mp","mt","ac","da","some","chain"]);
+  let prem,ans,dis,ex;
+  if(t==="mp"){ prem=[`Semua ${s.n} ${s.p}.`,`${subj} ${be} ${s.n}.`]; ans=`${subj} ${s.p}.`; dis=[`${subj} ${s.np}.`,`Sebagian ${s.n} ${s.np}.`,"Tidak dapat ditarik kesimpulan."]; ex=`Karena ${subj} termasuk ${s.n}, dan semua ${s.n} ${s.p}, maka ${subj} pasti ${s.p}.`; }
+  if(t==="mt"){ prem=[`Semua ${s.n} ${s.p}.`,`${subj} ${s.np}.`]; ans=`${subj} bukan ${s.n}.`; dis=[`${subj} ${be} ${s.n}.`,`${subj} ${s.p}.`,"Tidak dapat ditarik kesimpulan."]; ex=`Seandainya ${subj} termasuk ${s.n}, ia pasti ${s.p}. Kenyataannya tidak, jadi ${subj} bukan ${s.n}.`; }
+  if(t==="ac"){ prem=[`Semua ${s.n} ${s.p}.`,`${subj} ${s.p}.`]; ans=`${subj} belum tentu ${s.n}.`; dis=[`${subj} ${be} ${s.n}.`,`${subj} bukan ${s.n}.`,`${subj} ${s.np}.`]; ex=`Yang ${s.p} tidak hanya ${s.n}. Jadi dari premis ini belum bisa dipastikan apakah ${subj} termasuk ${s.n}. Ini jebakan yang sering muncul.`; }
+  if(t==="da"){ prem=[`Semua ${s.n} ${s.p}.`,`${subj} bukan ${s.n}.`]; ans=`${subj} belum tentu ${s.p}.`; dis=[`${subj} ${s.np}.`,`${subj} ${s.p}.`,`${subj} ${be} ${s.n}.`]; ex=`Premis hanya membahas ${s.n}. Untuk yang bukan ${s.n}, tidak ada informasi, jadi belum tentu ${s.p} maupun tidak.`; }
+  if(t==="some"){ prem=[`Semua ${s.n} ${s.p}.`,`Sebagian ${s.g} ${isThing?"merupakan":"adalah"} ${s.n}.`]; ans=`Sebagian ${s.g} ${s.p}.`; dis=[`Semua ${s.g} ${s.p}.`,`Semua ${s.n} ${isThing?"merupakan":"adalah"} ${s.g}.`,`Semua ${s.g} ${s.np}.`]; ex=`Sebagian ${s.g} termasuk ${s.n}, dan semua ${s.n} ${s.p}. Jadi minimal sebagian ${s.g} ${s.p}; untuk sisanya tidak diketahui.`; }
+  if(t==="chain"){ const c=pickR(CHAINS), i=rint(0,1), A=c[i],B=c[i+1],Cc=c[i+2]; prem=[`Jika ${A}, maka ${B}.`,`Jika ${B}, maka ${Cc}.`]; ans=`Jika ${A}, maka ${Cc}.`; dis=[`Jika ${Cc}, maka ${A}.`,`Jika ${A} tidak terjadi, maka ${Cc} tidak terjadi.`,`Jika ${B}, maka ${A}.`]; ex=`Rantai: ${A} → ${B} → ${Cc}. Jadi ${A} → ${Cc}. Arah kebalikannya tidak bisa disimpulkan.`; }
+  return {cat:"cerita",sub:"Penarikan kesimpulan",tmul:2,passage:`<ul class="clues">${prem.map(p=>`<li>${cap1(p)}</li>`).join("")}</ul>`,q:"Kesimpulan yang paling tepat adalah…",opts:shuffle([ans,...dis]).map(v=>({h:esc(cap1(v)),ok:v===ans})),ex};
+}
+const BACAAN=[
+ {p:"Susut energi pada jaringan transmisi terdiri atas susut teknis dan nonteknis. Susut teknis timbul karena energi berubah menjadi panas pada konduktor dan trafo, sehingga besarnya dipengaruhi arus dan hambatan. Susut nonteknis antara lain disebabkan kesalahan pengukuran pada meter transaksi atau kesalahan pengolahan data. Karena itu, penurunan susut tidak cukup dilakukan dengan memperbaiki peralatan; akurasi meter dan kualitas data juga perlu dijaga.",
+  qs:[["Gagasan utama bacaan tersebut adalah…",["Susut memiliki penyebab teknis dan nonteknis sehingga penanganannya perlu menyeluruh","Susut teknis disebabkan panas pada konduktor","Meter transaksi sering mengalami kesalahan","Trafo merupakan penyebab utama susut"],"Paragraf membahas dua jenis susut lalu menyimpulkan bahwa penanganannya harus mencakup peralatan, meter, dan data."],
+      ["Menurut bacaan, susut teknis dipengaruhi oleh…",["Arus dan hambatan","Kesalahan pengolahan data","Akurasi meter transaksi","Jumlah pelanggan"],"Kalimat kedua menyebut susut teknis dipengaruhi arus dan hambatan."],
+      ["Simpulan yang sesuai dengan bacaan adalah…",["Mengganti konduktor saja belum tentu menurunkan seluruh susut","Susut nonteknis tidak dapat dikurangi","Susut teknis lebih besar daripada susut nonteknis","Kualitas data tidak berpengaruh pada susut"],"Bacaan menegaskan perbaikan peralatan saja tidak cukup karena ada penyebab nonteknis. Perbandingan besar keduanya tidak disebut."]]},
+ {p:"Sebelum pekerjaan pemeliharaan dimulai, tim wajib melakukan briefing keselamatan untuk mengidentifikasi bahaya, membagi tugas, dan memastikan peralatan pelindung lengkap. Data internal menunjukkan bahwa sebagian besar kejadian nyaris celaka terjadi pada pekerjaan yang briefing-nya dilakukan terburu-buru. Meski memakan waktu sekitar lima belas menit, briefing yang baik justru mempercepat pekerjaan karena mengurangi kesalahan dan pekerjaan ulang.",
+  qs:[["Tujuan briefing keselamatan menurut bacaan adalah…",["Mengidentifikasi bahaya, membagi tugas, dan memastikan APD lengkap","Mempercepat pekerjaan tanpa memperhatikan bahaya","Mengganti pelatihan K3","Mencatat kehadiran tim"],"Kalimat pertama menyebut tiga tujuan briefing."],
+      ["Pernyataan yang TIDAK sesuai dengan bacaan adalah…",["Briefing membuat pekerjaan menjadi lebih lambat secara keseluruhan","Briefing berlangsung sekitar lima belas menit","Kejadian nyaris celaka banyak terjadi saat briefing terburu-buru","Briefing yang baik mengurangi pekerjaan ulang"],"Bacaan justru menyatakan briefing yang baik mempercepat pekerjaan secara keseluruhan."],
+      ["Sikap penulis terhadap briefing keselamatan adalah…",["Mendukung karena manfaatnya lebih besar daripada waktu yang dipakai","Netral karena manfaatnya belum terbukti","Menolak karena memakan waktu","Ragu karena data internal terbatas"],"Penulis menyampaikan data dan menyimpulkan briefing justru mempercepat pekerjaan, artinya mendukung."]]},
+ {p:"Digitalisasi pelaporan inspeksi memungkinkan temuan di lapangan langsung tercatat dengan foto dan lokasi. Dengan begitu, supervisor dapat memantau tindak lanjut tanpa menunggu laporan kertas dikumpulkan. Namun, manfaat ini hanya tercapai jika petugas mengisi data dengan lengkap dan tepat waktu. Beberapa unit melaporkan bahwa pada bulan pertama, kualitas data justru menurun karena petugas belum terbiasa dengan aplikasi.",
+  qs:[["Syarat agar manfaat digitalisasi tercapai menurut bacaan adalah…",["Petugas mengisi data dengan lengkap dan tepat waktu","Supervisor mengumpulkan laporan kertas","Aplikasi dilengkapi fitur baru","Inspeksi dilakukan lebih jarang"],"Kalimat ketiga menyebut syarat tersebut secara langsung."],
+      ["Mengapa kualitas data menurun pada bulan pertama?",["Petugas belum terbiasa dengan aplikasi","Aplikasi tidak dapat menyimpan foto","Supervisor tidak memantau","Laporan kertas masih dipakai"],"Kalimat terakhir menyebut penyebabnya."],
+      ["Kesimpulan yang paling tepat dari bacaan adalah…",["Digitalisasi perlu disertai pendampingan pengguna agar manfaatnya optimal","Digitalisasi pelaporan sebaiknya dibatalkan","Laporan kertas lebih akurat daripada aplikasi","Supervisor tidak lagi diperlukan"],"Manfaat digitalisasi bergantung pada kebiasaan petugas, dan masalah awal muncul karena belum terbiasa, sehingga pendampingan diperlukan."]]},
+ {p:"Kerja sama antarunit sering terhambat bukan oleh kurangnya kemampuan teknis, melainkan oleh perbedaan prioritas. Unit A mungkin mengejar target keandalan, sementara unit B fokus pada efisiensi biaya. Ketika masing-masing hanya melihat targetnya sendiri, koordinasi berjalan lambat. Pertemuan rutin yang membahas sasaran bersama terbukti membantu karena setiap unit memahami kepentingan unit lain dan dapat menyusun jadwal kerja yang saling mendukung.",
+  qs:[["Menurut bacaan, penghambat utama kerja sama antarunit adalah…",["Perbedaan prioritas","Kurangnya kemampuan teknis","Jumlah pegawai yang sedikit","Peralatan yang terbatas"],"Kalimat pertama menyebut hambatannya perbedaan prioritas, bukan kemampuan teknis."],
+      ["Mengapa pertemuan rutin membantu?",["Setiap unit memahami kepentingan unit lain","Target setiap unit menjadi sama","Biaya operasional langsung turun","Koordinasi tidak diperlukan lagi"],"Kalimat terakhir menjelaskan alasannya."],
+      ["Judul yang paling tepat untuk bacaan ini adalah…",["Menyelaraskan Prioritas untuk Kerja Sama Antarunit","Pentingnya Keandalan Jaringan","Cara Menekan Biaya Operasional","Kemampuan Teknis Pegawai"],"Bacaan membahas hambatan kerja sama karena prioritas berbeda dan cara menyelaraskannya."]]}
+];
+function bacaanPool(){ return BACAAN.concat(store.get("sc_gen_bacaan",[])); }
+function genBacaan(){
+  const pool=bacaanPool(), seen=store.get("sc_bseen",[]);
+  const flat=[]; pool.forEach((b,bi)=>b.qs.forEach((q,qi)=>flat.push({b,q,k:b.p.slice(0,40)+"#"+qi})));
+  const un=flat.filter(x=>!seen.includes(x.k)), x=un.length?pickR(un):pickR(flat);
+  if(!seen.includes(x.k)){ seen.push(x.k); store.set("sc_bseen",seen.slice(-500)); }
+  const [q,opts,ex]=x.q;
+  return {cat:"cerita",sub:"Pemahaman bacaan",tmul:3,passage:`<p class="read">${esc(x.b.p)}</p>`,q:esc(q),opts:shuffle(opts.map((o,i)=>({h:esc(o),ok:i===0}))),ex};
+}
+async function topUpBacaan(){
+  if(!sample) return;
+  const seen=store.get("sc_bseen",[]), pool=bacaanPool();
+  const left=pool.reduce((a,b)=>a+b.qs.filter((_,qi)=>!seen.includes(b.p.slice(0,40)+"#"+qi)).length,0);
+  if(left>=6) return;
+  const j=await ask(`Buat 2 bacaan BARU untuk tes pemahaman bacaan (psikotes/tes potensi kerja) bahasa Indonesia. Tiap bacaan 70–110 kata tentang dunia kerja kelistrikan/perkantoran (misal transmisi, K3, layanan pelanggan, digitalisasi, energi terbarukan, kerja tim), topiknya berbeda dari: ${pool.map(b=>b.p.slice(0,60)).join(" | ")}.
+Tiap bacaan punya 3 soal (gagasan utama/judul, detail, simpulan/tersirat atau pernyataan yang TIDAK sesuai). Tiap soal 4 pilihan; pilihan PERTAMA adalah jawaban benar; pengecoh harus masuk akal. Sertakan pembahasan singkat.
+Balas HANYA JSON: {"bacaan":[{"p":"teks","qs":[["pertanyaan",["benar","salah","salah","salah"],"pembahasan"]]}]}`);
+  const ok=(j.bacaan||[]).filter(b=>b&&b.p&&Array.isArray(b.qs)).map(b=>({p:String(b.p),qs:b.qs.filter(q=>Array.isArray(q)&&q[0]&&Array.isArray(q[1])&&q[1].length===4).map(q=>[String(q[0]),q[1].map(String),String(q[2]||"")])})).filter(b=>b.qs.length);
+  store.set("sc_gen_bacaan",store.get("sc_gen_bacaan",[]).concat(ok));
+}
+const genCerita=()=>{ const r=Math.random(); return r<.25?genSeating():r<.45?genCompare():r<.75?genSyllogism():genBacaan(); };
+
 // ---------- sesi tes ----------
 const PCAT={gambar:{name:"Gambar diputar",desc:"Rotasi bangun, putaran 90°, dan deret putaran",gen:genFigure,color:"#0f5e57"},
   angka:{name:"Angka",desc:"Deret angka dan hitungan (persen, susut, pecahan, persamaan, soal cerita)",gen:()=>Math.random()<.5?genSeries():genArith(),color:"#2b6cb0"},
   bahasa:{name:"Bahasa",desc:"Sinonim, antonim, dan analogi",gen:genVerbal,color:"#b83280"},
-  campur:{name:"Campuran",desc:"Gabungan ketiganya, seperti tes sebenarnya",gen:()=>pickR([genFigure,genSeries,genArith,genVerbal])(),color:"#c8661b"}};
+  cerita:{name:"Cerita & penalaran",desc:"Urutan duduk, perbandingan, penarikan kesimpulan, pemahaman bacaan",gen:genCerita,color:"#6b46c1"},
+  campur:{name:"Campuran",desc:"Gabungan semua jenis, seperti tes sebenarnya",gen:()=>pickR([genFigure,genSeries,genArith,genVerbal,genCerita])(),color:"#c8661b"}};
 let PT={n:10,timer:30}, PS=null;
 function psikoMenu(){
   const best=store.get("sc_psiko",{});
-  return topbar("Psikotes")+`<p class="small muted" style="margin:-4px 2px 14px">Soal gambar dan angka dibuat acak oleh program, jadi tidak pernah habis. Soal bahasa ditambah AI kalau bank katanya hampir habis.</p>
+  return topbar("Psikotes")+`<p class="small muted" style="margin:-4px 2px 14px">Soal gambar, angka, urutan duduk, perbandingan, dan penarikan kesimpulan dibuat acak oleh program, jadi tidak pernah habis. Soal bahasa dan bacaan ditambah AI kalau hampir habis. Batas waktu soal cerita otomatis lebih panjang.</p>
   <div class="card"><p class="label">Pengaturan</p>
    <div class="small" style="font-weight:700;margin-bottom:6px">Jumlah soal</div>
    <div class="seg" id="pN">${[10,20,30].map(n=>`<button class="${PT.n===n?"on":""}" data-v="${n}">${n}</button>`).join("")}</div>
    <div class="small" style="font-weight:700;margin-bottom:6px">Batas waktu per soal</div>
    <div class="seg" id="pT" style="margin-bottom:0">${[[0,"Bebas"],[20,"20 detik"],[30,"30 detik"],[45,"45 detik"]].map(([v,l])=>`<button class="${PT.timer===v?"on":""}" data-v="${v}">${l}</button>`).join("")}</div>
   </div>
-  ${Object.entries(PCAT).map(([k,c])=>`<button class="comp" onclick="startPsiko('${k}')"><span class="ic" style="background:${c.color}1a;color:${c.color}">${k==="gambar"?"↻":k==="angka"?"123":k==="bahasa"?"Aa":"★"}</span><span class="tx"><div class="nm">${c.name}</div><div class="sb">${c.desc}${best[k]!=null?` · terbaik ${best[k]}%`:""}</div></span><span class="muted">›</span></button>`).join("")}`;
+  ${Object.entries(PCAT).map(([k,c])=>`<button class="comp" onclick="startPsiko('${k}')"><span class="ic" style="background:${c.color}1a;color:${c.color}">${k==="gambar"?"↻":k==="angka"?"123":k==="bahasa"?"Aa":k==="cerita"?"¶":"★"}</span><span class="tx"><div class="nm">${c.name}</div><div class="sb">${c.desc}${best[k]!=null?` · terbaik ${best[k]}%`:""}</div></span><span class="muted">›</span></button>`).join("")}`;
 }
 function bindPsikoMenu(){
   [["#pN","n"],["#pT","timer"]].forEach(([sel,k])=>document.querySelectorAll(sel+" button").forEach(b=>b.onclick=()=>{ PT[k]=+b.dataset.v; document.querySelectorAll(sel+" button").forEach(x=>x.classList.toggle("on",x===b)); }));
 }
 async function startPsiko(cat){
-  if(cat==="bahasa"||cat==="campur"){ await waitSample(); if(sample){ $("#app").innerHTML=loadingView("Psikotes","tes","Menyiapkan soal…"); try{ await topUpVerbal(); }catch(e){} } }
+  if(cat==="bahasa"||cat==="cerita"||cat==="campur"){ await waitSample(); if(sample){ $("#app").innerHTML=loadingView("Psikotes","tes","Menyiapkan soal…"); try{ if(cat!=="cerita") await topUpVerbal(); if(cat!=="bahasa") await topUpBacaan(); }catch(e){} } }
   const items=[]; for(let i=0;i<PT.n;i++){ let it; let tries=0; const sig=x=>x.q+(x.fig||"")+x.opts.map(o=>o.h).join("|"); do{ it=PCAT[cat].gen(); tries++; }while(tries<30&&items.some(x=>sig(x)===sig(it))); items.push(it); }
   PS={cat,items,i:0,res:[],t0:Date.now(),timer:PT.timer,tick:null};
   renderPsiko();
@@ -1060,8 +1182,9 @@ function renderPsiko(){
   $("#app").innerHTML=topbar("Psikotes · "+PCAT[PS.cat].name,"tes")+`
    <div class="progress"><i style="width:${PS.i/PS.items.length*100}%"></i></div>
    <div class="card">
-    <div class="qmeta"><span class="pill">${it.sub}</span><span class="small muted">${PS.i+1} / ${PS.items.length}${PS.timer?` · <b id="pclock">${PS.timer}</b> dtk`:""}</span></div>
+    <div class="qmeta"><span class="pill">${it.sub}</span><span class="small muted">${PS.i+1} / ${PS.items.length}${PS.timer?` · <b id="pclock">${Math.round(PS.timer*(it.tmul||1))}</b> dtk`:""}</span></div>
     ${PS.timer?`<div class="tbar"><i id="tfill"></i></div>`:""}
+    ${it.passage?`<div class="passage">${it.passage}</div>`:""}
     <div class="qtext">${it.q}</div>
     ${it.fig?`<div class="figq">${it.fig}</div>`:""}
     <div class="${it.cat==="gambar"?"fopts":"opts"}">${it.opts.map((o,j)=>`<button class="opt ${it.cat==="gambar"?"fopt":""}" data-j="${j}">${it.cat==="gambar"?`<span class="flab">${"ABCD"[j]}</span>`:""}${o.h}</button>`).join("")}</div>
@@ -1071,8 +1194,9 @@ function renderPsiko(){
   document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>answerPsiko(+b.dataset.j));
   $("#pnext").onclick=()=>{ if(PS.i<PS.items.length-1){ PS.i++; renderPsiko(); window.scrollTo(0,0);} else psikoResult(); };
   PS.qStart=Date.now(); PS.done=false;
-  if(PS.timer){ PS.tick=setInterval(()=>{ const left=Math.max(0,PS.timer-(Date.now()-PS.qStart)/1000); const c=$("#pclock"), f=$("#tfill");
-    if(!c){ clearInterval(PS.tick); return; } c.textContent=Math.ceil(left); f.style.width=(left/PS.timer*100)+"%"; f.style.background=left<6?"var(--bad)":"var(--accent)";
+  const lim=PS.timer*(it.tmul||1);
+  if(PS.timer){ PS.tick=setInterval(()=>{ const left=Math.max(0,lim-(Date.now()-PS.qStart)/1000); const c=$("#pclock"), f=$("#tfill");
+    if(!c){ clearInterval(PS.tick); return; } c.textContent=Math.ceil(left); f.style.width=(left/lim*100)+"%"; f.style.background=left<6?"var(--bad)":"var(--accent)";
     if(left<=0){ clearInterval(PS.tick); answerPsiko(-1); } },200); }
 }
 function answerPsiko(j){

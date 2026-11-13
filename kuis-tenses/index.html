@@ -162,6 +162,12 @@
       <div class="acts" id="modList"></div>
       <button class="btn ghost small" style="margin-top:10px" data-gen="modal">+ Papan Will · Would · Shall baru (acak)</button>
     </div>
+    <div class="card">
+      <p class="label">Should · Must · Have to</p>
+      <p class="note" style="margin:-4px 0 14px">Sebaiknya (should), wajib (must), harus (have to), dilarang (mustn't), tidak perlu (don't have to), harus kemarin (had to), dan seharusnya tapi tidak (should have + V3).</p>
+      <div class="acts" id="mod2List"></div>
+      <button class="btn ghost small" style="margin-top:10px" data-gen="modal2">+ Papan Should · Must · Have to baru (acak)</button>
+    </div>
     <div class="acts"><button class="act mix" id="mixBtn"><span class="num">?</span><span class="tx"><p class="tt">Campuran acak</p><p class="st">10 soal dari semua papan</p></span></button></div>
   </section>
 
@@ -209,7 +215,15 @@ const TENSES = {
   getting:{name:"Present Continuous (getting)", short:"mulai", color:"var(--t-cont)"},
   will:{name:"Will · kasual", short:"will", color:"var(--t-present)"},
   would:{name:"Would · sopan", short:"would", color:"var(--t-cont)"},
-  shall:{name:"Shall · menawarkan", short:"shall", color:"var(--t-perfect)"}
+  shall:{name:"Shall · menawarkan", short:"shall", color:"var(--t-perfect)"},
+  should:{name:"Should · saran", short:"should", color:"var(--t-present)"},
+  must:{name:"Must · wajib", short:"must", color:"var(--t-cont)"},
+  haveto:{name:"Have to · harus", short:"have to", color:"var(--t-perfect)"},
+  mustnt:{name:"Mustn't · dilarang", short:"mustn't", color:"var(--t-future)"},
+  donthave:{name:"Don't have to · tidak perlu", short:"tidak perlu", color:"var(--t-past)"},
+  hadto:{name:"Had to · harus (lampau)", short:"had to", color:"var(--t-past)"},
+  shouldhave:{name:"Should have · seharusnya", short:"should have", color:"var(--t-ever)"},
+  q_haveto:{name:"Do/Does … have to? · pertanyaan", short:"tanya", color:"var(--t-cont)"}
 };
 const ORDER = ["present","cont","perfect","future","past"];
 
@@ -321,6 +335,73 @@ const MODAL_EXPL = {
   would:"Would + you + V1? → lebih sopan/formal, cocok untuk atasan, orang tua, atau orang yang belum dikenal.",
   shall:"Shall + I/we + V1? → menawarkan bantuan (haruskah saya…?) atau mengajak (bagaimana kalau kita…?). Shall hanya dipakai dengan I atau we, dan terdengar sangat formal."
 };
+// SHOULD · MUST · HAVE TO
+const MV = (id,vp,s,ing,past,v3)=>({id,vp,s,ing,past,v3});
+const M2_PH = [
+  MV("memakai helm","wear a helmet","wears a helmet","wearing a helmet","wore a helmet","worn a helmet"),
+  MV("menyelesaikan laporan","finish the report","finishes the report","finishing the report","finished the report","finished the report"),
+  MV("memeriksa meter","check the meter","checks the meter","checking the meter","checked the meter","checked the meter"),
+  MV("datang lebih awal","come early","comes early","coming early","came early","come early"),
+  MV("beristirahat","rest","rests","resting","rested","rested"),
+  MV("menelepon supervisor","call the supervisor","calls the supervisor","calling the supervisor","called the supervisor","called the supervisor"),
+  MV("mengisi formulir","fill in the form","fills in the form","filling in the form","filled in the form","filled in the form"),
+  MV("membawa kartu identitas","bring the ID card","brings the ID card","bringing the ID card","brought the ID card","brought the ID card"),
+  MV("mengikuti briefing K3","attend the safety briefing","attends the safety briefing","attending the safety briefing","attended the safety briefing","attended the safety briefing"),
+  MV("tidur lebih awal","sleep early","sleeps early","sleeping early","slept early","slept early"),
+  MV("mengikuti pelatihan","take the training","takes the training","taking the training","took the training","taken the training"),
+  MV("mengirim data","send the data","sends the data","sending the data","sent the data","sent the data"),
+  MV("membaca SOP","read the SOP","reads the SOP","reading the SOP","read the SOP","read the SOP"),
+  MV("mengemudi dengan hati-hati","drive carefully","drives carefully","driving carefully","drove carefully","driven carefully")
+];
+const M2_NO = [
+  MV("merokok di gardu induk","smoke in the substation","smokes in the substation","smoking in the substation","smoked in the substation","smoked in the substation"),
+  MV("menyentuh panel bertegangan","touch the live panel","touches the live panel","touching the live panel","touched the live panel","touched the live panel"),
+  MV("parkir di sini","park here","parks here","parking here","parked here","parked here"),
+  MV("memakai ponsel saat mengemudi","use the phone while driving","uses the phone while driving","using the phone while driving","used the phone while driving","used the phone while driving"),
+  MV("masuk tanpa izin","enter without permission","enters without permission","entering without permission","entered without permission","entered without permission")
+];
+const M2_SUBJ = [{k:"I",id:"Saya"},{k:"you",id:"Kamu"},{k:"he",id:"Dia"},{k:"we",id:"Kami"},{k:"they",id:"Mereka"}];
+const M2_EXPL = {
+  should:"Should + V1 = sebaiknya (saran). Setelah should langsung V1, tanpa to dan tanpa -s.",
+  must:"Must + V1 = wajib (aturan tegas). Setelah must langsung V1, tanpa to dan tanpa -s, untuk semua subjek.",
+  haveto:"Have to / has to + V1 = harus karena aturan atau keadaan. He/she/it pakai has to; kata kerjanya tetap V1.",
+  mustnt:"Mustn't + V1 = dilarang. Jangan tertukar dengan don't have to, yang artinya tidak perlu.",
+  donthave:"Don't / doesn't have to + V1 = tidak perlu (boleh, tapi tidak wajib). Mustn't artinya dilarang, jadi maknanya berbeda.",
+  hadto:"Must tidak punya bentuk lampau. Untuk \"harus\" di masa lalu pakai had to + V1, untuk semua subjek.",
+  shouldhave:"Should have + V3 = seharusnya (tapi kenyataannya tidak dilakukan). Must have + V3 artinya lain: \"pasti sudah\".",
+  q_haveto:"Pertanyaan: Do/Does + S + have to + V1? Lebih umum daripada \"Must I…?\"."
+};
+const M2_NOTE = {must:"Juga benar. Must dan have to sering bisa saling menggantikan; must lebih tegas.", haveto:"Juga benar. Must dan have to sering bisa saling menggantikan.", mustnt:"Juga benar.", donthave:"Juga benar.", should:"Juga benar.", q_haveto:"Juga benar, tapi \"Must I…?\" terdengar lebih formal/kaku."};
+function buildModal2(sp, phs, no){
+  const [p1,p2,p3,p4,p5,p6]=phs;
+  const Sx=k=>SUBJ[k], A=(sk)=>M2_SUBJ.find(x=>x.k===sk);
+  const sub=sk=>Sx(sk).en, cap=s=>s.charAt(0).toUpperCase()+s.slice(1);
+  const S1=sp[0], S2=sp[1], S3="he", S4=sp[2], S5=sp[3];
+  const s1=sub(S1), s2=sub(S2), s4=sub(S4), s5=sub(S5);
+  const vs=(sk,p)=>Sx(sk).third?p.s:p.vp, idl=sk=>{ const x=A(sk).id; return x==="Saya"||x==="Kamu"||x==="Dia"||x==="Kami"||x==="Mereka"?x.toLowerCase():x; };
+  const has=sk=>Sx(sk).third?"has":"have", dont=sk=>Sx(sk).third?"doesn't":"don't", doo=sk=>Sx(sk).third?"does":"do";
+  const it=[
+    {t:"should", q:`${A(S1).id} sebaiknya ${p1.id}. (saran)`, a:`${cap(s1)} should ${p1.vp}.`, alt:[`${cap(s1)} ought to ${p1.vp}.`],
+     w:[`${cap(s1)} should to ${p1.vp}.`,`${cap(s1)} should ${p1.ing}.`,`${cap(s1)} should ${p1.past}.`,`${cap(s1)} should ${p1.s}.`]},
+    {t:"must", q:`${A(S2).id} wajib ${p2.id}. (aturan tegas)`, a:`${cap(s2)} must ${p2.vp}.`, alt:[`${cap(s2)} ${has(S2)} to ${p2.vp}.`],
+     w:[`${cap(s2)} must to ${p2.vp}.`,`${cap(s2)} must ${p2.ing}.`,`${cap(s2)} musts ${p2.vp}.`,`${cap(s2)} must ${p2.past}.`]},
+    {t:"haveto", q:`Dia harus ${p3.id} hari ini. (karena tuntutan pekerjaan)`, a:`He has to ${p3.vp} today.`, alt:[`He must ${p3.vp} today.`],
+     w:[`He have to ${p3.vp} today.`,`He has to ${p3.s} today.`,`He has ${p3.vp} today.`,`He musts ${p3.vp} today.`]},
+    {t:"mustnt", q:`${A(S4).id} dilarang ${no.id}.`, a:`${cap(s4)} mustn't ${no.vp}.`, alt:[`${cap(s4)} must not ${no.vp}.`],
+     w:[`${cap(s4)} ${dont(S4)} have to ${no.vp}.`,`${cap(s4)} mustn't to ${no.vp}.`,`${cap(s4)} ${dont(S4)} must ${no.vp}.`]},
+    {t:"donthave", q:`${A(S5).id} tidak perlu ${p4.id}. (boleh, tapi tidak wajib)`, a:`${cap(s5)} ${dont(S5)} have to ${p4.vp}.`,
+     w:[`${cap(s5)} mustn't ${p4.vp}.`,`${cap(s5)} ${dont(S5)} must ${p4.vp}.`,`${cap(s5)} ${Sx(S5).third?"doesn't has":"haven't"} to ${p4.vp}.`]},
+    {t:"hadto", q:`Kemarin ${idl(S1)} harus ${p5.id}.`, a:`${cap(s1)} had to ${p5.vp} yesterday.`,
+     w:[`${cap(s1)} must ${p5.past} yesterday.`,`${cap(s1)} ${has(S1)} to ${p5.vp} yesterday.`,`${cap(s1)} had to ${p5.past} yesterday.`,`${cap(s1)} musted ${p5.vp} yesterday.`]},
+    {t:"shouldhave", q:`Seharusnya ${idl(S2)} ${p6.id}. (tapi kenyataannya tidak)`, a:`${cap(s2)} should have ${p6.v3}.`,
+     w:[`${cap(s2)} should ${p6.past}.`,`${cap(s2)} should have ${p6.past===p6.v3?p6.vp:p6.past}.`,`${cap(s2)} must have ${p6.v3}.`,`${cap(s2)} should has ${p6.v3}.`]},
+    {t:"q_haveto", q:`Apakah ${idl(S5)==="saya"?"saya":idl(S5)} harus ${p1.id}?`, a:`${cap(doo(S5))} ${s5} have to ${p1.vp}?`, alt:[`Must ${s5} ${p1.vp}?`],
+     w:[`${cap(doo(S5))} ${s5} must ${p1.vp}?`,`${cap(Sx(S5).third?"do":"does")} ${s5} have to ${p1.vp}?`,`${cap(has(S5))} ${s5} to ${p1.vp}?`,`${cap(doo(S5))} ${s5} have to ${p1.s}?`]}
+  ];
+  return it.map(x=>({...x, kind:"m2", f:FORM["m2_"+x.t], e:M2_EXPL[x.t], altNote:M2_NOTE[x.t]}));
+}
+const m2Set=(key,title,sp,phs,no,gen)=>({key, gen, type:"modal2", title, head:"Should · Must · Have to", forms:"saran · wajib · harus · dilarang · tidak perlu", items:buildModal2(sp,phs,no)});
+
 const MODALS = [
   {title:"Will · Would · Shall (1)", items:[
     {t:"will", q:"Maukah kamu membantuku? (ke teman)", a:"Will you help me?", alt:["Would you help me?","Can you help me?"], w:["Shall you help me?","Will you helping me?","Will you to help me?"]},
@@ -358,6 +439,8 @@ const FORM = {
   a_present:"S + am/is/are + kata sifat", a_getting:"S + am/is/are + getting + kata sifat", a_perfect:"S + have/has + been + kata sifat",
   a_future:"S + will + be + kata sifat", a_past:"S + was/were + kata sifat", a_ever:"S + have/has + been + kata sifat + before",
   aq_present:"Am/Is/Are + S + kata sifat?", aq_past:"Was/Were + S + kata sifat?", aq_future:"Will + S + be + kata sifat?", aq_ever:"Have/Has + S + ever + been + kata sifat?",
+  m2_should:"S + should + V1", m2_must:"S + must + V1", m2_haveto:"S + have/has to + V1", m2_mustnt:"S + mustn't + V1  (dilarang)",
+  m2_donthave:"S + don't/doesn't have to + V1  (tidak perlu)", m2_hadto:"S + had to + V1  (lampau)", m2_shouldhave:"S + should have + V3", m2_q_haveto:"Do/Does + S + have to + V1?",
   m_will:"Will + you + V1?  (kasual, ke teman)", m_would:"Would + you + V1?  (sopan / formal)", m_shall:"Shall + I/we + V1?  (menawarkan / mengajak)"
 };
 
@@ -445,11 +528,17 @@ const SETS = [
 SETS.push(...ADJ.map((d,i)=>adjSet(d,"j"+i)));
 SETS.push(...MODALS.map((m,i)=>({key:"m"+i, type:"modal", title:m.title, head:"Will · Would · Shall", forms:"kasual · sopan · menawarkan",
   items:m.items.map(x=>({...x, kind:"m", f:FORM["m_"+x.t], e:MODAL_EXPL[x.t], altNote:MODAL_NOTE[x.t]}))})));
+SETS.push(
+  m2Set("n0","Should · Must · Have to (1)",["you","I","we","they"],[M2_PH[4],M2_PH[0],M2_PH[1],M2_PH[3],M2_PH[5],M2_PH[2]],M2_NO[0]),
+  m2Set("n1","Should · Must · Have to (2)",["I","they","you","he"],[M2_PH[9],M2_PH[8],M2_PH[11],M2_PH[7],M2_PH[6],M2_PH[10]],M2_NO[1]),
+  m2Set("n2","Should · Must · Have to (3)",["we","you","they","I"],[M2_PH[12],M2_PH[13],M2_PH[6],M2_PH[9],M2_PH[1],M2_PH[3]],M2_NO[3])
+);
 function prep(s){ s.items.forEach((it,j)=>{ it.set=s; it.idx=j; it.w=pick(it.a,it.w); });
   if(s.type==="adj") s.sub=`${s.items[0].q.replace(/\.$/,"")} · ${s.items.length} soal`;
   if(s.type==="active") s.sub=`${s.items[0].q.replace(/\.$/,"")} · ${s.items.length} soal`;
   if(s.type==="passive") s.sub=`${s.items[0].q.replace(/\.$/,"")} · ${s.items.length} soal`;
   if(s.type==="modal") s.sub=`Minta tolong & menawarkan · ${s.items.length} soal`;
+  if(s.type==="modal2") s.sub=`Saran, wajib, dilarang, tidak perlu · ${s.items.length} soal`;
   return s; }
 SETS.forEach(prep);
 
@@ -548,7 +637,11 @@ function genAdj(){
   const g=freshPick(()=>{ const a=rnd(GEN_ADJ), su=rnd(GEN_SUBJ); return {key:`J|${a[0]}|${su.s}`, a, su}; });
   return prep(adjSet({adjId:g.a[0], adj:g.a[1], s:g.su.s, sId:g.su.sId, qs:g.su.qs, qsId:g.su.qsId}, "g"+(++GEN_N), true));
 }
-const GEN = {active:genActive, passive:genPassive, adj:genAdj, modal:genModal};
+function genModal2(){
+  const g=freshPick(()=>{ const sp=shuffle(["I","you","he","we","they"]).slice(0,4), phs=shuffle(M2_PH).slice(0,6), no=rnd(M2_NO); return {key:`N|${phs.map(x=>x.vp).join("+")}|${sp.join("")}`, sp, phs, no}; });
+  return prep(m2Set("g"+(++GEN_N),"Should · Must · Have to (baru)",g.sp,g.phs,g.no,true));
+}
+const GEN = {active:genActive, passive:genPassive, adj:genAdj, modal:genModal, modal2:genModal2};
 
 // ================= CHECKING =================
 const LEAD_TIME = ["since this morning","every morning","every afternoon","every day","every night","every week","every weekend","every evening","every sunday","every saturday","yesterday","tomorrow"];
@@ -593,7 +686,7 @@ function nextBoard(type){
   const pool = FIXED().filter(s=>!type||s.type===type);
   const todo = pool.find(s=>store.get("kt3_best_"+s.key)==null);
   if(todo) return todo;
-  const t = type || rnd(["active","passive","adj","modal"]);
+  const t = type || rnd(["active","passive","adj","modal","modal2"]);
   return GEN[t]();
 }
 function renderMenu(){
@@ -607,6 +700,7 @@ function renderMenu(){
   $("actList").innerHTML = SETS.filter(s=>s.type==="active").map((s,i)=>setBtn(s,i+1,"")).join("");
   $("pasList").innerHTML = SETS.filter(s=>s.type==="passive").map((s,i)=>setBtn(s,i+1,"pas")).join("");
   $("adjList").innerHTML = SETS.filter(s=>s.type==="adj").map((s,i)=>setBtn(s,i+1,"")).join("");
+  $("mod2List").innerHTML = SETS.filter(s=>s.type==="modal2").map((s,i)=>setBtn(s,i+1,"pas")).join("");
   $("modList").innerHTML = SETS.filter(s=>s.type==="modal").map((s,i)=>setBtn(s,i+1,"mix")).join("");
 }
 document.addEventListener("click",e=>{
@@ -662,7 +756,7 @@ function renderQ(){
   const it=S.items[S.i]; S.answered=false;
   $("count").textContent=`${S.i+1} / ${S.items.length}`;
   const k=$("kind");
-  k.textContent = it.kind==="q"?"Pertanyaan":it.kind==="p"?"Kalimat pasif":it.kind==="m"?"Will · Would · Shall":"Kalimat";
+  k.textContent = it.kind==="q"?"Pertanyaan":it.kind==="p"?"Kalimat pasif":it.kind==="m"?"Will · Would · Shall":it.kind==="m2"?"Should · Must · Have to":"Kalimat";
   k.className = "kind "+(it.kind==="q"?"q":it.kind==="p"?"p":"");
   $("qText").textContent=it.q;
   $("feedback").innerHTML=""; $("nextBtn").classList.add("hidden");
@@ -782,6 +876,16 @@ $("rumus").innerHTML =
     ["past","S + was/were + kata sifat","I was hungry yesterday."],
     ["ever","S + have/has + been + kata sifat + before","I have been hungry before."]],
     "Pertanyaan: pindahkan to be ke depan (Are you hungry? Were you busy? Will you be busy? Have you ever been sick?). Jangan pakai do/does/did, dan jangan beri -ing pada kata sifat.") +
+  rumusTable("Should · Must · Have to",[
+    ["should","S + should + V1","You should rest. (Sebaiknya kamu istirahat.)"],
+    ["must","S + must + V1","You must wear a helmet. (Wajib, aturan tegas.)"],
+    ["haveto","S + have/has to + V1","He has to finish the report today."],
+    ["mustnt","S + mustn't + V1","You mustn't smoke here. (Dilarang.)"],
+    ["donthave","S + don't/doesn't have to + V1","You don't have to come. (Tidak perlu.)"],
+    ["hadto","S + had to + V1","I had to work late yesterday."],
+    ["shouldhave","S + should have + V3","I should have come earlier. (Seharusnya, tapi tidak.)"],
+    ["q_haveto","Do/Does + S + have to + V1?","Do I have to fill in this form?"]],
+    "Setelah should, must, dan mustn't langsung V1 tanpa to. Must tidak punya bentuk lampau, jadi pakai had to. Mustn't = dilarang, don't have to = tidak perlu.") +
   rumusTable("Will · Would · Shall",[
     ["will","Will + you + V1?","Will you help me? (santai, ke teman)"],
     ["would","Would + you + V1?","Would you help me? (sopan / formal)"],
