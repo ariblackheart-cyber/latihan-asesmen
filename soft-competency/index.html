@@ -535,16 +535,16 @@ function compProgress(c){
 function homeView(){
   return `<div class="card hero"><h2>Latihan Soft Competency</h2><p>Latihan mandiri untuk asesmen kompetensi: pahami key behavior, kerjakan studi kasus, latih jawaban STAR, dan simulasi role play dengan AI.</p></div>
   <div class="card" style="border-color:var(--warm);background:var(--warm-soft)">
-    <p class="label" style="color:var(--warm)">Prioritas pengembangan</p>
-    <h3>Gaining Commitment · gap 1 rating</h3>
-    <p class="small" style="margin:4px 0 12px">Mulai dari sini: baca key behavior-nya, lalu coba simulasi meyakinkan supervisor gardu induk.</p>
+    <p class="label" style="color:var(--warm)">Mulai dari sini</p>
+    <h3>Gaining Commitment</h3>
+    <p class="small" style="margin:4px 0 12px">Kompetensi meyakinkan orang lain agar mendukung gagasan atau rencana. Baca key behavior-nya, lalu coba simulasi meyakinkan supervisor gardu induk.</p>
     <div class="row"><button class="btn warm" onclick="go('materi-gc')">Pelajari</button><button class="btn ghost" style="border-color:var(--warm);color:var(--warm)" onclick="go('sim-0')">Simulasi</button></div>
   </div>
   <button class="comp" onclick="go('tes')"><span class="ic" style="background:#2b6cb01a;color:#2b6cb0">↻</span><span class="tx"><div class="nm">Psikotes</div><div class="sb">Gambar diputar, angka, bahasa, cerita &amp; penalaran</div></span><span class="muted">›</span></button>
   <p class="label" style="margin:18px 2px 10px">Semua kompetensi</p>
   ${COMP.map(c=>{const p=compProgress(c);return `<button class="comp ${c.focus?"focus":""}" onclick="go('materi-${c.id}')">
     <span class="ic" style="background:${c.color}1a;color:${c.color}">${ini(c.name)}</span>
-    <span class="tx"><div class="nm">${c.name} ${c.focus?'<span class="pill warm">Prioritas</span>':""}</div>
+    <span class="tx"><div class="nm">${c.name} ${c.focus?'<span class="pill warm">Disarankan</span>':""}</div>
     <div class="sb">${c.idn}${P.sjt[c.id]!=null?` · studi kasus ${P.sjt[c.id]}%`:""}</div>
     <div class="mbar"><i style="width:${p}%;background:${c.color}"></i></div></span></button>`;}).join("")}
   <div class="card" style="margin-top:14px"><p class="label">Cara menjawab saat asesmen</p>
@@ -558,7 +558,7 @@ function homeView(){
 }
 function pickComp(title,tab,desc){
   return topbar(title)+`<p class="small muted" style="margin:-4px 2px 14px">${desc}</p>`+
-   COMP.map(c=>`<button class="comp ${c.focus?"focus":""}" onclick="go('${tab}-${c.id}')"><span class="ic" style="background:${c.color}1a;color:${c.color}">${ini(c.name)}</span><span class="tx"><div class="nm">${c.name} ${c.focus?'<span class="pill warm">Prioritas</span>':""}</div><div class="sb">${c.idn}</div></span><span class="muted">›</span></button>`).join("");
+   COMP.map(c=>`<button class="comp ${c.focus?"focus":""}" onclick="go('${tab}-${c.id}')"><span class="ic" style="background:${c.color}1a;color:${c.color}">${ini(c.name)}</span><span class="tx"><div class="nm">${c.name} ${c.focus?'<span class="pill warm">Disarankan</span>':""}</div><div class="sb">${c.idn}</div></span><span class="muted">›</span></button>`).join("");
 }
 
 // ===================== MATERI =====================
@@ -581,7 +581,7 @@ function kasusMenu(){
   <button class="btn ghost" style="margin-bottom:16px" onclick="go('kasus-kb-all')">Kuis key behavior campuran (12 soal)</button>
   <p class="small muted" style="margin:0 2px 12px">Soal yang belum dikerjakan selalu didahulukan. Kalau soal di suatu kompetensi habis, AI otomatis membuat soal baru${sampleChecked&&!sample?" (saat halaman dibuka di claude.ai)":""}.</p>
   <p class="label" style="margin:6px 2px 10px">Per kompetensi</p>
-  ${COMP.map(c=>`<div class="card" style="padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px"><b>${c.name}</b>${c.focus?'<span class="pill warm">Prioritas</span>':""}</div>
+  ${COMP.map(c=>`<div class="card" style="padding:14px"><div style="display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px"><b>${c.name}</b>${c.focus?'<span class="pill warm">Disarankan</span>':""}</div>
    <div class="small muted" style="margin-bottom:10px">${sjtPool(c).length} soal studi kasus · belum dikerjakan: pilih satu ${unseenOf("sjt",c)}, urutkan ${unseenOf("rank",c)}, kuis KB ${unseenOf("kb",c)}</div>
    <div class="row"><button class="btn ghost" style="padding:10px;font-size:13.5px" onclick="go('kasus-sjt-${c.id}')">Pilih satu${P.sjt[c.id]!=null?` · ${P.sjt[c.id]}%`:""}</button><button class="btn ghost" style="padding:10px;font-size:13.5px" onclick="go('kasus-rank-${c.id}')">Urutkan${P.rank[c.id]!=null?` · ${P.rank[c.id]}%`:""}</button><button class="btn ghost" style="padding:10px;font-size:13.5px" onclick="go('kasus-kb-${c.id}')">Kuis KB${P.kb[c.id]!=null?` · ${P.kb[c.id]}%`:""}</button></div></div>`).join("")}`;
 }
