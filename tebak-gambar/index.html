@@ -1,0 +1,431 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<title>Guess the Picture!</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{--bg:#fff7e8;--ink:#2d2a4a;--muted:#7a7495;--card:#fff;--pri:#ff7a59;--pri-d:#e45f3d;--ok:#2fbf71;--bad:#ff5d73;--sky:#5bc0eb;--sun:#ffd23f;--grape:#9b5de5;}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  html,body{margin:0;background:var(--bg);color:var(--ink);font-family:"Fredoka",system-ui,sans-serif;min-height:100%;overscroll-behavior:none}
+  body{background:radial-gradient(circle at 10% 0%,#ffe3c2 0,transparent 40%),radial-gradient(circle at 100% 30%,#d9f3ff 0,transparent 35%),var(--bg)}
+  .wrap{max-width:520px;margin:0 auto;padding:16px 16px 40px;min-height:100vh}
+  button{font-family:inherit;cursor:pointer;border:0;color:inherit}
+  .hidden{display:none !important}
+  /* header */
+  .bar{display:flex;align-items:center;gap:10px;margin-bottom:14px}
+  .icon-btn{width:46px;height:46px;border-radius:16px;background:#fff;box-shadow:0 3px 0 #eadfcb;font-size:22px;display:flex;align-items:center;justify-content:center}
+  .stars{margin-left:auto;background:#fff;border-radius:99px;padding:8px 14px;font-weight:700;font-size:18px;box-shadow:0 3px 0 #eadfcb}
+  /* home */
+  .title{text-align:center;margin:10px 0 4px}
+  .title h1{font-size:38px;margin:0;line-height:1.05;color:var(--pri);text-shadow:0 3px 0 #ffd0b5;letter-spacing:.5px}
+  .title p{margin:6px 0 0;color:var(--muted);font-size:17px}
+  .owl{font-size:64px;text-align:center;animation:bob 2.4s ease-in-out infinite}
+  @keyframes bob{50%{transform:translateY(-8px) rotate(-4deg)}}
+  .sec{font-weight:700;font-size:18px;margin:22px 4px 10px}
+  .modes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .mode{background:#fff;border-radius:20px;padding:12px 6px 10px;text-align:center;box-shadow:0 4px 0 #eadfcb;border:3px solid transparent;transition:transform .1s}
+  .mode.on{border-color:var(--pri)}
+  .mode .e{font-size:32px;display:block}
+  .mode b{display:block;font-size:15px;margin-top:2px}
+  .mode small{display:block;color:var(--muted);font-size:12px;line-height:1.2;margin-top:2px}
+  .cats{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+  .cat{border-radius:22px;padding:14px 6px 12px;text-align:center;color:#fff;box-shadow:0 5px 0 rgba(0,0,0,.15);transition:transform .1s}
+  .cat:active,.mode:active,.big:active,.opt:active,.tile:active{transform:translateY(3px);box-shadow:0 1px 0 rgba(0,0,0,.15)}
+  .cat .e{font-size:40px;display:block;filter:drop-shadow(0 2px 0 rgba(0,0,0,.12))}
+  .cat b{display:block;font-size:16px;margin-top:4px}
+  .cat small{display:block;font-size:12px;opacity:.9}
+  .link{display:block;width:100%;margin-top:16px;background:#fff;border-radius:18px;padding:14px;font-size:17px;font-weight:600;box-shadow:0 4px 0 #eadfcb}
+  /* game */
+  .prog{height:12px;background:#f1e6d3;border-radius:99px;overflow:hidden;flex:1}
+  .prog i{display:block;height:100%;background:linear-gradient(90deg,var(--sun),var(--pri));border-radius:99px;transition:width .3s}
+  .stage{background:#fff;border-radius:30px;padding:20px 16px;box-shadow:0 6px 0 #eadfcb;text-align:center;position:relative}
+  .ask{font-size:21px;font-weight:600;margin:0 0 8px}
+  .pic{font-size:120px;line-height:1.15;margin:4px 0 6px;user-select:none}
+  .pic.count{font-size:46px;line-height:1.25;max-width:330px;margin:6px auto 10px}
+  .speak{background:var(--sky);color:#fff;border-radius:99px;padding:10px 18px;font-size:18px;font-weight:600;box-shadow:0 4px 0 #3a9fca;display:inline-flex;align-items:center;gap:8px}
+  .speak.lg{font-size:22px;padding:16px 26px;margin:14px 0 6px}
+  .opts{display:grid;grid-template-columns:1fr;gap:10px;margin-top:16px}
+  .opts.pics{grid-template-columns:1fr 1fr}
+  .opt{background:#fff;border:3px solid #efe4d2;border-radius:20px;padding:14px;font-size:24px;font-weight:600;box-shadow:0 4px 0 #eadfcb}
+  .opts.pics .opt{font-size:64px;padding:10px;line-height:1.2}
+  .opt.ok{border-color:var(--ok);background:#e3f8ec;animation:pop .35s}
+  .opt.no{border-color:var(--bad);background:#ffe8ec;animation:shake .35s;opacity:.55}
+  @keyframes pop{50%{transform:scale(1.08)}}
+  @keyframes shake{20%,60%{transform:translateX(-7px)}40%,80%{transform:translateX(7px)}}
+  .slots{display:flex;justify-content:center;gap:6px;flex-wrap:wrap;margin:10px 0 14px}
+  .slot{width:42px;height:50px;border-radius:12px;border:3px dashed #e3d6bf;display:flex;align-items:center;justify-content:center;font-size:28px;font-weight:700;text-transform:lowercase}
+  .slot.f{border-style:solid;border-color:var(--ok);background:#e3f8ec}
+  .tiles{display:flex;justify-content:center;gap:8px;flex-wrap:wrap}
+  .tile{width:50px;height:56px;border-radius:14px;background:var(--sun);font-size:30px;font-weight:700;box-shadow:0 4px 0 #d9ad16;text-transform:lowercase}
+  .tile.used{visibility:hidden}
+  .tile.no{animation:shake .35s;background:#ffb3bf;box-shadow:0 4px 0 #e2899a}
+  .msg{min-height:64px;margin-top:14px;font-size:22px;font-weight:700}
+  .msg .id{display:block;font-size:16px;font-weight:500;color:var(--muted);margin-top:2px}
+  .msg.ok{color:var(--ok)} .msg.no{color:var(--bad)}
+  .big{display:block;width:100%;background:var(--pri);color:#fff;border-radius:20px;padding:16px;font-size:22px;font-weight:700;box-shadow:0 5px 0 var(--pri-d);margin-top:14px}
+  .big.sec2{background:#fff;color:var(--ink);box-shadow:0 5px 0 #eadfcb}
+  /* end */
+  .result{text-align:center}
+  .result .trophy{font-size:96px;animation:bob 2s ease-in-out infinite}
+  .result h2{font-size:34px;margin:4px 0;color:var(--pri)}
+  .starrow{font-size:34px;letter-spacing:2px;margin:8px 0}
+  .learned{display:flex;flex-wrap:wrap;justify-content:center;gap:8px;margin:12px 0}
+  .learned span{background:#fff;border-radius:14px;padding:6px 10px;font-size:16px;box-shadow:0 3px 0 #eadfcb}
+  /* stickers */
+  .sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:8px}
+  .stk{background:#fff;border-radius:16px;padding:8px 2px;text-align:center;box-shadow:0 3px 0 #eadfcb;font-size:34px;line-height:1.1}
+  .stk small{display:block;font-size:12px;font-weight:600;margin-top:2px;color:var(--ink)}
+  .stk.lock{filter:grayscale(1);opacity:.25}
+  img.ph{width:auto;height:auto;max-width:100%;max-height:260px;min-width:120px;object-fit:contain;border-radius:26px;box-shadow:0 5px 0 #eadfcb;display:block;margin:6px auto 4px;background:#f6efe2}
+  .pic img.ph{font-size:0}
+  img.oph{width:100%;aspect-ratio:1;object-fit:contain;border-radius:14px;display:block;background:#f6efe2}
+  .opts.pics .opt:has(img){padding:6px}
+  .confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:50}
+  .confetti span{position:absolute;top:-40px;font-size:28px;animation:fall 1.6s ease-in forwards}
+  @keyframes fall{to{transform:translateY(110vh) rotate(540deg)}}
+  .note{font-size:13px;color:var(--muted);text-align:center;margin-top:16px}
+</style>
+</head>
+<body>
+<div class="wrap" id="app"></div>
+<div class="confetti" id="confetti"></div>
+<script>
+// ================= DATA =================
+const CATS = {
+  animals:{name:"Animals",id:"Hewan",e:"🐶",c:"#ff7a59",w:[
+    ["cat","kucing","🐱"],["dog","anjing","🐶"],["cow","sapi","🐮"],["chicken","ayam","🐔"],["duck","bebek","🦆"],["fish","ikan","🐟"],
+    ["bird","burung","🐦"],["elephant","gajah","🐘"],["lion","singa","🦁"],["monkey","monyet","🐒"],["rabbit","kelinci","🐰"],["horse","kuda","🐴"],
+    ["frog","katak","🐸"],["snake","ular","🐍"],["bear","beruang","🐻"],["tiger","harimau","🐯"],["giraffe","jerapah","🦒"],["butterfly","kupu-kupu","🦋"],
+    ["turtle","kura-kura","🐢"],["goat","kambing","🐐"],["sheep","domba","🐑"],["crocodile","buaya","🐊"],["ant","semut","🐜"],["bee","lebah","🐝"],["owl","burung hantu","🦉"],["penguin","penguin","🐧"]]},
+  fruits:{name:"Fruits",id:"Buah",e:"🍎",c:"#ef476f",w:[
+    ["apple","apel","🍎"],["banana","pisang","🍌"],["orange","jeruk","🍊"],["grapes","anggur","🍇"],["watermelon","semangka","🍉"],["strawberry","stroberi","🍓"],
+    ["pineapple","nanas","🍍"],["mango","mangga","🥭"],["coconut","kelapa","🥥"],["pear","pir","🍐"],["cherry","ceri","🍒"],["lemon","lemon","🍋"],
+    ["peach","persik","🍑"],["melon","melon","🍈"],["kiwi","kiwi","🥝"],["avocado","alpukat","🥑"]]},
+  vehicles:{name:"Vehicles",id:"Kendaraan",e:"🚗",c:"#118ab2",w:[
+    ["car","mobil","🚗"],["bus","bus","🚌"],["bicycle","sepeda","🚲"],["motorcycle","sepeda motor","🏍️"],["train","kereta","🚆"],["airplane","pesawat","✈️"],
+    ["boat","perahu","⛵"],["ship","kapal","🚢"],["truck","truk","🚚"],["helicopter","helikopter","🚁"],["rocket","roket","🚀"],["ambulance","ambulans","🚑"],
+    ["fire truck","mobil pemadam","🚒"],["police car","mobil polisi","🚓"],["tractor","traktor","🚜"],["taxi","taksi","🚕"]]},
+  food:{name:"Food",id:"Makanan",e:"🍰",c:"#f78c6b",w:[
+    ["bread","roti","🍞"],["rice","nasi","🍚"],["egg","telur","🥚"],["milk","susu","🥛"],["cake","kue","🍰"],["ice cream","es krim","🍦"],
+    ["pizza","piza","🍕"],["cookie","biskuit","🍪"],["candy","permen","🍬"],["carrot","wortel","🥕"],["corn","jagung","🌽"],["tomato","tomat","🍅"],
+    ["cheese","keju","🧀"],["honey","madu","🍯"],["noodles","mi","🍜"],["donut","donat","🍩"]]},
+  body:{name:"Body",id:"Tubuh",e:"👃",c:"#9b5de5",w:[
+    ["eye","mata","👁️"],["ear","telinga","👂"],["nose","hidung","👃"],["mouth","mulut","👄"],["hand","tangan","✋"],["foot","kaki","🦶"],
+    ["tooth","gigi","🦷"],["tongue","lidah","👅"],["arm","lengan","💪"],["brain","otak","🧠"]]},
+  things:{name:"Things",id:"Benda",e:"🎒",c:"#06a77d",w:[
+    ["ball","bola","⚽"],["book","buku","📕"],["pencil","pensil","✏️"],["bag","tas","🎒"],["clock","jam","⏰"],["chair","kursi","🪑"],
+    ["bed","tempat tidur","🛏️"],["door","pintu","🚪"],["key","kunci","🔑"],["phone","telepon","📱"],["umbrella","payung","☂️"],["cup","cangkir","☕"],
+    ["scissors","gunting","✂️"],["hat","topi","🎩"],["shoe","sepatu","👟"],["sock","kaus kaki","🧦"],["shirt","baju","👕"],["glasses","kacamata","👓"],["gift","hadiah","🎁"],["kite","layang-layang","🪁"]]},
+  nature:{name:"Nature",id:"Alam",e:"🌈",c:"#5bc0eb",w:[
+    ["sun","matahari","☀️"],["moon","bulan","🌙"],["star","bintang","⭐"],["cloud","awan","☁️"],["rain","hujan","🌧️"],["rainbow","pelangi","🌈"],
+    ["tree","pohon","🌳"],["flower","bunga","🌸"],["leaf","daun","🍃"],["mountain","gunung","⛰️"],["fire","api","🔥"],["snow","salju","❄️"],["wave","ombak","🌊"],["volcano","gunung berapi","🌋"]]},
+  colors:{name:"Colors",id:"Warna",e:"🎨",c:"#ffb703",w:[
+    ["red","merah","🔴"],["orange","oranye","🟠"],["yellow","kuning","🟡"],["green","hijau","🟢"],["blue","biru","🔵"],["purple","ungu","🟣"],
+    ["brown","cokelat","🟤"],["black","hitam","⚫"],["white","putih","⚪"]]},
+  numbers:{name:"Numbers",id:"Angka",e:"🔢",c:"#43aa8b",w:[
+    ["one","satu",1],["two","dua",2],["three","tiga",3],["four","empat",4],["five","lima",5],["six","enam",6],["seven","tujuh",7],["eight","delapan",8],["nine","sembilan",9],["ten","sepuluh",10]]}
+};
+const COUNT_EMO=["🍎","⭐","🐟","🎈","🐤","🌸","🍪","🚗"];
+const MODES={
+  see:{e:"👀",n:"Look",d:"Lihat gambar, pilih kata"},
+  hear:{e:"👂",n:"Listen",d:"Dengar kata, pilih gambar"},
+  spell:{e:"🔤",n:"Spell",d:"Susun huruf"}
+};
+const PRAISE=["Great job!","Awesome!","Well done!","Super!","You got it!","Excellent!","Amazing!","Fantastic!"];
+
+// ================= STORAGE =================
+const store={get(k,d){try{const v=JSON.parse(localStorage.getItem(k));return v==null?d:v;}catch(e){return d;}},set(k,v){try{localStorage.setItem(k,JSON.stringify(v));}catch(e){}}};
+const ST={stars:store.get("tg_stars",0), stickers:store.get("tg_stk",{}), mode:store.get("tg_mode","see"), speed:store.get("tg_speed","slow")};
+const saveAll=()=>{store.set("tg_stars",ST.stars);store.set("tg_stk",ST.stickers);store.set("tg_mode",ST.mode);store.set("tg_speed",ST.speed);};
+const SPEED={slow:{n:"🐢 Pelan sekali",tts:0.7,loc:0.5,word:0.42},mid:{n:"🙂 Pelan",tts:0.8,loc:0.65,word:0.55},normal:{n:"🐇 Normal",tts:1,loc:0.85,word:0.75}};
+
+// ================= SOUND =================
+let tts=null;
+(async()=>{ await null; try{ if(window.claude&&claude.use) tts=await claude.use("tts"); }catch(e){ tts=null; } })();
+let voice=null;
+function pickVoice(){ try{ const vs=speechSynthesis.getVoices(); voice=vs.find(v=>/en[-_]US/i.test(v.lang)&&/samantha|google|female|aria|jenny/i.test(v.name))||vs.find(v=>/en[-_]US/i.test(v.lang))||vs.find(v=>/^en/i.test(v.lang))||null; }catch(e){} }
+try{ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }catch(e){}
+// say("lion") atau say(["Lion!","Lion!","Good job!","This is a lion."]) — tiap baris diucapkan dengan jeda
+function say(text){
+  const lines=(Array.isArray(text)?text:[text]).filter(Boolean);
+  if(tts){ tts.speak(lines.map(t=>({text:t,language:"en",voice:"airy"})),{rate:SPEED[ST.speed].tts}).catch(e=>{ if(e&&(e.code==="not_granted"||e.code==="unavailable")) tts=null; if(!tts) sayLocal(lines); }); return; }
+  sayLocal(lines);
+}
+function sayLocal(lines){ try{ speechSynthesis.cancel(); lines.forEach((t,i)=>{ const u=new SpeechSynthesisUtterance(t); u.lang="en-US"; u.rate=/^[A-Z][a-z' -]*[!.]$/.test(t)&&t.split(" ").length<=2?SPEED[ST.speed].word:SPEED[ST.speed].loc; u.pitch=1.1; if(voice) u.voice=voice; speechSynthesis.speak(u); }); }catch(e){} }
+// kalimat "This is a lion." dengan a/an, jamak, dan tak terhitung
+const PLURAL=new Set(["grapes","scissors","glasses","noodles","vegetables","shoes","socks","clothes","flowers","books"]);
+const UNCOUNT=new Set(["rice","milk","bread","honey","cheese","corn","fire","snow","rain","water","juice","tea","coffee","sand","grass","ice cream","fruit","soup"]);
+function sentence(q){
+  const w=q.w[0];
+  if(q.k==="colors") return `It is ${w}.`;
+  if(q.k==="numbers") return q.w[2]===1?"There is one.":`There are ${w}.`;
+  if(PLURAL.has(w)||(/s$/.test(w)&&!/(ss|us|bus)$/.test(w)&&!["glass","bus","octopus"].includes(w)&&q.k==="photos")) return `These are ${w}.`;
+  if(UNCOUNT.has(w)) return `This is ${w}.`;
+  return `This is ${/^[aeiou]/.test(w)&&!/^(uni|use|eu)/.test(w)?"an":"a"} ${w}.`;
+}
+const Cap=w=>w.charAt(0).toUpperCase()+w.slice(1);
+let actx=null;
+function beep(ok){
+  try{ actx=actx||new (window.AudioContext||window.webkitAudioContext)(); const t=actx.currentTime;
+    const notes= ok?[[660,0],[880,.09],[1320,.18]]:[[220,0],[180,.12]];
+    notes.forEach(([f,d])=>{ const o=actx.createOscillator(), g=actx.createGain(); o.type=ok?"triangle":"sine"; o.frequency.value=f;
+      g.gain.setValueAtTime(.0001,t+d); g.gain.exponentialRampToValueAtTime(.25,t+d+.02); g.gain.exponentialRampToValueAtTime(.0001,t+d+.22);
+      o.connect(g).connect(actx.destination); o.start(t+d); o.stop(t+d+.25); }); }catch(e){}
+}
+function confetti(){
+  const box=document.getElementById("confetti"), em=["⭐","🎉","✨","🌟","🎈","💖"];
+  for(let i=0;i<22;i++){ const s=document.createElement("span"); s.textContent=em[i%em.length]; s.style.left=Math.random()*100+"vw"; s.style.animationDelay=Math.random()*.5+"s"; s.style.fontSize=(20+Math.random()*22)+"px"; box.appendChild(s); setTimeout(()=>s.remove(),2400); }
+}
+
+// ================= HELPERS =================
+const $=s=>document.querySelector(s);
+const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+function picOf(cat,w,cls){
+  if(w[2]&&typeof w[2]==="object") return `<img class="${cls||"ph"}" src="${w[2].img}" alt="">`;
+  if(cat==="numbers") return Array(w[2]).fill(G&&G.countEmo?G.countEmo:"⭐").join("");
+  const m=phMap()[w[0]]; if(m&&Math.random()<.6) return `<img class="${cls||"ph"}" src="${pick(m)}" alt="">`;
+  return w[2];
+}
+
+// ================= FOTO SENDIRI =================
+const PH={list:[],mode:"local",db:null,assets:null,ready:false,err:""};
+const ALLW=Object.values(CATS).flatMap(c=>c.w.filter(w=>typeof w[2]==="string").map(w=>[w[0],w[1]]));
+function phSrc(p){ return p.data || (p.asset?"/_blob/"+p.asset:p.url); }
+function phMap(){ const m={}; PH.list.forEach(p=>{ const k=p.word.toLowerCase(); (m[k]=m[k]||[]).push(phSrc(p)); }); return m; }
+function loadLocal(){ PH.list=store.get("tg_photos",[]); }
+(async()=>{ await null;
+  try{ if(window.claude&&claude.use){ PH.db=await claude.use("db"); PH.assets=await claude.use("assets"); } }catch(e){}
+  if(PH.db){
+    PH.mode="cloud";
+    let first=true; const timer=setTimeout(()=>{ if(first){ PH.err="Foto belum bisa dimuat."; refreshPhotoViews(); } },10000);
+    PH.db.collection("photos").orderBy("t","desc").onSnapshot(snap=>{ clearTimeout(timer); first=false;
+      PH.list=snap.docs.map(d=>({id:d.id,...d.data()})).filter(p=>p.word&&(p.asset||p.url)); PH.ready=true; PH.err=""; refreshPhotoViews(); },
+      ()=>{ clearTimeout(timer); PH.mode="local"; loadLocal(); PH.ready=true; refreshPhotoViews(); });
+  } else { loadLocal(); PH.ready=true; refreshPhotoViews(); }
+})();
+loadLocal();
+function refreshPhotoViews(){ if(VIEW==="home") home(); else if(VIEW==="photos") photos(); }
+async function compress(file){
+  const url=URL.createObjectURL(file);
+  const img=await new Promise((res,rej)=>{ const i=new Image(); i.onload=()=>res(i); i.onerror=rej; i.src=url; });
+  const max=PH.mode==="cloud"?640:360, s=Math.min(1,max/Math.max(img.naturalWidth,img.naturalHeight));
+  const c=document.createElement("canvas"); c.width=Math.round(img.naturalWidth*s); c.height=Math.round(img.naturalHeight*s);
+  c.getContext("2d").drawImage(img,0,0,c.width,c.height); URL.revokeObjectURL(url);
+  const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.8));
+  return {blob, data:PH.mode==="local"?c.toDataURL("image/jpeg",.72):null};
+}
+async function addPhoto(file,word,arti){
+  const {blob,data}=await compress(file);
+  if(PH.mode==="cloud"){
+    if(!PH.assets) throw {code:"no_assets"};
+    const a=await PH.assets.upload(blob);
+    await PH.db.collection("photos").add({word,arti,asset:a.id,t:Date.now()});
+  } else {
+    const list=store.get("tg_photos",[]); list.unshift({id:"l"+Date.now(),word,arti,data,t:Date.now()});
+    try{ localStorage.setItem("tg_photos",JSON.stringify(list)); }catch(e){ throw {code:"full"}; }
+    PH.list=list;
+  }
+}
+async function delPhoto(p){
+  if(PH.mode==="cloud"){ await PH.db.doc("photos/"+p.id).delete(); if(PH.assets&&p.asset){ try{ await PH.assets.delete(p.asset); }catch(e){} } }
+  else { PH.list=PH.list.filter(x=>x.id!==p.id); store.set("tg_photos",PH.list); }
+}
+const escH=s=>String(s).replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+let VIEW="home", PEND=null, PEND_W="";
+function dupInfo(){
+  const el=$("#dup"), w=$("#w"); if(!el||!w) return; const v=w.value.trim().toLowerCase();
+  const n=PH.list.filter(p=>p.word===v).length, bawaan=ALLW.some(x=>x[0]===v);
+  el.innerHTML = !v?"" : n?`✅ Sudah ada ${n} foto untuk <b>${escH(v)}</b>. Foto ini akan ditambahkan sebagai variasi, jadi saat main fotonya bergantian.`
+    : bawaan?`🎉 Kata <b>${escH(v)}</b> ada di daftar bawaan dan belum punya foto. Foto ini akan menggantikan emojinya saat main.`
+    : `✨ Kata baru. Akan muncul di tema My Photos dan Mix.`;
+}
+function todoList(){
+  const have=new Set(PH.list.map(p=>p.word));
+  return Object.entries(CATS).filter(([k])=>k!=="numbers"&&k!=="colors").map(([k,c])=>{
+    const miss=c.w.filter(w=>!have.has(w[0])), done=c.w.length-miss.length;
+    return `<details style="background:#fff;border-radius:16px;padding:10px 14px;margin-bottom:8px;box-shadow:0 3px 0 #eadfcb"${done&&miss.length?" open":""}>
+      <summary style="font-weight:700;font-size:17px;cursor:pointer">${c.e} ${c.name} <small style="color:var(--muted);font-weight:500">· ${done}/${c.w.length} ada foto</small></summary>
+      ${miss.length?`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${miss.map(w=>`<button data-todo="${w[0]}" style="background:#fff7e8;border:2px solid #efe4d2;border-radius:99px;padding:6px 11px;font-size:15px">${w[2]} ${w[0]}</button>`).join("")}</div>`:`<p style="margin:8px 0 0;color:var(--ok);font-weight:600">Semua sudah ada foto! 🎉</p>`}
+    </details>`; }).join("");
+}
+function photos(){
+  VIEW="photos";
+  const canAdd = PH.mode==="local" || !!PH.assets;
+  $("#app").innerHTML=`<div class="bar"><button class="icon-btn" id="home">🏠</button><b style="font-size:22px">📷 My Photos</b><span class="stars">${PH.list.length} foto</span></div>
+   <p style="margin:0 4px 12px;color:var(--muted);line-height:1.45">Foto benda atau hewan di rumah, lalu tulis nama bahasa Inggrisnya. Foto akan keluar sebagai soal.
+   ${PH.mode==="cloud"?"Foto tersimpan di game ini, jadi tetap ada walau dibuka dari HP lain.":"Foto tersimpan di HP/browser ini saja."}</p>
+   ${PH.err?`<p class="note" style="color:var(--bad)">${PH.err}</p>`:""}
+   ${canAdd?`<div class="stage" style="text-align:left">
+     <input type="file" accept="image/*" id="file" class="hidden">
+     <div id="prev" style="text-align:center">${PEND?`<img src="${PEND.url}" class="ph">`:`<button class="big" id="pickBtn" style="margin-top:0">📷 Ambil / pilih foto</button>`}</div>
+     <div id="form" class="${PEND?"":"hidden"}">
+       <label style="display:block;font-weight:600;margin:14px 0 6px">Kata bahasa Inggris</label>
+       <input id="w" list="wl" autocomplete="off" autocapitalize="none" placeholder="contoh: cat" style="width:100%;font:inherit;font-size:20px;padding:12px 14px;border-radius:14px;border:3px solid #efe4d2">
+       <datalist id="wl">${ALLW.map(w=>`<option value="${w[0]}">`).join("")}</datalist>
+       <label style="display:block;font-weight:600;margin:12px 0 6px">Arti (bahasa Indonesia)</label>
+       <input id="a" autocomplete="off" placeholder="contoh: kucing" style="width:100%;font:inherit;font-size:18px;padding:12px 14px;border-radius:14px;border:3px solid #efe4d2">
+       <div class="row" style="display:flex;gap:10px"><button class="big sec2" id="cancel" style="flex:1">Batal</button><button class="big" id="save" style="flex:2">💾 Simpan</button></div>
+       <p class="note" id="dup" style="text-align:left;margin-top:8px"></p>
+       <p class="note" id="perr"></p>
+     </div></div>`:`<p class="note">Kamu bisa melihat foto, tapi hanya pemilik game yang bisa menambah foto.</p>`}
+   ${canAdd?`<div class="sec">📋 Belum ada foto asli</div><p style="margin:-4px 4px 10px;color:var(--muted);font-size:14px">Ketuk salah satu kata untuk langsung memotret atau memilih fotonya. Kata akan terisi otomatis.</p>${todoList()}`:""}
+   ${PH.list.length>=3?`<button class="big" id="playPh">▶ Main dengan foto (${PH.list.length})</button>`:`<p class="note">Tambahkan minimal 3 foto untuk mulai main.</p>`}
+   <div class="sgrid" style="margin-top:16px">${PH.list.map((p,i)=>`<div class="stk" style="padding:6px;position:relative"><img src="${phSrc(p)}" style="width:100%;aspect-ratio:1;object-fit:contain;background:#f6efe2;border-radius:12px" data-say="${escH(p.word)}"><small>${escH(p.word)}</small>${canAdd?`<button data-del="${i}" style="position:absolute;top:2px;right:2px;background:#fff;border-radius:99px;width:28px;height:28px;font-size:14px;box-shadow:0 2px 0 #eadfcb">🗑️</button>`:""}</div>`).join("")}</div>`;
+  $("#home").onclick=home;
+  const f=$("#file");
+  if($("#pickBtn")) $("#pickBtn").onclick=()=>f.click();
+  if(f) f.onchange=()=>{ const file=f.files[0]; if(!file) return; PEND={file,url:URL.createObjectURL(file)}; photos();
+    const w=$("#w"); if(w){ if(PEND_W){ w.value=PEND_W; const m=ALLW.find(x=>x[0]===PEND_W); if(m) $("#a").value=m[1]; dupInfo(); PEND_W=""; } else setTimeout(()=>w.focus(),50); } };
+  document.querySelectorAll("[data-todo]").forEach(b=>b.onclick=()=>{ PEND_W=b.dataset.todo; f.click(); });
+  if($("#w")) $("#w").oninput=()=>{ const v=$("#w").value.trim().toLowerCase(), m=ALLW.find(x=>x[0]===v); if(m&&!$("#a").value) $("#a").value=m[1]; dupInfo(); };
+  if($("#cancel")) $("#cancel").onclick=()=>{ PEND=null; photos(); };
+  if($("#save")) $("#save").onclick=async()=>{
+    const w=$("#w").value.trim().toLowerCase(), a=$("#a").value.trim();
+    if(!w){ $("#perr").textContent="Tulis dulu kata bahasa Inggrisnya ya."; return; }
+    if(!/^[a-z][a-z \-']{0,24}$/.test(w)){ $("#perr").textContent="Pakai huruf saja (a–z), maksimal 25 huruf."; return; }
+    const b=$("#save"); b.disabled=true; b.textContent="Menyimpan…";
+    try{ await addPhoto(PEND.file,w,a); PEND=null; say(w); photos(); }
+    catch(e){ b.disabled=false; b.textContent="💾 Simpan"; $("#perr").textContent= e&&e.code==="full"?"Penyimpanan di HP penuh. Hapus beberapa foto dulu.":e&&e.code==="quota_exceeded"?"Kuota penyimpanan penuh. Hapus beberapa foto dulu.":"Gagal menyimpan foto. Coba lagi."; }
+  };
+  document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{ const p=PH.list[+b.dataset.del]; b.textContent="…"; try{ await delPhoto(p); }catch(e){} if(PH.mode==="local") photos(); });
+  document.querySelectorAll("[data-say]").forEach(i=>i.onclick=()=>say(i.dataset.say));
+  if($("#playPh")) $("#playPh").onclick=()=>start("photos");
+}
+
+// ================= SCREENS =================
+function home(){ VIEW="home";
+  const total=Object.values(CATS).reduce((a,c)=>a+c.w.length,0), got=Object.keys(ST.stickers).length;
+  $("#app").innerHTML=`
+   <div class="bar"><span class="stars" style="margin-left:0">⭐ ${ST.stars}</span><span class="stars">🏅 ${got}/${total}</span></div>
+   <div class="owl">🦉</div>
+   <div class="title"><h1>Guess the<br>Picture!</h1><p>Tebak gambar dalam bahasa Inggris</p></div>
+   <div class="sec">1. Pilih cara main</div>
+   <div class="modes">${Object.entries(MODES).map(([k,m])=>`<button class="mode ${ST.mode===k?"on":""}" data-m="${k}"><span class="e">${m.e}</span><b>${m.n}</b><small>${m.d}</small></button>`).join("")}</div>
+   <div class="sec">2. Pilih tema</div>
+   <div class="cats">${Object.entries(CATS).map(([k,c])=>`<button class="cat" data-c="${k}" style="background:${c.c}"><span class="e">${c.e}</span><b>${c.name}</b><small>${c.id}</small></button>`).join("")}</div>
+   <button class="cat" data-c="mix" style="width:100%;margin-top:10px;background:linear-gradient(90deg,#ff7a59,#9b5de5,#118ab2);padding:14px"><b style="font-size:19px">🎲 Mix! Semua tema</b></button>
+   <button class="cat" id="phCat" style="width:100%;margin-top:10px;background:linear-gradient(90deg,#06a77d,#43aa8b);padding:14px"><b style="font-size:19px">📷 My Photos · foto sendiri (${PH.list.length})</b><small>${PH.list.length>=3?"Main dengan foto dari rumah":"Tambah foto benda/hewan di rumah"}</small></button>
+   ${PH.list.length?`<button class="link" id="phMan" style="margin-top:10px">📷 Kelola foto</button>`:""}
+   <button class="link" id="stk">🏅 My Stickers · koleksi kata</button>
+   <div class="sec">🔊 Kecepatan suara</div>
+   <div class="modes" id="spd">${Object.entries(SPEED).map(([k,v])=>`<button class="mode ${ST.speed===k?"on":""}" data-s="${k}" style="padding:10px 4px"><b style="font-size:14px">${v.n}</b></button>`).join("")}</div>
+   <p class="note">Tekan tombol 🔊 untuk mendengar cara membaca katanya.</p>`;
+  document.querySelectorAll("#spd .mode").forEach(b=>b.onclick=()=>{ ST.speed=b.dataset.s; saveAll(); document.querySelectorAll("#spd .mode").forEach(x=>x.classList.toggle("on",x===b)); say(["Lion.","This is a lion."]); });
+  document.querySelectorAll(".mode[data-m]").forEach(b=>b.onclick=()=>{ ST.mode=b.dataset.m; saveAll(); document.querySelectorAll(".mode[data-m]").forEach(x=>x.classList.toggle("on",x===b)); say(MODES[ST.mode].n); });
+  document.querySelectorAll(".cat").forEach(b=>b.onclick=()=>start(b.dataset.c));
+  $("#stk").onclick=stickers;
+  $("#phCat").onclick=()=>{ if(PH.list.length>=3) start("photos"); else photos(); };
+  if($("#phMan")) $("#phMan").onclick=photos;
+}
+
+let G=null;
+function start(cat){
+  VIEW="game";
+  const photoPool=PH.list.map(p=>({k:"photos",w:[p.word,p.arti||"",{img:phSrc(p)}]}));
+  const pool = cat==="photos" ? photoPool : cat==="mix" ? Object.entries(CATS).flatMap(([k,c])=>c.w.map(w=>({k,w}))).concat(photoPool) : CATS[cat].w.map(w=>({k:cat,w}));
+  let usable = pool;
+  if(ST.mode==="spell") usable = pool.filter(x=>!x.w[0].includes(" ") && x.w[0].length<=8);
+  if(ST.mode==="hear") usable = usable.filter(x=>x.k!=="numbers"||true);
+  // utamakan kata yang belum jadi stiker
+  const fresh=shuffle(usable.filter(x=>!ST.stickers[x.w[0]])), old=shuffle(usable.filter(x=>ST.stickers[x.w[0]]));
+  const qs=fresh.concat(old).slice(0,10);
+  if(!qs.length){ $("#app").innerHTML=`<div class="stage" style="margin-top:30px"><div class="pic">🙈</div><p class="ask">Belum ada kata yang cocok untuk mode ini.</p><p class="note">Mode Spell butuh kata tanpa spasi, maksimal 8 huruf.</p><button class="big" id="hb">🏠 Home</button></div>`; $("#hb").onclick=home; return; }
+  G={cat,pool,qs,i:0,score:0,first:true,learned:[],countEmo:pick(COUNT_EMO)};
+  round();
+}
+function topBar(){
+  return `<div class="bar"><button class="icon-btn" id="home">🏠</button><div class="prog"><i style="width:${G.i/G.qs.length*100}%"></i></div><span class="stars">⭐ ${G.score}</span></div>`;
+}
+function distractors(q,n){
+  let same=shuffle(G.pool.filter(x=>x.k===q.k&&x.w[0]!==q.w[0])).filter((x,i,a)=>a.findIndex(y=>y.w[0]===x.w[0])===i);
+  if(same.length<n){ const extra=shuffle(Object.entries(CATS).filter(([k])=>k!=="numbers"&&k!=="colors").flatMap(([k,c])=>c.w.map(w=>({k,w})))).filter(x=>x.w[0]!==q.w[0]&&!same.some(y=>y.w[0]===x.w[0])); same=same.concat(extra); }
+  return same.slice(0,n);
+}
+function round(){
+  const q=G.qs[G.i]; G.first=true; G.countEmo=pick(COUNT_EMO);
+  const word=q.w[0], cat=q.k;
+  let body="";
+  if(ST.mode==="see"){
+    const opts=shuffle([q,...distractors(q,2)]);
+    body=`<p class="ask">What is this?</p>
+      <div class="pic ${cat==="numbers"?"count":""}">${picOf(cat,q.w)}</div>
+      ${cat==="numbers"?`<p class="ask" style="font-size:16px;color:var(--muted);margin:-4px 0 0">How many?</p>`:""}
+      <div class="opts">${opts.map(o=>`<button class="opt" data-w="${escH(o.w[0])}">${escH(o.w[0])}</button>`).join("")}</div>`;
+  } else if(ST.mode==="hear"){
+    const opts=shuffle([q,...distractors(q,3)]);
+    body=`<p class="ask">Listen and tap!</p>
+      <button class="speak lg" id="sp">🔊 Play</button>
+      <div class="opts pics">${opts.map(o=>`<button class="opt" data-w="${escH(o.w[0])}" style="${o.k==="numbers"?"font-size:20px;line-height:1.3;padding:14px 8px":""}">${picOf(o.k,o.w,"oph")}</button>`).join("")}</div>`;
+  } else {
+    const letters=shuffle(word.split(""));
+    body=`<p class="ask">Spell it!</p>
+      <div class="pic ${cat==="numbers"?"count":""}" style="font-size:${cat==="numbers"?46:96}px">${picOf(cat,q.w)}</div>
+      <button class="speak" id="sp">🔊 Hear</button>
+      <div class="slots">${word.split("").map(()=>`<span class="slot"></span>`).join("")}</div>
+      <div class="tiles">${letters.map((l,i)=>`<button class="tile" data-l="${escH(l)}" data-i="${i}">${escH(l)}</button>`).join("")}</div>`;
+    G.typed="";
+  }
+  $("#app").innerHTML=topBar()+`<div class="stage">${body}<div class="msg" id="msg"></div></div><button class="big hidden" id="next">Next ➜</button>`;
+  $("#home").onclick=home;
+  const sp=$("#sp"); if(sp) sp.onclick=()=>say(ST.mode==="hear"?[Cap(word)+".",Cap(word)+"."]:Cap(word)+".");
+  if(ST.mode==="hear") say([Cap(word)+".",Cap(word)+"."]);
+  document.querySelectorAll(".opt").forEach(b=>b.onclick=()=>choose(b,q));
+  document.querySelectorAll(".tile").forEach(b=>b.onclick=()=>tap(b,q));
+  $("#next").onclick=()=>{ G.i++; if(G.i<G.qs.length) round(); else end(); };
+}
+function win(q){
+  const word=q.w[0];
+  if(G.first){ G.score++; ST.stars++; if(!ST.stickers[word]){ ST.stickers[word]=1; G.learned.push(q); } saveAll(); }
+  beep(true); confetti();
+  const pr=pick(PRAISE), sen=sentence(q);
+  $("#msg").className="msg ok"; $("#msg").innerHTML=`${pr}<span class="id">${escH(sen)}${q.w[1]?" · "+escH(q.w[1]):""}</span>`;
+  say(G.first?[Cap(word)+"!",Cap(word)+"!",pr,sen]:[Cap(word)+"!","Yes! "+sen]);
+  $("#next").classList.remove("hidden");
+  $(".bar .stars").textContent="⭐ "+G.score;
+}
+function choose(b,q){
+  if(b.classList.contains("no")||$("#next").classList.contains("hidden")===false) return;
+  if(b.dataset.w===q.w[0]){ b.classList.add("ok"); document.querySelectorAll(".opt").forEach(x=>x.disabled=true); win(q); }
+  else { G.first=false; b.classList.add("no"); beep(false); $("#msg").className="msg no"; $("#msg").innerHTML=`Try again! 💪<span class="id">Coba lagi ya</span>`; if(ST.mode==="hear") say(["Try again!",Cap(q.w[0])+"."]); else say("Oops! Try again!"); }
+}
+function tap(b,q){
+  const word=q.w[0], need=word[G.typed.length];
+  if(b.dataset.l===need){
+    b.classList.add("used"); G.typed+=need;
+    const s=document.querySelectorAll(".slot")[G.typed.length-1]; s.textContent=need; s.classList.add("f");
+    if(G.typed===word){ document.querySelectorAll(".tile").forEach(x=>x.disabled=true); win(q); }
+  } else { G.first=false; beep(false); b.classList.remove("no"); void b.offsetWidth; b.classList.add("no"); $("#msg").className="msg no"; $("#msg").innerHTML=`Try again! 💪<span class="id">Huruf berikutnya bukan itu</span>`; }
+}
+function end(){
+  const n=G.qs.length, s=G.score;
+  const stars = s>=n?3:s>=Math.ceil(n*.7)?2:s>=Math.ceil(n*.4)?1:0;
+  confetti(); setTimeout(confetti,600);
+  say(stars===3?"Perfect! You are a superstar!":stars>=2?"Great job!":"Good try! Let's play again!");
+  $("#app").innerHTML=`<div class="result" style="padding-top:20px">
+    <div class="trophy">${stars===3?"🏆":stars===2?"🥳":"🌟"}</div>
+    <h2>${stars===3?"Perfect!":stars===2?"Great job!":"Good try!"}</h2>
+    <div class="starrow">${"⭐".repeat(stars)}${"☆".repeat(3-stars)}</div>
+    <p style="font-size:20px;margin:4px 0">${s} / ${n} benar di percobaan pertama</p>
+    ${G.learned.length?`<p style="font-weight:700;margin:16px 0 4px">Stiker baru! 🏅</p><div class="learned">${G.learned.map(q=>`<span>${q.w[2]&&typeof q.w[2]==="object"?`<img src="${q.w[2].img}" style="width:26px;height:26px;object-fit:cover;border-radius:6px;vertical-align:middle">`:q.w[2]} ${escH(q.w[0])}</span>`).join("")}</div>`:""}
+    <button class="big" id="again">Play again ↻</button>
+    <button class="big sec2" id="back">🏠 Home</button></div>`;
+  $("#again").onclick=()=>start(G.cat); $("#back").onclick=home;
+}
+function stickers(){ VIEW="stickers";
+  const total=Object.values(CATS).reduce((a,c)=>a+c.w.length,0), got=Object.keys(ST.stickers).length;
+  $("#app").innerHTML=`<div class="bar"><button class="icon-btn" id="home">🏠</button><b style="font-size:22px">My Stickers</b><span class="stars">🏅 ${got}/${total}</span></div>
+   <p style="margin:0 4px 12px;color:var(--muted)">Jawab benar di percobaan pertama untuk membuka stiker. Ketuk stiker untuk mendengar katanya.</p>
+   ${Object.entries(CATS).map(([k,c])=>`<div class="sec" style="color:${c.c}">${c.e} ${c.name} <small style="color:var(--muted);font-weight:500">${c.w.filter(w=>ST.stickers[w[0]]).length}/${c.w.length}</small></div>
+    <div class="sgrid">${c.w.map(w=>{ const on=ST.stickers[w[0]]; return `<button class="stk ${on?"":"lock"}" data-w="${on?w[0]:""}">${k==="numbers"?`<span style="font-size:28px;font-weight:700;color:${c.c}">${w[2]}</span>`:w[2]}<small>${on?w[0]:"?"}</small></button>`; }).join("")}</div>`).join("")}`;
+  if(PH.list.length) $("#app").insertAdjacentHTML("beforeend",`<div class="sec" style="color:#06a77d">📷 My Photos</div><div class="sgrid">${PH.list.map(p=>`<button class="stk" data-w="${ST.stickers[p.word]?escH(p.word):""}" style="padding:6px"><img src="${phSrc(p)}" style="width:100%;aspect-ratio:1;object-fit:contain;background:#f6efe2;border-radius:12px;${ST.stickers[p.word]?"":"filter:grayscale(1);opacity:.35"}"><small>${ST.stickers[p.word]?escH(p.word):"?"}</small></button>`).join("")}</div>`);
+  $("#home").onclick=home;
+  document.querySelectorAll(".stk").forEach(b=>b.onclick=()=>{ if(b.dataset.w) say(b.dataset.w); });
+}
+home();
+</script>
+</body>
+</html>
