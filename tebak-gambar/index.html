@@ -184,10 +184,17 @@ function confetti(){
 const $=s=>document.querySelector(s);
 const shuffle=a=>{a=[...a];for(let i=a.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[a[i],a[j]]=[a[j],a[i]];}return a;};
 const pick=a=>a[Math.floor(Math.random()*a.length)];
+const PHOTO_MIN=10;
+const PCATS=Object.entries(CATS).filter(([k])=>k!=="numbers"&&k!=="colors");
+function builtinCat(word){ for(const [k,c] of PCATS) if(c.w.some(w=>w[0]===word)) return k; return ""; }
+function photoCat(p){ return builtinCat(p.word) || p.cat || ""; }
+// kata (unik) yang punya foto asli dalam satu tema
+function photoWordsOf(k){ const seen=new Set(), out=[]; PH.list.forEach(p=>{ if(photoCat(p)===k&&!seen.has(p.word)){ seen.add(p.word); out.push(p); } }); return out; }
+const usesPhotos=k=>photoWordsOf(k).length>=PHOTO_MIN;
 function picOf(cat,w,cls){
   if(w[2]&&typeof w[2]==="object") return `<img class="${cls||"ph"}" src="${w[2].img}" alt="">`;
   if(cat==="numbers") return Array(w[2]).fill(G&&G.countEmo?G.countEmo:"⭐").join("");
-  const m=phMap()[w[0]]; if(m&&Math.random()<.6) return `<img class="${cls||"ph"}" src="${pick(m)}" alt="">`;
+  const m=phMap()[w[0]]; if(m&&(G&&G.photoOnly||Math.random()<.6)) return `<img class="${cls||"ph"}" src="${pick(m)}" alt="">`;
   return w[2];
 }
 
@@ -218,17 +225,21 @@ async function compress(file){
   const blob=await new Promise(r=>c.toBlob(r,"image/jpeg",.8));
   return {blob, data:PH.mode==="local"?c.toDataURL("image/jpeg",.72):null};
 }
-async function addPhoto(file,word,arti){
+async function addPhoto(file,word,arti,cat){ cat=cat||builtinCat(word)||"";
   const {blob,data}=await compress(file);
   if(PH.mode==="cloud"){
     if(!PH.assets) throw {code:"no_assets"};
     const a=await PH.assets.upload(blob);
-    await PH.db.collection("photos").add({word,arti,asset:a.id,t:Date.now()});
+    await PH.db.collection("photos").add({word,arti,cat,asset:a.id,t:Date.now()});
   } else {
-    const list=store.get("tg_photos",[]); list.unshift({id:"l"+Date.now(),word,arti,data,t:Date.now()});
+    const list=store.get("tg_photos",[]); list.unshift({id:"l"+Date.now(),word,arti,cat,data,t:Date.now()});
     try{ localStorage.setItem("tg_photos",JSON.stringify(list)); }catch(e){ throw {code:"full"}; }
     PH.list=list;
   }
+}
+async function setPhotoCat(p,cat){
+  if(PH.mode==="cloud") await PH.db.doc("photos/"+p.id).update({cat});
+  else { const list=store.get("tg_photos",[]); const x=list.find(y=>y.id===p.id); if(x) x.cat=cat; store.set("tg_photos",list); PH.list=list; }
 }
 async function delPhoto(p){
   if(PH.mode==="cloud"){ await PH.db.doc("photos/"+p.id).delete(); if(PH.assets&&p.asset){ try{ await PH.assets.delete(p.asset); }catch(e){} } }
@@ -248,7 +259,7 @@ function todoList(){
   return Object.entries(CATS).filter(([k])=>k!=="numbers"&&k!=="colors").map(([k,c])=>{
     const miss=c.w.filter(w=>!have.has(w[0])), done=c.w.length-miss.length;
     return `<details style="background:#fff;border-radius:16px;padding:10px 14px;margin-bottom:8px;box-shadow:0 3px 0 #eadfcb"${done&&miss.length?" open":""}>
-      <summary style="font-weight:700;font-size:17px;cursor:pointer">${c.e} ${c.name} <small style="color:var(--muted);font-weight:500">· ${done}/${c.w.length} ada foto</small></summary>
+      <summary style="font-weight:700;font-size:17px;cursor:pointer">${c.e} ${c.name} <small style="color:var(--muted);font-weight:500">· ${done}/${c.w.length} ada foto${photoWordsOf(k).length>=PHOTO_MIN?' · <span style="color:var(--ok)">📷 pakai foto asli</span>':` · ${PHOTO_MIN-photoWordsOf(k).length} lagi untuk mode foto`}</small></summary>
       ${miss.length?`<div style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px">${miss.map(w=>`<button data-todo="${w[0]}" style="background:#fff7e8;border:2px solid #efe4d2;border-radius:99px;padding:6px 11px;font-size:15px">${w[2]} ${w[0]}</button>`).join("")}</div>`:`<p style="margin:8px 0 0;color:var(--ok);font-weight:600">Semua sudah ada foto! 🎉</p>`}
     </details>`; }).join("");
 }
@@ -266,6 +277,8 @@ function photos(){
        <label style="display:block;font-weight:600;margin:14px 0 6px">Kata bahasa Inggris</label>
        <input id="w" list="wl" autocomplete="off" autocapitalize="none" placeholder="contoh: cat" style="width:100%;font:inherit;font-size:20px;padding:12px 14px;border-radius:14px;border:3px solid #efe4d2">
        <datalist id="wl">${ALLW.map(w=>`<option value="${w[0]}">`).join("")}</datalist>
+       <label style="display:block;font-weight:600;margin:12px 0 6px">Tema</label>
+       <select id="tc" style="width:100%;font:inherit;font-size:18px;padding:12px 14px;border-radius:14px;border:3px solid #efe4d2;background:#fff">${PCATS.map(([k,c])=>`<option value="${k}">${c.e} ${c.name}</option>`).join("")}<option value="">📷 Lainnya (hanya di My Photos)</option></select>
        <label style="display:block;font-weight:600;margin:12px 0 6px">Arti (bahasa Indonesia)</label>
        <input id="a" autocomplete="off" placeholder="contoh: kucing" style="width:100%;font:inherit;font-size:18px;padding:12px 14px;border-radius:14px;border:3px solid #efe4d2">
        <div class="row" style="display:flex;gap:10px"><button class="big sec2" id="cancel" style="flex:1">Batal</button><button class="big" id="save" style="flex:2">💾 Simpan</button></div>
@@ -274,25 +287,28 @@ function photos(){
      </div></div>`:`<p class="note">Kamu bisa melihat foto, tapi hanya pemilik game yang bisa menambah foto.</p>`}
    ${canAdd?`<div class="sec">📋 Belum ada foto asli</div><p style="margin:-4px 4px 10px;color:var(--muted);font-size:14px">Ketuk salah satu kata untuk langsung memotret atau memilih fotonya. Kata akan terisi otomatis.</p>${todoList()}`:""}
    ${PH.list.length>=3?`<button class="big" id="playPh">▶ Main dengan foto (${PH.list.length})</button>`:`<p class="note">Tambahkan minimal 3 foto untuk mulai main.</p>`}
-   <div class="sgrid" style="margin-top:16px">${PH.list.map((p,i)=>`<div class="stk" style="padding:6px;position:relative"><img src="${phSrc(p)}" style="width:100%;aspect-ratio:1;object-fit:contain;background:#f6efe2;border-radius:12px" data-say="${escH(p.word)}"><small>${escH(p.word)}</small>${canAdd?`<button data-del="${i}" style="position:absolute;top:2px;right:2px;background:#fff;border-radius:99px;width:28px;height:28px;font-size:14px;box-shadow:0 2px 0 #eadfcb">🗑️</button>`:""}</div>`).join("")}</div>`;
+   <div class="sgrid" style="margin-top:16px">${PH.list.map((p,i)=>`<div class="stk" style="padding:6px;position:relative"><img src="${phSrc(p)}" style="width:100%;aspect-ratio:1;object-fit:contain;background:#f6efe2;border-radius:12px" data-say="${escH(p.word)}"><small>${escH(p.word)}</small>${canAdd&&!builtinCat(p.word)?`<select data-cat="${i}" style="width:100%;font:inherit;font-size:12px;margin-top:4px;border-radius:8px;border:2px solid #efe4d2;background:#fff;padding:2px">${PCATS.map(([k,c])=>`<option value="${k}" ${p.cat===k?"selected":""}>${c.e} ${c.name}</option>`).join("")}<option value="" ${!p.cat?"selected":""}>📷 Lainnya</option></select>`:""}${canAdd?`<button data-del="${i}" style="position:absolute;top:2px;right:2px;background:#fff;border-radius:99px;width:28px;height:28px;font-size:14px;box-shadow:0 2px 0 #eadfcb">🗑️</button>`:""}</div>`).join("")}</div>`;
   $("#home").onclick=home;
   const f=$("#file");
   if($("#pickBtn")) $("#pickBtn").onclick=()=>f.click();
   if(f) f.onchange=()=>{ const file=f.files[0]; if(!file) return; PEND={file,url:URL.createObjectURL(file)}; photos();
     const w=$("#w"); if(w){ if(PEND_W){ w.value=PEND_W; const m=ALLW.find(x=>x[0]===PEND_W); if(m) $("#a").value=m[1]; dupInfo(); PEND_W=""; } else setTimeout(()=>w.focus(),50); } };
   document.querySelectorAll("[data-todo]").forEach(b=>b.onclick=()=>{ PEND_W=b.dataset.todo; f.click(); });
-  if($("#w")) $("#w").oninput=()=>{ const v=$("#w").value.trim().toLowerCase(), m=ALLW.find(x=>x[0]===v); if(m&&!$("#a").value) $("#a").value=m[1]; dupInfo(); };
+  const syncCat=()=>{ const v=$("#w").value.trim().toLowerCase(), b=builtinCat(v), t=$("#tc"); if(!t) return; if(b){ t.value=b; t.disabled=true; } else t.disabled=false; };
+  if($("#w")) $("#w").oninput=()=>{ const v=$("#w").value.trim().toLowerCase(), m=ALLW.find(x=>x[0]===v); if(m&&!$("#a").value) $("#a").value=m[1]; dupInfo(); syncCat(); };
+  if($("#w")&&$("#w").value) syncCat();
   if($("#cancel")) $("#cancel").onclick=()=>{ PEND=null; photos(); };
   if($("#save")) $("#save").onclick=async()=>{
     const w=$("#w").value.trim().toLowerCase(), a=$("#a").value.trim();
     if(!w){ $("#perr").textContent="Tulis dulu kata bahasa Inggrisnya ya."; return; }
     if(!/^[a-z][a-z \-']{0,24}$/.test(w)){ $("#perr").textContent="Pakai huruf saja (a–z), maksimal 25 huruf."; return; }
     const b=$("#save"); b.disabled=true; b.textContent="Menyimpan…";
-    try{ await addPhoto(PEND.file,w,a); PEND=null; say(w); photos(); }
+    try{ await addPhoto(PEND.file,w,a,builtinCat(w)||$("#tc").value); PEND=null; say(w); photos(); }
     catch(e){ b.disabled=false; b.textContent="💾 Simpan"; $("#perr").textContent= e&&e.code==="full"?"Penyimpanan di HP penuh. Hapus beberapa foto dulu.":e&&e.code==="quota_exceeded"?"Kuota penyimpanan penuh. Hapus beberapa foto dulu.":"Gagal menyimpan foto. Coba lagi."; }
   };
   document.querySelectorAll("[data-del]").forEach(b=>b.onclick=async()=>{ const p=PH.list[+b.dataset.del]; b.textContent="…"; try{ await delPhoto(p); }catch(e){} if(PH.mode==="local") photos(); });
   document.querySelectorAll("[data-say]").forEach(i=>i.onclick=()=>say(i.dataset.say));
+  document.querySelectorAll("[data-cat]").forEach(sel=>sel.onchange=async()=>{ const p=PH.list[+sel.dataset.cat]; try{ await setPhotoCat(p,sel.value); }catch(e){} if(PH.mode==="local") photos(); });
   if($("#playPh")) $("#playPh").onclick=()=>start("photos");
 }
 
@@ -306,7 +322,7 @@ function home(){ VIEW="home";
    <div class="sec">1. Pilih cara main</div>
    <div class="modes">${Object.entries(MODES).map(([k,m])=>`<button class="mode ${ST.mode===k?"on":""}" data-m="${k}"><span class="e">${m.e}</span><b>${m.n}</b><small>${m.d}</small></button>`).join("")}</div>
    <div class="sec">2. Pilih tema</div>
-   <div class="cats">${Object.entries(CATS).map(([k,c])=>`<button class="cat" data-c="${k}" style="background:${c.c}"><span class="e">${c.e}</span><b>${c.name}</b><small>${c.id}</small></button>`).join("")}</div>
+   <div class="cats">${Object.entries(CATS).map(([k,c])=>`<button class="cat" data-c="${k}" style="background:${c.c};position:relative"><span class="e">${c.e}</span><b>${c.name}</b><small>${c.id}</small>${usesPhotos(k)?`<span style="position:absolute;top:6px;right:6px;background:#fff;color:${c.c};border-radius:99px;font-size:11px;font-weight:700;padding:2px 7px">📷 foto</span>`:""}</button>`).join("")}</div>
    <button class="cat" data-c="mix" style="width:100%;margin-top:10px;background:linear-gradient(90deg,#ff7a59,#9b5de5,#118ab2);padding:14px"><b style="font-size:19px">🎲 Mix! Semua tema</b></button>
    <button class="cat" id="phCat" style="width:100%;margin-top:10px;background:linear-gradient(90deg,#06a77d,#43aa8b);padding:14px"><b style="font-size:19px">📷 My Photos · foto sendiri (${PH.list.length})</b><small>${PH.list.length>=3?"Main dengan foto dari rumah":"Tambah foto benda/hewan di rumah"}</small></button>
    ${PH.list.length?`<button class="link" id="phMan" style="margin-top:10px">📷 Kelola foto</button>`:""}
@@ -326,7 +342,11 @@ let G=null;
 function start(cat){
   VIEW="game";
   const photoPool=PH.list.map(p=>({k:"photos",w:[p.word,p.arti||"",{img:phSrc(p)}]}));
-  const pool = cat==="photos" ? photoPool : cat==="mix" ? Object.entries(CATS).flatMap(([k,c])=>c.w.map(w=>({k,w}))).concat(photoPool) : CATS[cat].w.map(w=>({k:cat,w}));
+  let photoOnly=false, pool;
+  if(cat==="photos") pool=photoPool;
+  else if(cat==="mix") pool=Object.entries(CATS).flatMap(([k,c])=>c.w.map(w=>({k,w}))).concat(photoPool.filter(x=>!builtinCat(x.w[0])));
+  else if(usesPhotos(cat)){ photoOnly=true; pool=photoWordsOf(cat).map(p=>{ const b=CATS[cat].w.find(w=>w[0]===p.word); return {k:cat,w:b?b:[p.word,p.arti||"",{img:phSrc(p)}]}; }); }
+  else pool=CATS[cat].w.map(w=>({k:cat,w})).concat(photoPool.filter(x=>{ const p=PH.list.find(y=>y.word===x.w[0]); return p&&!builtinCat(p.word)&&p.cat===cat; }).map(x=>({...x,k:cat})));
   let usable = pool;
   if(ST.mode==="spell") usable = pool.filter(x=>!x.w[0].includes(" ") && x.w[0].length<=8);
   if(ST.mode==="hear") usable = usable.filter(x=>x.k!=="numbers"||true);
@@ -334,7 +354,7 @@ function start(cat){
   const fresh=shuffle(usable.filter(x=>!ST.stickers[x.w[0]])), old=shuffle(usable.filter(x=>ST.stickers[x.w[0]]));
   const qs=fresh.concat(old).slice(0,10);
   if(!qs.length){ $("#app").innerHTML=`<div class="stage" style="margin-top:30px"><div class="pic">🙈</div><p class="ask">Belum ada kata yang cocok untuk mode ini.</p><p class="note">Mode Spell butuh kata tanpa spasi, maksimal 8 huruf.</p><button class="big" id="hb">🏠 Home</button></div>`; $("#hb").onclick=home; return; }
-  G={cat,pool,qs,i:0,score:0,first:true,learned:[],countEmo:pick(COUNT_EMO)};
+  G={cat,pool,qs,i:0,score:0,first:true,learned:[],countEmo:pick(COUNT_EMO),photoOnly};
   round();
 }
 function topBar(){
@@ -383,7 +403,7 @@ function win(q){
   beep(true); confetti();
   const pr=pick(PRAISE), sen=sentence(q);
   $("#msg").className="msg ok"; $("#msg").innerHTML=`${pr}<span class="id">${escH(sen)}${q.w[1]?" · "+escH(q.w[1]):""}</span>`;
-  say(G.first?[Cap(word)+"!",Cap(word)+"!",pr,sen]:[Cap(word)+"!","Yes! "+sen]);
+  say([sen, Cap(word)+"!"]);
   $("#next").classList.remove("hidden");
   $(".bar .stars").textContent="⭐ "+G.score;
 }
